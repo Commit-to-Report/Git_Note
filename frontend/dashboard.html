@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitNote - Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>로그인 성공</h1>
+
+        <div class="success-box">
+            <div id="loading" class="loading">로딩 중...</div>
+            <div id="error" class="error-message" style="display: none;"></div>
+
+            <div id="userProfile" style="display: none;">
+                <div class="profile">
+                    <img id="avatar" src="" alt="Profile">
+                    <div class="profile-info">
+                        <h2 id="name"></h2>
+                        <p id="username"></p>
+                        <p id="bio"></p>
+                        <p id="location"></p>
+                        <p id="company"></p>
+                    </div>
+                </div>
+
+                <div class="details">
+                    <h3>계정 정보</h3>
+                    <div class="info-row">
+                        <span class="info-label">User ID:</span>
+                        <span class="info-value" id="userId"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Username:</span>
+                        <span class="info-value" id="login"></span>
+                    </div>
+                    <div class="info-row" id="emailRow" style="display: none;">
+                        <span class="info-label">Email:</span>
+                        <span class="info-value" id="email"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Repositories:</span>
+                        <span class="info-value" id="repos"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Followers:</span>
+                        <span class="info-value" id="followers"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Following:</span>
+                        <span class="info-value" id="following"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Created:</span>
+                        <span class="info-value" id="created"></span>
+                    </div>
+                </div>
+
+                <div>
+                    <a href="index.html" class="back-link">← 로그인 페이지로 돌아가기</a>
+                    <button id="logoutBtn" class="logout-button">로그아웃</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

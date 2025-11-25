@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Error</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #d73a49;
+        }
+
+        .error-box {
+            border: 1px solid #ddd;
+            padding: 30px;
+            text-align: center;
+            margin-top: 30px;
+            background-color: #fff5f5;
+        }
+
+        .error-message {
+            margin: 20px 0;
+            color: #666;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #0366d6;
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>로그인 실패</h1>
+
+    <div class="error-box">
+        <p class="error-message" th:text="${error}">An error occurred during login.</p>
+        <a href="/" class="back-link">← 다시 시도하기</a>
+    </div>
+</body>
+</html>
