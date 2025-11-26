@@ -1,0 +1,254 @@
+
+> Task :compileJava
+Note: /Users/krystal/workspace/Git_Note/backend/src/main/java/com/gitnote/backend/service/GitHubService.java uses unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+
+> Task :processResources UP-TO-DATE
+> Task :classes
+> Task :resolveMainClassName
+
+> Task :bootRun
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::               (v3.4.12)
+
+2025-11-25T17:38:41.218+09:00  INFO 69602 --- [backend] [           main] com.gitnote.backend.BackendApplication   : Starting BackendApplication using Java 17.0.16 with PID 69602 (/Users/krystal/workspace/Git_Note/backend/build/classes/java/main started by krystal in /Users/krystal/workspace/Git_Note/backend)
+2025-11-25T17:38:41.219+09:00  INFO 69602 --- [backend] [           main] com.gitnote.backend.BackendApplication   : The following 1 profile is active: "dev"
+2025-11-25T17:38:41.567+09:00  INFO 69602 --- [backend] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-11-25T17:38:41.573+09:00  INFO 69602 --- [backend] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-11-25T17:38:41.574+09:00  INFO 69602 --- [backend] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.49]
+2025-11-25T17:38:41.591+09:00  INFO 69602 --- [backend] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-11-25T17:38:41.592+09:00  INFO 69602 --- [backend] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 354 ms
+2025-11-25T17:38:41.844+09:00  INFO 69602 --- [backend] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2025-11-25T17:38:41.848+09:00  INFO 69602 --- [backend] [           main] com.gitnote.backend.BackendApplication   : Started BackendApplication in 0.79 seconds (process running for 0.93)
+2025-11-25T17:39:35.938+09:00  INFO 69602 --- [backend] [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-11-25T17:39:35.939+09:00  INFO 69602 --- [backend] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2025-11-25T17:39:35.941+09:00  INFO 69602 --- [backend] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+2025-11-25T17:39:36.573+09:00 ERROR 69602 --- [backend] [nio-8080-exec-2] i.n.r.d.DnsServerAddressStreamProviders  : Unable to load io.netty.resolver.dns.macos.MacOSDnsServerAddressStreamProvider, fallback to system defaults. This may result in incorrect DNS resolutions on MacOS. Check whether you have a dependency on 'io.netty:netty-resolver-dns-native-macos'. Use DEBUG level to see the full stack: java.lang.UnsatisfiedLinkError: failed to load the required native library
+
+>>> API Request: GET /api/github/repositories
+Session - AccessToken: 존재
+Session - Username: pkrystal95
+============================================================
+Fetching repositories for user: pkrystal95
+URL: https://api.github.com/users/pkrystal95/repos?per_page=100&sort=updated
+✓ Successfully fetched 25 repositories in 728 ms
+============================================================
+✓ Fetched 25 repositories
+  Sample: name=cicd-demo, fullName=pkrystal95/cicd-demo
+✓ Response sent with 25 repositories
+
+
+>>> API Request: GET /api/github/repositories
+Session - AccessToken: 존재
+Session - Username: pkrystal95
+============================================================
+Fetching repositories for user: pkrystal95
+URL: https://api.github.com/users/pkrystal95/repos?per_page=100&sort=updated
+✓ Successfully fetched 25 repositories in 1200 ms
+============================================================
+✓ Fetched 25 repositories
+  Sample: name=cicd-demo, fullName=pkrystal95/cicd-demo
+✓ Response sent with 25 repositories
+
+
+>>> API Request: GET /api/github/repositories
+Session - AccessToken: 존재
+Session - Username: pkrystal95
+============================================================
+Fetching repositories for user: pkrystal95
+URL: https://api.github.com/users/pkrystal95/repos?per_page=100&sort=updated
+✓ Successfully fetched 25 repositories in 612 ms
+============================================================
+✓ Fetched 25 repositories
+  Sample: name=cicd-demo, fullName=pkrystal95/cicd-demo
+✓ Response sent with 25 repositories
+
+
+>>> API Request: GET /api/github/repositories
+Session - AccessToken: 존재
+Session - Username: pkrystal95
+============================================================
+Fetching repositories for user: pkrystal95
+URL: https://api.github.com/users/pkrystal95/repos?per_page=100&sort=updated
+✓ Successfully fetched 25 repositories in 393 ms
+============================================================
+✓ Fetched 25 repositories
+  Sample: name=cicd-demo, fullName=pkrystal95/cicd-demo
+✓ Response sent with 25 repositories
+
+
+>>> API Request: GET /api/github/repositories
+Session - AccessToken: 존재
+Session - Username: pkrystal95
+============================================================
+Fetching repositories for user: pkrystal95
+URL: https://api.github.com/users/pkrystal95/repos?per_page=100&sort=updated
+✓ Successfully fetched 25 repositories in 627 ms
+============================================================
+✓ Fetched 25 repositories
+  Sample: name=cicd-demo, fullName=pkrystal95/cicd-demo
+✓ Response sent with 25 repositories
+
+
+>>> API Request: GET /api/github/repositories
+Session - AccessToken: 존재
+Session - Username: pkrystal95
+============================================================
+Fetching repositories for user: pkrystal95
+URL: https://api.github.com/users/pkrystal95/repos?per_page=100&sort=updated
+
+>>> API Request: GET /api/github/repositories
+Session - AccessToken: 존재
+Session - Username: pkrystal95
+============================================================
+Fetching repositories for user: pkrystal95
+URL: https://api.github.com/users/pkrystal95/repos?per_page=100&sort=updated
+
+>>> API Request: GET /api/github/repositories
+Session - AccessToken: 존재
+Session - Username: pkrystal95
+============================================================
+Fetching repositories for user: pkrystal95
+URL: https://api.github.com/users/pkrystal95/repos?per_page=100&sort=updated
+✓ Successfully fetched 25 repositories in 1094 ms
+============================================================
+✓ Fetched 25 repositories
+  Sample: name=cicd-demo, fullName=pkrystal95/cicd-demo
+✓ Response sent with 25 repositories
+
+
+>>> API Request: GET /api/github/repositories
+Session - AccessToken: 존재
+Session - Username: pkrystal95
+============================================================
+Fetching repositories for user: pkrystal95
+URL: https://api.github.com/users/pkrystal95/repos?per_page=100&sort=updated
+
+>>> API Request: GET /api/github/repositories
+Session - AccessToken: 존재
+Session - Username: pkrystal95
+============================================================
+Fetching repositories for user: pkrystal95
+URL: https://api.github.com/users/pkrystal95/repos?per_page=100&sort=updated
+✓ Successfully fetched 25 repositories in 495 ms
+============================================================
+✓ Fetched 25 repositories
+  Sample: name=cicd-demo, fullName=pkrystal95/cicd-demo
+✓ Response sent with 25 repositories
+
+✓ Successfully fetched 25 repositories in 582 ms
+============================================================
+✓ Fetched 25 repositories
+  Sample: name=cicd-demo, fullName=pkrystal95/cicd-demo
+✓ Response sent with 25 repositories
+
+✓ Successfully fetched 25 repositories in 491 ms
+============================================================
+✓ Fetched 25 repositories
+  Sample: name=cicd-demo, fullName=pkrystal95/cicd-demo
+✓ Response sent with 25 repositories
+
+✓ Successfully fetched 25 repositories in 989 ms
+============================================================
+✓ Fetched 25 repositories
+  Sample: name=cicd-demo, fullName=pkrystal95/cicd-demo
+✓ Response sent with 25 repositories
+
+
+>>> API Request: GET /api/github/repositories
+Session - AccessToken: 존재
+Session - Username: pkrystal95
+============================================================
+Fetching repositories for user: pkrystal95
+URL: https://api.github.com/users/pkrystal95/repos?per_page=100&sort=updated
+
+>>> API Request: GET /api/github/repositories
+Session - AccessToken: 존재
+Session - Username: pkrystal95
+============================================================
+Fetching repositories for user: pkrystal95
+URL: https://api.github.com/users/pkrystal95/repos?per_page=100&sort=updated
+
+>>> API Request: GET /api/github/repositories
+Session - AccessToken: 존재
+Session - Username: pkrystal95
+============================================================
+Fetching repositories for user: pkrystal95
+URL: https://api.github.com/users/pkrystal95/repos?per_page=100&sort=updated
+
+>>> API Request: GET /api/github/repositories
+Session - AccessToken: 존재
+Session - Username: pkrystal95
+============================================================
+Fetching repositories for user: pkrystal95
+URL: https://api.github.com/users/pkrystal95/repos?per_page=100&sort=updated
+
+>>> API Request: GET /api/github/repositories
+Session - AccessToken: 존재
+Session - Username: pkrystal95
+============================================================
+Fetching repositories for user: pkrystal95
+URL: https://api.github.com/users/pkrystal95/repos?per_page=100&sort=updated
+
+>>> API Request: GET /api/github/repositories
+Session - AccessToken: 존재
+Session - Username: pkrystal95
+============================================================
+Fetching repositories for user: pkrystal95
+URL: https://api.github.com/users/pkrystal95/repos?per_page=100&sort=updated
+✓ Successfully fetched 25 repositories in 958 ms
+============================================================
+✓ Fetched 25 repositories
+  Sample: name=cicd-demo, fullName=pkrystal95/cicd-demo
+✓ Response sent with 25 repositories
+
+✓ Successfully fetched 25 repositories in 800 ms
+============================================================
+✓ Fetched 25 repositories
+  Sample: name=cicd-demo, fullName=pkrystal95/cicd-demo
+✓ Response sent with 25 repositories
+
+✓ Successfully fetched 25 repositories in 975 ms
+============================================================
+✓ Fetched 25 repositories
+  Sample: name=cicd-demo, fullName=pkrystal95/cicd-demo
+✓ Response sent with 25 repositories
+
+✓ Successfully fetched 25 repositories in 537 ms
+============================================================
+✓ Fetched 25 repositories
+  Sample: name=cicd-demo, fullName=pkrystal95/cicd-demo
+✓ Response sent with 25 repositories
+
+✓ Successfully fetched 25 repositories in 751 ms
+============================================================
+✓ Fetched 25 repositories
+  Sample: name=cicd-demo, fullName=pkrystal95/cicd-demo
+✓ Response sent with 25 repositories
+
+✓ Successfully fetched 25 repositories in 999 ms
+============================================================
+✓ Fetched 25 repositories
+  Sample: name=cicd-demo, fullName=pkrystal95/cicd-demo
+✓ Response sent with 25 repositories
+
+
+>>> API Request: GET /api/github/repositories
+Session - AccessToken: 존재
+Session - Username: pkrystal95
+============================================================
+Fetching repositories for user: pkrystal95
+URL: https://api.github.com/users/pkrystal95/repos?per_page=100&sort=updated
+✓ Successfully fetched 25 repositories in 491 ms
+============================================================
+✓ Fetched 25 repositories
+  Sample: name=cicd-demo, fullName=pkrystal95/cicd-demo
+✓ Response sent with 25 repositories
+

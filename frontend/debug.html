@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitNote - 디버그</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Courier New', monospace;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #252526;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        h1 {
+            color: #4ec9b0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #4ec9b0;
+            padding-bottom: 10px;
+        }
+        .section {
+            background: #1e1e1e;
+            border: 1px solid #3e3e42;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .section h2 {
+            color: #dcdcaa;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        button {
+            background: #0e639c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            font-family: inherit;
+        }
+        button:hover {
+            background: #1177bb;
+        }
+        .success { color: #4ec9b0; }
+        .error { color: #f48771; }
+        .warning { color: #dcdcaa; }
+        .info { color: #569cd6; }
+        pre {
+            background: #1e1e1e;
+            border: 1px solid #3e3e42;
+            border-radius: 4px;
+            padding: 10px;
+            overflow-x: auto;
+            margin-top: 10px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .status-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+        .status-dot.green { background: #4ec9b0; }
+        .status-dot.red { background: #f48771; }
+        .status-dot.yellow { background: #dcdcaa; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 GitNote 디버그 도구</h1>
+
+        <div class="section">
+            <h2>1. 서버 상태 확인</h2>
+            <button onclick="checkBackendServer()">백엔드 서버 확인 (8080)</button>
+            <button onclick="checkFrontendServer()">프론트엔드 서버 확인 (5173)</button>
+            <div id="serverStatus"></div>
+        </div>
+
+        <div class="section">
+            <h2>2. 세션 정보</h2>
+            <button onclick="checkSession()">세션 확인</button>
+            <button onclick="clearSessionStorage()">세션 스토리지 초기화</button>
+            <div id="sessionInfo"></div>
+        </div>
+
+        <div class="section">
+            <h2>3. API 테스트</h2>
+            <button onclick="testClientIdAPI()">Client ID API</button>
+            <button onclick="testRepositoriesAPI()">Repositories API</button>
+            <button onclick="testRateLimitAPI()">Rate Limit API</button>
+            <div id="apiTest"></div>
+        </div>
+
+        <div class="section">
+            <h2>4. 브라우저 콘솔 로그</h2>
+            <p class="info">F12를 눌러 개발자 도구를 열고 Console 탭을 확인하세요.</p>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = "http://localhost:8080";
+
+        async function checkBackendServer() {
+            const output = document.getElementById("serverStatus");
+            output.innerHTML = "<pre>⏳ 백엔드 서버 확인 중...</pre>";
+
+            try {
+                const response = await fetch(`${API_BASE}/api/github/client-id`, {
+                    credentials: "include"
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    output.innerHTML = `<pre class="success"><span class="status-dot green"></span>✅ 백엔드 서버 실행 중 (8080 포트)
+Client ID: ${data.clientId}</pre>`;
+                } else {
+                    output.innerHTML = `<pre class="error"><span class="status-dot red"></span>❌ 백엔드 응답 오류: ${response.status}</pre>`;
+                }
+            } catch (error) {
+                output.innerHTML = `<pre class="error"><span class="status-dot red"></span>❌ 백엔드 서버에 연결할 수 없습니다.
+
+오류: ${error.message}
+
+해결방법:
+1. 터미널을 열고 다음 명령어 실행:
+   cd /Users/krystal/workspace/Git_Note/backend
+   ./gradlew bootRun
+
+2. 또는:
+   cd /Users/krystal/workspace/Git_Note/backend
+   ./gradlew build && java -jar build/libs/backend-0.0.1-SNAPSHOT.jar
+</pre>`;
+            }
+        }
+
+        async function checkFrontendServer() {
+            const output = document.getElementById("serverStatus");
+            const currentPort = window.location.port;
+            
+            if (currentPort === "5173") {
+                output.innerHTML = `<pre class="success"><span class="status-dot green"></span>✅ 프론트엔드 서버 실행 중 (${currentPort} 포트)</pre>`;
+            } else if (window.location.protocol === "file:") {
+                output.innerHTML = `<pre class="warning"><span class="status-dot yellow"></span>⚠️ 파일로 직접 열었습니다.
+
+서버를 통해 접속하세요:
+1. 터미널에서 실행:
+   cd /Users/krystal/workspace/Git_Note/frontend
+   python3 -m http.server 5173
+
+2. 브라우저에서 접속:
+   http://localhost:5173
+</pre>`;
+            } else {
+                output.innerHTML = `<pre class="info"><span class="status-dot yellow"></span>ℹ️ 현재 포트: ${currentPort || "알 수 없음"}</pre>`;
+            }
+        }
+
+        function checkSession() {
+            const output = document.getElementById("sessionInfo");
+            const username = sessionStorage.getItem("username");
+            const avatar = sessionStorage.getItem("avatar");
+            const accessToken = sessionStorage.getItem("accessToken");
+
+            if (username) {
+                output.innerHTML = `<pre class="success">✅ 로그인 상태
+
+Username: ${username}
+Avatar: ${avatar ? "있음" : "없음"}
+Access Token: ${accessToken ? "있음 (sessionStorage에 저장되어 있으면 안됨!)" : "없음 (정상)"}
+
+※ Access Token은 서버 세션에만 저장되어야 합니다.
+</pre>`;
+            } else {
+                output.innerHTML = `<pre class="warning">⚠️ 로그인되지 않음
+
+SessionStorage가 비어있습니다.
+index.html에서 로그인해주세요.
+</pre>`;
+            }
+        }
+
+        function clearSessionStorage() {
+            sessionStorage.clear();
+            document.getElementById("sessionInfo").innerHTML = 
+                '<pre class="success">✅ SessionStorage를 초기화했습니다.</pre>';
+        }
+
+        async function testClientIdAPI() {
+            const output = document.getElementById("apiTest");
+            output.innerHTML = "<pre>⏳ 테스트 중...</pre>";
+
+            try {
+                const response = await fetch(`${API_BASE}/api/github/client-id`, {
+                    credentials: "include"
+                });
+                const data = await response.json();
+                
+                output.innerHTML = `<pre class="success">✅ Client ID API 정상
+
+Status: ${response.status}
+Response:
+${JSON.stringify(data, null, 2)}
+</pre>`;
+            } catch (error) {
+                output.innerHTML = `<pre class="error">❌ 실패: ${error.message}</pre>`;
+            }
+        }
+
+        async function testRepositoriesAPI() {
+            const output = document.getElementById("apiTest");
+            output.innerHTML = "<pre>⏳ Repositories API 테스트 중...</pre>";
+
+            try {
+                const response = await fetch(`${API_BASE}/api/github/repositories`, {
+                    credentials: "include"
+                });
+                const data = await response.json();
+                
+                if (response.ok) {
+                    output.innerHTML = `<pre class="success">✅ Repositories API 성공
+
+Status: ${response.status}
+리포지토리 개수: ${data.count}
+Response:
+${JSON.stringify(data, null, 2)}
+</pre>`;
+                } else {
+                    output.innerHTML = `<pre class="error">❌ Repositories API 실패
+
+Status: ${response.status}
+Error:
+${JSON.stringify(data, null, 2)}
+
+${data.needLogin ? "\n⚠️ 로그인이 필요합니다!" : ""}
+</pre>`;
+                }
+            } catch (error) {
+                output.innerHTML = `<pre class="error">❌ 실패: ${error.message}
+
+서버가 실행 중인지 확인하세요.
+</pre>`;
+            }
+        }
+
+        async function testRateLimitAPI() {
+            const output = document.getElementById("apiTest");
+            output.innerHTML = "<pre>⏳ Rate Limit 확인 중...</pre>";
+
+            try {
+                const response = await fetch(`${API_BASE}/api/github/rate-limit`, {
+                    credentials: "include"
+                });
+                const data = await response.json();
+                
+                if (response.ok && data.resources) {
+                    const core = data.resources.core;
+                    const resetTime = new Date(core.reset * 1000).toLocaleString('ko-KR');
+                    
+                    output.innerHTML = `<pre class="success">✅ Rate Limit 정보
+
+남은 요청: ${core.remaining} / ${core.limit}
+재설정 시간: ${resetTime}
+
+Full Response:
+${JSON.stringify(data, null, 2)}
+</pre>`;
+                } else {
+                    output.innerHTML = `<pre class="error">❌ Rate Limit API 실패
+
+${JSON.stringify(data, null, 2)}
+</pre>`;
+                }
+            } catch (error) {
+                output.innerHTML = `<pre class="error">❌ 실패: ${error.message}</pre>`;
+            }
+        }
+
+        // 페이지 로드 시 자동 체크
+        window.addEventListener("DOMContentLoaded", () => {
+            checkBackendServer();
+            checkSession();
+        });
+    </script>
+</body>
+</html>
+
