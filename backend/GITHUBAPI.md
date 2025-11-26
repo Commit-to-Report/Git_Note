@@ -31,7 +31,7 @@
 
 2. **Backend 설정 파일 수정**
    ```properties
-   # backend/src/main/resources/application.properties
+   # backend/src/main/resources/application-test.properties
    github.client.id=YOUR_CLIENT_ID
    github.client.secret=YOUR_CLIENT_SECRET
    github.redirect.uri=http://localhost:5173/callback.html
