@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -42,5 +43,11 @@ public class S3Controller {
                     "message", "Upload failed: " + e.getMessage()
             ));
         }
+    }
+
+    // [추가] 파일 목록 조회 API
+    @GetMapping("/list")
+    public ResponseEntity<List<String>> getFiles() {
+        return ResponseEntity.ok(s3Service.getFileList());
     }
 }

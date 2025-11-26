@@ -9,9 +9,14 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.HeadObjectRequest;
 import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
+import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;
+import software.amazon.awssdk.services.s3.model.ListObjectsV2Response;
+import software.amazon.awssdk.services.s3.model.S3Object;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -56,6 +61,31 @@ public class S3Service {
         }
         return fileName;
     }
+
+    // [추가] S3 버킷의 모든 텍스트 파일 목록 조회
+    public List<String> getFileList() {
+        ListObjectsV2Request request = ListObjectsV2Request.builder()
+                .bucket(bucketName)
+                .build();
+
+        ListObjectsV2Response result = s3Client.listObjectsV2(request);
+
+        return result.contents().stream()
+                .map(S3Object::key)
+                .filter(key -> key.endsWith(".txt")) // txt 파일만 필터링
+                .collect(Collectors.toList());
+    }
+
+    // [추가] S3 파일 내용 읽어오기 (String으로 반환)
+    public String getFileContent(String fileName) {
+
+        try (InputStream is = s3Template.download(bucketName, fileName).getInputStream()) {
+             return new String(is.readAllBytes(), StandardCharsets.UTF_8);
+        } catch (IOException e) {
+             throw new RuntimeException("파일 읽기 실패", e);
+        }
+    }
+
 
     // S3에 파일이 있는지 확인하는 메서드
     private boolean doesFileExist(String fileName) {
