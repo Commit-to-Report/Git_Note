@@ -1,6 +1,6 @@
 # GitNote
 [![Deploy to Amazon ECR](https://github.com/Commit-to-Report/Git_Note/actions/workflows/deploy.yml/badge.svg)](https://github.com/Commit-to-Report/Git_Note/actions/workflows/deploy.yml)
-빨간색 불 들어오면 김지윤에게 말씀해주세요!
+Failing 뜨면 즉시 김지윤에게 말씀해주세요.
 
 GitNote는 GitHub OAuth를 통해 로그인하여 리포지토리의 커밋 내역을 조회하고 텍스트 파일로 내보낼 수 있는 웹 애플리케이션입니다.
 
