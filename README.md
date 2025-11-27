@@ -48,7 +48,7 @@ GitNote는 GitHub OAuth를 통해 로그인하여 리포지토리의 커밋 내�
 
 ```bash
 cd [프로젝트 경로]/Git_Note/frontend
-python3 -m http.server:5173
+python3 -m http.server 5173
 ```
 ---
 
