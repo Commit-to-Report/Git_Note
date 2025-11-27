@@ -90,8 +90,8 @@ public class CommitControllerTest {
         session.setAttribute("accessToken", "test-token");
 
         List<GitHubCommit> commits = Arrays.asList(
-                createTestCommit("abc123", "첫 번째 커밋", "testuser", "2024-01-01T10:00:00Z"),
-                createTestCommit("def456", "두 번째 커밋", "testuser", "2024-01-02T15:30:00Z")
+                createTestCommit("abc1234567890", "첫 번째 커밋", "testuser", "2024-01-01T10:00:00Z"),
+                createTestCommit("def4567890123", "두 번째 커밋", "testuser", "2024-01-02T15:30:00Z")
         );
 
         given(gitHubService.getCommitsByDateRange(anyString(), anyString(), anyString(), any(LocalDate.class), any(LocalDate.class)))

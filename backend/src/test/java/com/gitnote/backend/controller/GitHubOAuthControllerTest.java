@@ -15,10 +15,8 @@ import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Map;
-
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.BDDMockito.given;
+import org.mockito.BDDMockito;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
@@ -72,8 +70,8 @@ public class GitHubOAuthControllerTest {
         userInfo.setFollowing(50);
         userInfo.setCreatedAt("2020-01-01T00:00:00Z");
 
-        given(gitHubService.getAccessToken(anyString())).willReturn(accessToken);
-        given(gitHubService.getUserInfo(anyString())).willReturn(userInfo);
+        BDDMockito.given(gitHubService.getAccessToken(anyString())).willReturn(accessToken);
+        BDDMockito.given(gitHubService.getUserInfo(anyString())).willReturn(userInfo);
 
         // when & then
         mockMvc.perform(get("/api/github/user")
@@ -130,7 +128,7 @@ public class GitHubOAuthControllerTest {
         session.setAttribute("accessToken", "test-token");
         session.setAttribute("username", "testuser");
 
-        given(gitHubService.revokeToken(anyString())).willReturn(true);
+        BDDMockito.given(gitHubService.revokeToken(anyString())).willReturn(true);
 
         // when & then
         mockMvc.perform(post("/api/logout")

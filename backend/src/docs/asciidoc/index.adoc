@@ -121,14 +121,6 @@ table tbody tr:hover {
     margin-bottom: 0.5rem;
 }
 
-/* HTTP 메서드 뱃지 */
-.listingblock pre code::before {
-    font-weight: bold;
-    padding: 0.2rem 0.5rem;
-    border-radius: 3px;
-    margin-right: 0.5rem;
-}
-
 /* 파라미터 섹션 */
 .dlist dt {
     font-weight: 600;
@@ -169,14 +161,23 @@ table tbody tr:hover {
 ++++
 
 [.lead]
-GitNote 프로젝트의 REST API 문서입니다. GitHub 저장소와 커밋 정보를 조회할 수 있는 API를 제공합니다.
+GitNote 프로젝트의 REST API 문서입니다. GitHub 저장소와 커밋 정보를 조회하고, AI 기반 보고서를 생성하며, S3 및 DynamoDB를 통해 데이터를 관리할 수 있는 API를 제공합니다.
 
 '''
 
 [[overview]]
 == 개요
 
-GitNote는 GitHub 저장소의 커밋 히스토리를 분석하고 관리하는 서비스입니다.
+GitNote는 GitHub 저장소의 커밋 히스토리를 분석하고 AI 기반 보고서를 자동 생성하는 서비스입니다.
+
+=== 주요 기능
+
+* GitHub OAuth 인증 및 사용자 관리
+* GitHub 저장소 및 커밋 조회
+* S3 기반 커밋 로그 저장 및 관리
+* AI(Gemini) 기반 커밋 요약 보고서 생성
+* DynamoDB 기반 보고서 저장
+* 사용자별 보고서 설정 관리
 
 === API 엔드포인트
 
@@ -204,9 +205,6 @@ Base URL: `http://localhost:8080`
 | `PUT`
 | 기존 리소스를 수정할 때 사용
 
-| `PATCH`
-| 기존 리소스의 일부를 수정할 때 사용
-
 | `DELETE`
 | 기존 리소스를 삭제할 때 사용
 |===
@@ -220,12 +218,6 @@ Base URL: `http://localhost:8080`
 
 | `200 OK`
 | 요청을 성공적으로 처리함
-
-| `201 Created`
-| 새 리소스를 성공적으로 생성함
-
-| `204 No Content`
-| 기존 리소스를 성공적으로 수정함
 
 | `400 Bad Request`
 | 잘못된 요청을 보낸 경우
@@ -355,14 +347,6 @@ include::{snippets}/commit-controller-test/get-repositories/http-response.adoc[]
 
 include::{snippets}/commit-controller-test/get-repositories/response-fields.adoc[]
 
-===== 예시
-
-[source,bash]
-----
-curl -X GET http://localhost:8080/api/github/repositories \
-  -H "Cookie: GITNOTE_SESSION=your-session-id"
-----
-
 '''
 
 [[resources-github-commits]]
@@ -386,14 +370,6 @@ include::{snippets}/commit-controller-test/get-commits/http-response.adoc[]
 
 include::{snippets}/commit-controller-test/get-commits/response-fields.adoc[]
 
-===== 예시
-
-[source,bash]
-----
-curl -X GET "http://localhost:8080/api/github/commits?owner=myuser&repo=myrepo&since=2024-01-01&until=2024-01-31&includeDetails=false" \
-  -H "Cookie: GITNOTE_SESSION=your-session-id"
-----
-
 '''
 
 [[resources-github-rate-limit]]
@@ -412,57 +388,6 @@ include::{snippets}/commit-controller-test/get-rate-limit/http-response.adoc[]
 ===== 응답 필드
 
 include::{snippets}/commit-controller-test/get-rate-limit/response-fields.adoc[]
-
-===== 예시
-
-[source,bash]
-----
-curl -X GET http://localhost:8080/api/github/rate-limit \
-  -H "Cookie: GITNOTE_SESSION=your-session-id"
-----
-
-'''
-
-[[resources-summary]]
-=== 커밋 요약 API
-
-AI를 활용하여 커밋 히스토리를 요약하는 API입니다.
-
-[[resources-summary-commits]]
-==== 커밋 요약 생성
-
-지정된 기간의 커밋 내역을 AI로 요약합니다.
-
-===== 요청 필드
-
-include::{snippets}/summary-controller-test/summarize-commits/request-fields.adoc[]
-
-===== 요청
-
-include::{snippets}/summary-controller-test/summarize-commits/http-request.adoc[]
-
-===== 응답
-
-include::{snippets}/summary-controller-test/summarize-commits/http-response.adoc[]
-
-===== 응답 필드
-
-include::{snippets}/summary-controller-test/summarize-commits/response-fields.adoc[]
-
-===== 예시
-
-[source,bash]
-----
-curl -X POST http://localhost:8080/api/summary/commits \
-  -H "Content-Type: application/json" \
-  -H "Cookie: GITNOTE_SESSION=your-session-id" \
-  -d '{
-    "owner": "testuser",
-    "repo": "testrepo",
-    "since": "2024-01-01",
-    "until": "2024-01-31"
-  }'
-----
 
 '''
 
@@ -492,21 +417,6 @@ include::{snippets}/s3-controller-test/upload-commit-log/http-response.adoc[]
 
 include::{snippets}/s3-controller-test/upload-commit-log/response-fields.adoc[]
 
-===== 예시
-
-[source,bash]
-----
-curl -X POST http://localhost:8080/api/s3/upload \
-  -H "Content-Type: application/json" \
-  -d '{
-    "username": "testuser",
-    "repositoryName": "testuser/testrepo",
-    "startDate": "2024-01-01",
-    "endDate": "2024-01-31",
-    "content": "커밋 로그 내용..."
-  }'
-----
-
 '''
 
 [[resources-s3-list]]
@@ -530,12 +440,71 @@ include::{snippets}/s3-controller-test/get-my-commit-logs/http-response.adoc[]
 
 include::{snippets}/s3-controller-test/get-my-commit-logs/response-fields.adoc[]
 
-===== 예시
+'''
 
-[source,bash]
+[[resources-s3-report]]
+=== S3 보고서 생성 API
+
+S3에 저장된 커밋 로그를 기반으로 AI 보고서를 생성하는 API입니다.
+
+[[resources-s3-report-generate]]
+==== AI 보고서 생성
+
+엔드포인트: `GET /api/s3/report`
+
+S3에 저장된 파일을 읽어 AI 기반 보고서를 생성합니다.
+
+===== 요청 파라미터
+
+[cols="1,1,3"]
+|===
+|파라미터|타입|설명
+
+|key
+|String
+|S3에 저장된 파일 키 (경로 포함)
+
+|style
+|String
+|보고서 생성 스타일 (기본값: summary, 선택사항)
+|===
+
+===== 응답 예시
+
+[source,json]
 ----
-curl -X GET "http://localhost:8080/api/s3/list?username=testuser"
+{
+  "summary": "AI가 생성한 커밋 요약 보고서"
+}
 ----
+
+'''
+
+[[resources-ddb-report]]
+=== DynamoDB 보고서 저장 API
+
+생성된 보고서를 DynamoDB에 저장하는 API입니다.
+
+[[resources-ddb-report-save]]
+==== 보고서 저장
+
+사용자 보고서를 DynamoDB에 저장합니다.
+
+===== 요청 필드
+
+include::{snippets}/ddb-report-controller-test/save-report/request-fields.adoc[]
+
+===== 요청
+
+include::{snippets}/ddb-report-controller-test/save-report/http-request.adoc[]
+
+===== 응답
+
+include::{snippets}/ddb-report-controller-test/save-report/http-response.adoc[]
+
+===== 응답 필드
+
+include::{snippets}/ddb-report-controller-test/save-report/response-fields.adoc[]
 
 '''
 
@@ -702,3 +671,4 @@ include::{snippets}/user-preset-controller-test/update-report-frequency/response
 
 [.text-center]
 _Generated with Spring REST Docs_
+
