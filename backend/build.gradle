@@ -49,6 +49,7 @@ dependencies {
 	implementation("org.springframework.ai:spring-ai-client-chat:1.1.0")
     // AWS S3 SDK
     implementation 'io.awspring.cloud:spring-cloud-aws-starter-s3:3.1.1'
+	implementation 'io.awspring.cloud:spring-cloud-aws-starter-dynamodb:3.1.1'
 }
 
 tasks.named('test') {

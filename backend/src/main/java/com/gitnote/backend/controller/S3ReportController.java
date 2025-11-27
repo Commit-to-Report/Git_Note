@@ -35,7 +35,10 @@ public class S3ReportController {
     private String bucketName;
 
     @GetMapping("/report")
-    public ResponseEntity<?> generateReport(@RequestParam String key) {
+    public ResponseEntity<?> generateReport(
+            @RequestParam String key,
+            @RequestParam(defaultValue = "summary") String style
+    ) {
         S3Client s3 = S3Client.builder()
                 .region(Region.AP_NORTHEAST_2)
                 .credentialsProvider(
@@ -46,7 +49,6 @@ public class S3ReportController {
                 .build();
 
         try {
-            // URL 인코딩 문제 예방
             key = java.net.URLDecoder.decode(key, StandardCharsets.UTF_8);
 
             GetObjectRequest request = GetObjectRequest.builder()
@@ -57,7 +59,7 @@ public class S3ReportController {
             InputStream s3InputStream = s3.getObject(request);
             String content = new Scanner(s3InputStream, StandardCharsets.UTF_8).useDelimiter("\\A").next();
 
-            String summary = geminiApiService.generateContent(content);
+            String summary = geminiApiService.generateContent(content, style);
 
             return ResponseEntity.ok(Map.of("summary", summary));
 
@@ -73,5 +75,6 @@ public class S3ReportController {
                     .body(Map.of("error", "Gemini 요약 실패: " + e.getMessage()));
         }
     }
+
 
 }
