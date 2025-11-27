@@ -1,4 +1,26 @@
 # GitNote
+
+GitNote는 GitHub OAuth를 통해 로그인하여 리포지토리의 커밋 내역을 조회하고 텍스트 파일로 내보낼 수 있는 웹 애플리케이션입니다.
+
+## ✨ 주요 기능
+
+- 🔐 GitHub OAuth 로그인
+- 📦 사용자의 모든 리포지토리 조회
+- 📅 날짜 범위를 지정한 커밋 검색
+- 📝 커밋 내역을 상세하게 조회
+
+## 🚀 실행 방법
+
+### 1. Backend 서버 실행
+
+```sh
+cd [프로젝트 경로]/Git_Note/backend
+./gradlew bootRun
+```
+
+### 2. Frontend 서버 실행 (새 터미널에서)
+
+```sh
 ![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
 > 뱃지가 Failing(빨간색)으로 바뀌면 김지윤에게 알려주세요.
 
@@ -69,6 +91,44 @@ python3 -m http.server 5173
 3. **기능 활용**
    -텍스트 복사: 조회된 내역을 클립보드에 복사하여 붙여넣기 가능
    -☁️ S3 업로드: 버튼을 클릭하여 커밋 내역을 AWS S3 클라우드에 텍스트 파일로 영구 저장 (자동으로 중복 파일명 처리됨)
+
+---
+
+## 🛠️ 기술 스택
+
+### Backend
+
+- Java 17+
+- Spring Boot 3.x
+- Spring WebFlux (WebClient)
+- GitHub REST API v3
+
+### Frontend
+
+- HTML5, CSS3, JavaScript (Vanilla)
+- GitHub OAuth 2.0
+
+### 3. 브라우저에서 접속
+
+```
+http://localhost:5173
+```
+
+---
+
+## 📖 사용 방법
+
+1. **GitHub 로그인**
+
+   - 메인 페이지에서 "GitHub으로 로그인" 클릭
+   - GitHub 권한 승인
+
+2. **커밋 조회**
+
+   - 대시보드에서 "📝 커밋 조회하기" 클릭
+   - 리포지토리 선택
+   - 날짜 범위 지정 (시작일 ~ 종료일)
+   - "🔍 커밋 조회" 버튼 클릭
 
 ---
 

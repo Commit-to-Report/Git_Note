@@ -12,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -38,23 +37,17 @@ public class GitHubOAuthController {
 
     @GetMapping("/api/github/client-id")
     public ResponseEntity<Map<String, String>> getClientId() {
-        Map<String, String> response = new HashMap<>();
-        response.put("clientId", clientId);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(Map.of("clientId", clientId));
     }
 
     @GetMapping("/api/github/user")
     public ResponseEntity<?> getUserInfo(@RequestParam("code") String code, HttpSession session) {
         try {
             String accessToken = gitHubService.getAccessToken(code);
-
-            if (accessToken == null) {
-                Map<String, String> error = new HashMap<>();
-                error.put("error", "Failed to get access token");
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
-            }
+            if (accessToken == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Failed to get access token"));
 
             GitHubUserInfo userInfo = gitHubService.getUserInfo(accessToken);
+            if (userInfo == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Failed to get user information"));
 
             if (userInfo == null) {
                 Map<String, String> error = new HashMap<>();
@@ -68,27 +61,19 @@ public class GitHubOAuthController {
 
             return ResponseEntity.ok(userInfo);
         } catch (Exception e) {
-            Map<String, String> error = new HashMap<>();
-            error.put("error", "Error: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "Error: " + e.getMessage()));
         }
     }
 
     @PostMapping("/api/logout")
     public ResponseEntity<Map<String, String>> logout(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-        Map<String, String> response = new HashMap<>();
-
         if (session != null) {
             String accessToken = (String) session.getAttribute("accessToken");
-            if (accessToken != null) {
-                gitHubService.revokeToken(accessToken);
-            }
+            if (accessToken != null) gitHubService.revokeToken(accessToken);
             session.invalidate();
         }
-
-        response.put("message", "Logged out successfully");
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(Map.of("message", "Logged out successfully"));
     }
 
     /**

@@ -31,6 +31,7 @@
 
 2. **Backend 설정 파일 수정**
    ```properties
+   # backend/src/main/resources/application-test.properties
    # backend/src/main/resources/application.properties
    github.client.id=YOUR_CLIENT_ID
    github.client.secret=YOUR_CLIENT_SECRET
