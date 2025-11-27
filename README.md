@@ -21,9 +21,92 @@ cd [프로젝트 경로]/Git_Note/backend
 ### 2. Frontend 서버 실행 (새 터미널에서)
 
 ```sh
+![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
+> 뱃지가 Failing(빨간색)으로 바뀌면 김지윤에게 알려주세요.
+
+GitNote는 GitHub OAuth를 통해 로그인하여 리포지토리의 커밋 내역을 조회하고, **AWS S3에 백업**하거나 **AI 주간 보고서**를 생성할 수 있는 웹 애플리케이션입니다.
+
+## ✨ 주요 기능
+- 🔐 **GitHub OAuth 로그인**
+- 📦 **사용자의 모든 리포지토리 조회**
+- 📅 **날짜 범위를 지정한 커밋 검색**
+- 📝 **커밋 내역 상세 조회 및 텍스트 복사**
+- ☁️ **AWS S3 업로드: 커밋 내역을 텍스트 파일로 클라우드에 영구 저장 (자동 중복 방지)**
+
+## 🛠️ 기술 스택
+### Backend
+- **Java 17+**, **Spring Boot 3.x**
+- **Spring WebFlux (WebClient)**
+- **AWS SDK 3.1.1/3.1.1** (S3, DynamoDB)
+- **Google Gemini API**
+
+### Frontend
+- HTML5, CSS3, JavaScript (Vanilla)
+- GitHub OAuth 2.0
+
+---
+## 🚀 실행 방법
+
+### 1. Backend 서버 실행 (IntelliJ IDEA)
+터미널이 아닌 **IntelliJ IDEA**를 사용하여 실행합니다.
+
+1.  **프로젝트 열기**: IntelliJ에서 `Git_Note/backend` 폴더를 엽니다.
+2.  **Gradle 로딩**: 오른쪽 `Gradle` 탭에서 새로고침(🔄)을 눌러 의존성을 다운로드합니다.
+3.  **환경 변수 설정 (필수 ⭐)**:
+    - 상단 메뉴 `Run` > `Edit Configurations...` > `BackendApplication` 선택
+    - **Environment variables**에 아래 키들을 추가합니다.
+        - `AWS_ACCESS_KEY`: AWS 액세스 키
+        - `AWS_SECRET_KEY`: AWS 시크릿 키
+        - `AWS_S3_BUCKET`: S3 버킷 이름 (예: gitnote-bucket)
+        - `GEMINI_API_KEY`: Google Gemini API 키
+        - `GITHUB_CLIENT_SECRET`: GitHub OAuth Client Secret
+4.  **서버 실행**:
+    - `BackendApplication.java` 파일을 엽니다.
+    - 코드 옆의 **초록색 재생 버튼(▶)**을 클릭하여 서버를 시작합니다.
+    - 로그에 `Tomcat started on port(s): 8080`이 뜨면 성공입니다.
+
+### 2. Frontend 서버 실행 (터미널)
+프론트엔드는 간단한 파이썬 웹 서버를 사용합니다.
+
+```bash
 cd [프로젝트 경로]/Git_Note/frontend
 python3 -m http.server 5173
 ```
+---
+
+## 📖 사용 방법
+
+1. **GitHub 로그인**
+
+   - 메인 페이지에서 "GitHub으로 로그인" 클릭
+   - GitHub 권한 승인
+
+2. **커밋 조회**
+
+   - 대시보드에서 "📝 커밋 조회하기" 클릭
+   - 리포지토리 선택
+   - 날짜 범위 지정 (시작일 ~ 종료일)
+   - "🔍 커밋 조회" 버튼 클릭
+   - 
+3. **기능 활용**
+   -텍스트 복사: 조회된 내역을 클립보드에 복사하여 붙여넣기 가능
+   -☁️ S3 업로드: 버튼을 클릭하여 커밋 내역을 AWS S3 클라우드에 텍스트 파일로 영구 저장 (자동으로 중복 파일명 처리됨)
+
+---
+
+## 🛠️ 기술 스택
+
+### Backend
+
+- Java 17+
+- Spring Boot 3.x
+- Spring WebFlux (WebClient)
+- GitHub REST API v3
+
+### Frontend
+
+- HTML5, CSS3, JavaScript (Vanilla)
+- GitHub OAuth 2.0
 
 ### 3. 브라우저에서 접속
 
