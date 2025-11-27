@@ -49,8 +49,25 @@ dependencies {
 	implementation("org.springframework.ai:spring-ai-client-chat:1.1.0")
     // AWS S3 SDK
     implementation 'io.awspring.cloud:spring-cloud-aws-starter-s3:3.1.1'
+
+    // AWS DynamoDB SDK
+    implementation 'io.awspring.cloud:spring-cloud-aws-starter-dynamodb:3.1.1'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+tasks.named('bootRun') {
+	def envFile = file('.env')
+	if (envFile.exists()) {
+		envFile.readLines().each { line ->
+			if (line && line.contains('=')) {
+				def parts = line.split('=', 2)
+				if (parts.length == 2) {
+					environment parts[0].trim(), parts[1].trim()
+				}
+			}
+		}
+	}
 }
