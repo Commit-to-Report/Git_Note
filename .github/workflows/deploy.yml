@@ -3,7 +3,8 @@ name: Deploy to Amazon ECR
 on:
   push:
     branches: [ "main" ]
-
+  workflow_dispatch: {} # 수동 실행 코드  
+ 
 permissions:
   contents: read
 
