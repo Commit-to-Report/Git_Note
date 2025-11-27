@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.4.12'
 	id 'io.spring.dependency-management' version '1.1.7'
+	id 'org.asciidoctor.jvm.convert' version '3.3.2'
 }
 
 group = 'com.gitnote'
@@ -18,6 +19,7 @@ configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
+	asciidoctorExtensions
 }
 
 repositories {
@@ -25,6 +27,7 @@ repositories {
 }
 ext {
 	set('springAiVersion', "1.0.0-M6")
+	snippetsDir = file('build/generated-snippets')
 }
 
 dependencyManagement {
@@ -45,6 +48,11 @@ dependencies {
 	testImplementation 'org.junit.jupiter:junit-jupiter'
 	testImplementation 'org.assertj:assertj-core:3.25.3'
 	testImplementation "org.wiremock:wiremock-standalone:3.2.0"
+	
+	// Spring REST Docs
+	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+	asciidoctorExtensions 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+	
 	implementation 'io.netty:netty-resolver-dns-native-macos:4.1.99.Final:osx-aarch_64'
 	implementation("org.springframework.ai:spring-ai-client-chat:1.1.0")
 
@@ -58,7 +66,14 @@ dependencies {
 }
 
 tasks.named('test') {
+	outputs.dir snippetsDir
 	useJUnitPlatform()
+}
+
+tasks.named('asciidoctor') {
+	configurations 'asciidoctorExtensions'
+	inputs.dir snippetsDir
+	dependsOn test
 }
 
 tasks.named('bootRun') {
