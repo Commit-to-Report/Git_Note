@@ -2,6 +2,7 @@ package com.gitnote.backend.dto;
 
 public class S3UploadRequest {
     private String repositoryName;
+    private String username;
     private String startDate;
     private String endDate;
     private String content;
@@ -18,4 +19,7 @@ public class S3UploadRequest {
 
     public String getContent() { return content; }
     public void setContent(String content) { this.content = content; }
+
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
 }

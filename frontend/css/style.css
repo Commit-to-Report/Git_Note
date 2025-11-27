@@ -1,3 +1,20 @@
+/* 컨테이너의 위쪽 여백(기존 50px)을 줄여서 헤더와 가깝게 붙입니다 */
+.container {
+    margin-top: 10px !important; /* 중요: !important로 기존 설정 덮어쓰기 */
+}
+
+/* "로그인 성공" 제목이 가진 기본 위쪽 여백을 없앱니다 */
+h1 {
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+/* 화면 전체 배경색이 잘 적용되도록 설정 */
+body {
+    min-height: 100vh;
+    background-color: #f5f5f5;
+}
+
 body {
     font-family: Arial, sans-serif;
     margin: 0;

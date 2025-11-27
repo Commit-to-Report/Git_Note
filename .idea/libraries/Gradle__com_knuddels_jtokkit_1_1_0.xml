@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Gradle: com.knuddels:jtokkit:1.1.0" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="com.knuddels" artifactId="jtokkit" version="1.1.0" baseVersion="1.1.0" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.knuddels/jtokkit/1.1.0/b7370f801db3eb8c7c6a2c2c06231909ac6de0b0/jtokkit-1.1.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
