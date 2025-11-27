@@ -1,0 +1,73 @@
+/* header.css */
+body {
+    margin: 0;
+    font-family: 'Noto Sans KR', sans-serif; /* 폰트는 임의 설정 */
+}
+
+.app-header {
+    display: flex;
+    justify-content: space-between; /* 양쪽 끝으로 배치 */
+    align-items: center;
+    padding: 0 20px;
+    height: 60px;
+    background-color: #fff;
+    border-bottom: 1px solid #ddd; /* 하단 구분선 */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* 왼쪽 네비게이션 메뉴 */
+.nav-menu {
+    display: flex;
+    gap: 20px; /* 메뉴 사이 간격 */
+}
+
+.nav-link {
+    text-decoration: none;
+    color: #333;
+    font-size: 16px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.nav-link:hover {
+    color: #007bff; /* 마우스 올렸을 때 색상 */
+}
+
+/* 오른쪽 사용자 영역 */
+.user-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.user-icon {
+    width: 32px;
+    height: 32px;
+    background-color: #333;
+    color: #fff;
+    border-radius: 50%; /* 원형 아이콘 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+}
+
+.logout-btn {
+    text-decoration: none;
+    color: #666;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.logout-btn:hover {
+    color: #d9534f; /* 로그아웃 호버 시 빨간색 계열 */
+}

@@ -42,10 +42,23 @@ public class GitHubOAuthController {
 
             session.setAttribute("accessToken", accessToken);
             session.setAttribute("username", userInfo.getLogin());
+            session.setAttribute("email", userInfo.getEmail());
             return ResponseEntity.ok(userInfo);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "Error: " + e.getMessage()));
         }
+    }
+
+    @GetMapping("/api/user/session")
+    public ResponseEntity<?> checkSession(HttpSession session) {
+        String username = (String) session.getAttribute("username");
+        if (username == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "No active session"));
+        }
+        return ResponseEntity.ok(Map.of(
+            "username", username,
+            "email", session.getAttribute("email") != null ? session.getAttribute("email") : ""
+        ));
     }
 
     @PostMapping("/api/logout")

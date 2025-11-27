@@ -3,6 +3,7 @@ name: Deploy to Amazon ECR
 on:
   push:
     branches: [ "main" ]
+  workflow_dispatch: {} # 수동 실행 버튼
 
 permissions:
   contents: read
@@ -41,7 +42,8 @@ jobs:
 
     - name: Build, tag, and push image to Amazon ECR
       env:
-        ECR_REGISTRY: 061039804626.dkr.ecr.ap-northeast-2.amazonaws.com
+        # AWS 로그인 후 자동으로 ECR Registry 주소를 가져옴
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }} # <--- 수정됨: secrets 대신 로그인 아웃풋 사용
         ECR_REPOSITORY: gitnote-repo
         IMAGE_TAG: latest
       run: |
