@@ -4,335 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>GitNote - 커밋 조회</title>
-    <style>
-        * {
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
-        }
 
-        body {
-          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-            Oxygen, Ubuntu, Cantarell, sans-serif;
-          background-color: #f5f5f5;
-          min-height: 100vh;
-          padding: 20px;
-        }
-
-        .container {
-          max-width: 900px;
-          margin: 20px auto;
-          background: white;
-          border: 1px solid #ddd;
-          border-radius: 8px;
-          padding: 30px;
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        h1 {
-          color: #333;
-          margin-bottom: 20px;
-          font-size: 24px;
-          text-align: center;
-        }
-
-        .header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 20px;
-          padding-bottom: 20px;
-          border-bottom: 1px solid #ddd;
-        }
-
-        .user-info {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          font-size: 14px;
-          color: #666;
-        }
-
-        .user-info img {
-          width: 32px;
-          height: 32px;
-          border-radius: 50%;
-        }
-
-        .user-info .username {
-          font-weight: 500;
-          color: #333;
-        }
-
-        .btn-logout {
-          padding: 8px 16px;
-          background: #d73a49;
-          color: white;
-          border: none;
-          border-radius: 6px;
-          cursor: pointer;
-          font-size: 14px;
-          transition: background-color 0.2s;
-        }
-
-        .btn-logout:hover {
-          background: #b52a3a;
-        }
-
-        .filter-section {
-          background: #f9f9f9;
-          padding: 20px;
-          border-radius: 6px;
-          margin-bottom: 20px;
-          border: 1px solid #e1e4e8;
-        }
-
-        .form-row {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 15px;
-          margin-bottom: 15px;
-        }
-
-        .form-group {
-          display: flex;
-          flex-direction: column;
-        }
-
-        .form-group.full-width {
-          grid-column: 1 / -1;
-        }
-
-        label {
-          margin-bottom: 6px;
-          color: #333;
-          font-weight: 500;
-          font-size: 14px;
-        }
-
-        select,
-        input[type="date"] {
-          padding: 8px 12px;
-          border: 1px solid #d1d5da;
-          border-radius: 6px;
-          font-size: 14px;
-          transition: border-color 0.2s;
-          background-color: white;
-        }
-
-        select:disabled,
-        input[type="date"]:disabled {
-          cursor: not-allowed;
-          background-color: #f6f8fa;
-          opacity: 0.6;
-        }
-
-        select:focus,
-        input[type="date"]:focus {
-          outline: none;
-          border-color: #0366d6;
-        }
-
-        select:hover:not(:disabled),
-        input[type="date"]:hover:not(:disabled) {
-          border-color: #0366d6;
-        }
-
-        .button-group {
-          display: flex;
-          gap: 10px;
-          margin-top: 15px;
-        }
-
-        .btn {
-          padding: 8px 16px;
-          border: none;
-          border-radius: 6px;
-          font-size: 14px;
-          cursor: pointer;
-          transition: background-color 0.2s;
-        }
-
-        .btn-primary {
-          background: #24292e;
-          color: white;
-        }
-
-        .btn-primary:hover {
-          background: #444;
-        }
-
-        .btn-primary:disabled {
-          background: #ccc;
-          cursor: not-allowed;
-        }
-
-        .btn-success {
-          background: #28a745;
-          color: white;
-        }
-
-        .btn-success:hover {
-          background: #218838;
-        }
-
-        .btn-success:disabled {
-          background: #ccc;
-          cursor: not-allowed;
-        }
-
-        // 1126 새로추가
-        .btn-aws {
-          background: #FF9900;
-          color: white;
-        }
-
-        .btn-aws:hover {
-          background: #e08900;
-        }
-
-        .btn-aws:disabled {
-          background: #ccc;
-          cursor: not-allowed;
-        }
-
-        .loading {
-          text-align: center;
-          padding: 40px;
-          color: #666;
-          font-size: 14px;
-        }
-
-        .loading::after {
-          content: "...";
-          animation: dots 1.5s steps(4, end) infinite;
-        }
-
-        @keyframes dots {
-          0%,
-          20% {
-            content: ".";
-          }
-          40% {
-            content: "..";
-          }
-          60%,
-          100% {
-            content: "...";
-          }
-        }
-
-        .error-message {
-          background: #fff5f5;
-          color: #d73a49;
-          padding: 12px;
-          border-radius: 6px;
-          margin-bottom: 15px;
-          border: 1px solid #fdd;
-          font-size: 14px;
-        }
-
-        .success-message {
-          background: #f0fff4;
-          color: #28a745;
-          padding: 12px;
-          border-radius: 6px;
-          margin-bottom: 15px;
-          border: 1px solid #c6f6d5;
-          font-size: 14px;
-        }
-
-        .info-message {
-          background: #f0f8ff;
-          color: #0366d6;
-          padding: 12px;
-          border-radius: 6px;
-          margin-bottom: 15px;
-          border: 1px solid #bee5eb;
-          font-size: 14px;
-        }
-
-        .commits-section {
-          margin-top: 20px;
-        }
-
-        .commits-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 15px;
-        }
-
-        .commits-header h2 {
-          color: #333;
-          font-size: 18px;
-          font-weight: 500;
-        }
-
-        .commit-count {
-          background: #f6f8fa;
-          color: #333;
-          padding: 4px 10px;
-          border-radius: 12px;
-          font-size: 13px;
-          border: 1px solid #e1e4e8;
-        }
-
-        .empty-state {
-          text-align: center;
-          padding: 40px 20px;
-          color: #666;
-        }
-
-        .empty-state-icon {
-          font-size: 48px;
-          margin-bottom: 15px;
-        }
-
-        .empty-state h3 {
-          color: #333;
-          margin-bottom: 8px;
-          font-size: 16px;
-        }
-
-        .empty-state p {
-          color: #666;
-          font-size: 14px;
-        }
-
-        @media (max-width: 768px) {
-          body {
-            padding: 10px;
-          }
-
-          .container {
-            padding: 20px;
-          }
-
-          .form-row {
-            grid-template-columns: 1fr;
-          }
-
-          .header {
-            flex-direction: column;
-            gap: 10px;
-            align-items: flex-start;
-          }
-
-          h1 {
-            font-size: 20px;
-          }
-
-          .button-group {
-            flex-direction: column;
-            width: 100%;
-          }
-
-          .btn {
-            width: 100%;
-          }
-        }
-    </style>
+    <link rel="stylesheet" href="./css/commits.css" />
 </head>
 <body>
 <div class="container">
@@ -392,6 +65,10 @@
             <button class="btn btn-aws" id="s3UploadBtn" onclick="uploadToS3()" disabled style="display: none">
                 ☁️ S3 업로드
             </button>
+
+            <button class="btn btn-report" id="generateReportBtn" onclick="goToReport()" disabled style="display: none">
+                📄 보고서 생성
+            </button>
         </div>
     </div>
 
@@ -421,396 +98,148 @@
     const API_BASE = "http://localhost:8080";
     let currentCommits = [];
     let selectedRepo = null;
-    let currentCommitsText = ""; // 현재 커밋 텍스트 저장
+    let currentCommitsText = "";
+    let uploadedFileUrl = ""; // S3 업로드 URL 저장
 
     // 페이지 로드 시 초기화
     async function init() {
-      console.log("🔧 Initializing commits page...");
+        const username = sessionStorage.getItem("username");
+        const avatar = sessionStorage.getItem("avatar");
 
-      // 사용자 정보 확인
-      const username = sessionStorage.getItem("username");
-      const avatar = sessionStorage.getItem("avatar");
-
-      console.log("SessionStorage - Username:", username);
-      console.log("SessionStorage - Avatar:", avatar ? "있음" : "없음");
-
-      if (!username) {
-        console.warn("⚠️ Username not found in sessionStorage");
-        showMessage(
-          "⚠️ 로그인이 필요합니다. 로그인 페이지로 이동합니다...",
-          "error"
-        );
-        setTimeout(() => {
-          sessionStorage.clear();
-          window.location.href = "index.html";
-        }, 2000);
-        return;
-      }
-
-      document.getElementById("username").textContent = username;
-      document.getElementById("userAvatar").src =
-        avatar || "https://via.placeholder.com/50";
-
-      // 기본 날짜 설정 (최근 7일)
-      const today = new Date();
-      const weekAgo = new Date(today);
-      weekAgo.setDate(today.getDate() - 7);
-
-      document.getElementById("untilDate").value = today
-        .toISOString()
-        .split("T")[0];
-      document.getElementById("sinceDate").value = weekAgo
-        .toISOString()
-        .split("T")[0];
-
-      // Rate Limit 확인 (선택적)
-      checkRateLimit();
-
-      // 리포지토리 목록 로드
-      await loadRepositories();
-    }
-
-    // GitHub API Rate Limit 확인
-    async function checkRateLimit() {
-      try {
-        const response = await fetch(`${API_BASE}/api/github/rate-limit`, {
-          credentials: "include",
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          const core = data.resources?.core;
-
-          if (core) {
-            console.log(
-              `GitHub API Rate Limit: ${core.remaining}/${
-                core.limit
-              } (Reset: ${new Date(core.reset * 1000).toLocaleString(
-                "ko-KR"
-              )})`
-            );
-
-            // Rate limit이 낮으면 경고 표시
-            if (core.remaining < 10) {
-              showMessage(
-                `⚠️ GitHub API 요청 한도가 얼마 남지 않았습니다. (${
-                  core.remaining
-                }/${core.limit}) 재설정 시간: ${new Date(
-                  core.reset * 1000
-                ).toLocaleTimeString("ko-KR")}`,
-                "error"
-              );
-            }
-          }
-        }
-      } catch (error) {
-        console.error("Rate limit check failed:", error);
-      }
-    }
-
-    // 리포지토리 목록 로드
-    async function loadRepositories() {
-      const select = document.getElementById("repositorySelect");
-      const filterSection = document.querySelector(".filter-section");
-
-      // 기존 재시도 버튼 제거
-      const existingRetryBtn = document.getElementById("retryBtn");
-      if (existingRetryBtn) {
-        existingRetryBtn.remove();
-      }
-
-      select.innerHTML =
-        '<option value="">리포지토리를 불러오는 중...</option>';
-      select.disabled = true;
-
-      console.log(
-        "🔄 Loading repositories from:",
-        `${API_BASE}/api/github/repositories`
-      );
-
-      try {
-        const response = await fetch(`${API_BASE}/api/github/repositories`, {
-          method: "GET",
-          credentials: "include",
-          headers: {
-            Accept: "application/json",
-          },
-        });
-
-        console.log("Response status:", response.status);
-
-        // 응답 데이터 먼저 읽기
-        const data = await response.json();
-        console.log("✅ Response received:", {
-          status: response.status,
-          count: data.count,
-          hasRepositories: data.repositories ? "Yes" : "No",
-          repositoriesLength: data.repositories
-            ? data.repositories.length
-            : 0,
-        });
-
-        // 첫 번째 리포지토리 데이터 확인 (디버깅용)
-        if (data.repositories && data.repositories.length > 0) {
-          console.log("📦 First repository:", data.repositories[0]);
-        }
-
-        // 로그인 필요
-        if (!response.ok) {
-          if (data.needLogin === "true" || response.status === 401) {
-            showMessage(
-              "⚠️ 세션이 만료되었습니다. 다시 로그인해주세요.",
-              "error"
-            );
+        if (!username) {
+            showMessage("⚠️ 로그인이 필요합니다. 로그인 페이지로 이동합니다...", "error");
             setTimeout(() => {
-              sessionStorage.clear();
-              window.location.href = "index.html";
+                sessionStorage.clear();
+                window.location.href = "index.html";
             }, 2000);
             return;
-          }
-
-          // Rate limit
-          if (response.status === 429) {
-            select.innerHTML = '<option value="">⏱️ API 한도 초과</option>';
-            showMessage(
-              "⚠️ " + (data.error || "GitHub API 요청 한도를 초과했습니다."),
-              "error"
-            );
-            addRetryButton();
-            return;
-          }
-
-          // 기타 에러
-          throw new Error(
-            data.error || "리포지토리를 불러오는데 실패했습니다."
-          );
         }
 
-        // 성공
-        select.innerHTML =
-          '<option value="">리포지토리를 선택하세요</option>';
+        document.getElementById("username").textContent = username;
+        document.getElementById("userAvatar").src =
+            avatar || "https://via.placeholder.com/50";
 
-        if (data.repositories && data.repositories.length > 0) {
-          data.repositories.forEach((repo) => {
-            // full_name(snake_case) 또는 fullName(camelCase) 지원
-            const fullName = repo.fullName || repo.full_name;
-            const isPrivate = repo.isPrivate || repo.private;
+        const today = new Date();
+        const weekAgo = new Date(today);
+        weekAgo.setDate(today.getDate() - 7);
 
-            // 필수 데이터 검증
-            if (!fullName || !repo.name) {
-              console.warn(
-                "⚠️ Invalid repository data (missing name or fullName):",
-                repo
-              );
-              return; // 이 리포지토리는 건너뛰기
+        document.getElementById("untilDate").value = today.toISOString().split("T")[0];
+        document.getElementById("sinceDate").value = weekAgo.toISOString().split("T")[0];
+
+        await loadRepositories();
+    }
+
+    async function loadRepositories() {
+        const select = document.getElementById("repositorySelect");
+        select.innerHTML = '<option value="">리포지토리를 불러오는 중...</option>';
+        select.disabled = true;
+
+        try {
+            const response = await fetch(`${API_BASE}/api/github/repositories`, { credentials: "include" });
+            const data = await response.json();
+
+            if (!response.ok) throw new Error(data.error || "리포지토리를 불러오는데 실패했습니다.");
+
+            select.innerHTML = '<option value="">리포지토리를 선택하세요</option>';
+            if (data.repositories && data.repositories.length > 0) {
+                data.repositories.forEach((repo) => {
+                    const fullName = repo.fullName || repo.full_name;
+                    if (!fullName || !repo.name) return;
+                    const option = document.createElement("option");
+                    option.value = JSON.stringify({ owner: repo.owner || fullName.split("/")[0], name: repo.name, fullName });
+                    option.textContent = fullName + (repo.isPrivate ? " (Private)" : "");
+                    select.appendChild(option);
+                });
+            } else {
+                select.innerHTML = '<option value="">리포지토리가 없습니다</option>';
             }
+            select.disabled = false;
 
-            const parts = fullName.split("/");
-            const owner = parts.length > 1 ? parts[0] : repo.name;
-
-            const option = document.createElement("option");
-            option.value = JSON.stringify({
-              owner: owner,
-              name: repo.name,
-              fullName: fullName,
+            select.addEventListener("change", function () {
+                const selectedRepoInfo = document.getElementById("selectedRepoInfo");
+                if (this.value) {
+                    try {
+                        const repoData = JSON.parse(this.value);
+                        selectedRepo = repoData;
+                        selectedRepoInfo.innerHTML = `선택됨: <strong>${repoData.fullName}</strong>`;
+                        selectedRepoInfo.style.color = "#28a745";
+                    } catch (e) {
+                        selectedRepoInfo.innerHTML = "선택 오류";
+                        selectedRepoInfo.style.color = "#d73a49";
+                    }
+                } else {
+                    selectedRepoInfo.innerHTML = "";
+                    selectedRepo = null;
+                }
             });
-            option.textContent = `${fullName}${
-              isPrivate ? " (Private)" : ""
-            }`;
-            select.appendChild(option);
-          });
 
-          showMessage(
-            `✅ ${data.count}개의 리포지토리를 불러왔습니다.`,
-            "success"
-          );
-        } else {
-          select.innerHTML =
-            '<option value="">리포지토리가 없습니다</option>';
-          showMessage("ℹ️ 리포지토리가 없습니다.", "info");
+        } catch (error) {
+            showMessage("❌ " + error.message, "error");
         }
-
-        select.disabled = false;
-
-        // 리포지토리 선택 이벤트 리스너 추가
-        select.addEventListener("change", function () {
-          const selectedRepoInfo =
-            document.getElementById("selectedRepoInfo");
-
-          if (this.value) {
-            try {
-              const repoData = JSON.parse(this.value);
-              console.log("✅ 리포지토리 선택됨:", repoData);
-              selectedRepoInfo.innerHTML = `선택됨: <strong>${repoData.fullName}</strong>`;
-              selectedRepoInfo.style.color = "#28a745";
-            } catch (e) {
-              console.error("❌ 리포지토리 데이터 파싱 오류:", e);
-              selectedRepoInfo.innerHTML = `선택 오류`;
-              selectedRepoInfo.style.color = "#d73a49";
-            }
-          } else {
-            selectedRepoInfo.innerHTML = "";
-          }
-        });
-      } catch (error) {
-        console.error("❌ Repository loading error:", error);
-
-        select.innerHTML = '<option value="">불러오기 실패</option>';
-        select.disabled = false;
-
-        showMessage("❌ " + error.message, "error");
-        addRetryButton();
-      }
     }
 
-    // 재시도 버튼 추가
-    function addRetryButton() {
-      const existingRetryBtn = document.getElementById("retryBtn");
-      if (existingRetryBtn) return; // 이미 있으면 추가하지 않음
-
-      const retryBtn = document.createElement("button");
-      retryBtn.id = "retryBtn";
-      retryBtn.className = "btn btn-primary";
-      retryBtn.innerHTML = "🔄 다시 불러오기";
-      retryBtn.style.marginTop = "15px";
-      retryBtn.style.marginBottom = "15px";
-      retryBtn.onclick = () => {
-        retryBtn.remove();
-        loadRepositories();
-      };
-
-      const filterSection = document.querySelector(".filter-section");
-      const buttonGroup = document.querySelector(".button-group");
-      filterSection.insertBefore(retryBtn, buttonGroup);
-    }
-
-    // 커밋 조회
     async function searchCommits() {
-      console.log("🔍 커밋 조회 시작...");
+        if (!selectedRepo) { showMessage("⚠️ 리포지토리를 선택해주세요.", "error"); return; }
 
-      const repoSelect = document.getElementById("repositorySelect");
-      const since = document.getElementById("sinceDate").value;
-      const until = document.getElementById("untilDate").value;
+        const since = document.getElementById("sinceDate").value;
+        const until = document.getElementById("untilDate").value;
+        if (!since || !until) { showMessage("⚠️ 날짜를 선택해주세요.", "error"); return; }
 
-      console.log("Select element:", {
-        exists: !!repoSelect,
-        value: repoSelect ? repoSelect.value : "N/A",
-        selectedIndex: repoSelect ? repoSelect.selectedIndex : "N/A",
-        optionsCount: repoSelect ? repoSelect.options.length : "N/A",
-      });
+        document.getElementById("loadingBox").style.display = "block";
+        document.getElementById("commitsSection").style.display = "none";
+        document.getElementById("emptyState").style.display = "none";
+        document.getElementById("searchBtn").disabled = true;
 
-      if (!repoSelect || !repoSelect.value || repoSelect.value === "") {
-        console.warn("⚠️ 리포지토리가 선택되지 않음");
-        showMessage("⚠️ 리포지토리를 선택해주세요.", "error");
-        return;
-      }
+        try {
+            const url = `${API_BASE}/api/github/commits?owner=${encodeURIComponent(selectedRepo.owner)}&repo=${encodeURIComponent(selectedRepo.name)}&since=${since}&until=${until}&includeDetails=false`;
+            const response = await fetch(url, { credentials: "include" });
+            if (!response.ok) throw new Error("커밋을 불러올 수 없습니다.");
 
-      if (!since || !until) {
-        console.warn("⚠️ 날짜가 선택되지 않음");
-        showMessage("⚠️ 날짜를 선택해주세요.", "error");
-        return;
-      }
+            const data = await response.json();
+            currentCommits = data.commits;
+            displayCommits(data.commits);
 
-      try {
-        selectedRepo = JSON.parse(repoSelect.value);
-        console.log("✅ 선택된 리포지토리:", selectedRepo);
-      } catch (e) {
-        console.error("❌ 리포지토리 데이터 파싱 실패:", e);
-        showMessage("❌ 리포지토리 데이터가 올바르지 않습니다.", "error");
-        return;
-      }
-
-      // UI 업데이트
-      document.getElementById("loadingBox").style.display = "block";
-      document.getElementById("commitsSection").style.display = "none";
-      document.getElementById("emptyState").style.display = "none";
-      document.getElementById("searchBtn").disabled = true;
-      document.getElementById("copyBtn").disabled = true;
-      document.getElementById("copyBtn").style.display = "none";
-
-      // 1126 새로추가
-      document.getElementById("copyBtn").style.display = "none";      // 복사 버튼 숨기기
-      document.getElementById("s3UploadBtn").style.display = "none";  // S3 버튼 숨기기
-
-      try {
-        const url = `${API_BASE}/api/github/commits?owner=${encodeURIComponent(
-          selectedRepo.owner
-        )}&repo=${encodeURIComponent(
-          selectedRepo.name
-        )}&since=${since}&until=${until}&includeDetails=false`;
-
-        const response = await fetch(url, {
-          credentials: "include",
-        });
-
-        if (!response.ok) {
-          throw new Error("커밋을 불러올 수 없습니다.");
+        } catch (error) {
+            showMessage("❌ " + error.message, "error");
+        } finally {
+            document.getElementById("loadingBox").style.display = "none";
+            document.getElementById("searchBtn").disabled = false;
         }
-
-        const data = await response.json();
-        currentCommits = data.commits;
-
-        displayCommits(data.commits);
-      } catch (error) {
-        showMessage(error.message, "error");
-      } finally {
-        document.getElementById("loadingBox").style.display = "none";
-        document.getElementById("searchBtn").disabled = false;
-      }
     }
 
-    // 커밋 목록 표시 (텍스트 형태)
     function displayCommits(commits) {
-      if (commits.length === 0) {
-        document.getElementById("emptyState").style.display = "block";
-        document.getElementById("copyBtn").style.display = "none";
-        return;
-      }
+        if (commits.length === 0) {
+            document.getElementById("emptyState").style.display = "block";
+            document.getElementById("copyBtn").style.display = "none";
+            document.getElementById("s3UploadBtn").style.display = "none";
+            return;
+        }
 
-      document.getElementById("commitsSection").style.display = "block";
-      document.getElementById(
-        "commitCount"
-      ).textContent = `${commits.length}개`;
+        document.getElementById("commitsSection").style.display = "block";
+        document.getElementById("commitCount").textContent = `${commits.length}개`;
 
-      const commitsList = document.getElementById("commitsList");
+        let textContent = `리포지토리: ${selectedRepo?.fullName || "Unknown"}\n`;
+        textContent += `조회 기간: ${document.getElementById("sinceDate").value} ~ ${document.getElementById("untilDate").value}\n`;
+        textContent += `총 커밋 수: ${commits.length}\n${"=".repeat(80)}\n\n`;
 
+        commits.forEach((commit, index) => {
+            const message = commit.commit?.message || "No message";
+            const authorName = commit.commit?.author?.name || "Unknown";
+            const authorEmail = commit.commit?.author?.email || "";
+            const authorDate = commit.commit?.author?.date || "";
+            const sha = commit.sha || "";
+            const url = commit.htmlUrl || commit.html_url || "";
 
+            textContent += `[${index + 1}] ${sha.substring(0, 7)}\n`;
+            textContent += `메시지: ${message}\n`;
+            textContent += `작성자: ${authorName}${authorEmail ? " <"+authorEmail+">" : ""}\n`;
+            textContent += `날짜: ${authorDate ? new Date(authorDate).toISOString() : ""}\n`;
+            textContent += `URL: ${url}\n${"=".repeat(80)}\n\n`;
+        });
 
-      // 텍스트 형태로 커밋 목록 생성
-      let textContent = "";
-      textContent += `리포지토리: ${selectedRepo?.fullName || "Unknown"}\n`;
-      textContent += `조회 기간: ${
-        document.getElementById("sinceDate").value
-      } ~ ${document.getElementById("untilDate").value}\n`;
-      textContent += `총 커밋 수: ${commits.length}\n`;
-      textContent += `${"=".repeat(80)}\n\n`;
+        currentCommitsText = textContent;
 
-      commits.forEach((commit, index) => {
-        const message = commit.commit?.message || "No message";
-        const authorName = commit.commit?.author?.name || "Unknown";
-        const authorEmail = commit.commit?.author?.email || "";
-        const authorDate = commit.commit?.author?.date || "";
-        const sha = commit.sha || "";
-        const url = commit.htmlUrl || commit.html_url || "";
-
-        const date = authorDate ? new Date(authorDate).toISOString() : "";
-
-        // 한 줄씩 구분하여 파싱하기 쉽게
-        textContent += `[${index + 1}] ${sha.substring(0, 7)}\n`;
-        textContent += `메시지: ${message}\n`;
-        textContent += `작성자: ${authorName}`;
-        if (authorEmail) textContent += ` <${authorEmail}>`;
-        textContent += `\n`;
-        textContent += `날짜: ${date}\n`;
-        textContent += `URL: ${url}\n`;
-        textContent += `${"=".repeat(80)}\n\n`;
-      });
-
-      // 전역 변수에 저장 (복사용)
-      currentCommitsText = textContent;
-
-      // pre 태그로 감싸서 텍스트 그대로 표시
-      commitsList.innerHTML = `<pre style="
+        document.getElementById("commitsList").innerHTML = `<pre style="
         white-space: pre-wrap;
         word-wrap: break-word;
         background: #f8f9fa;
@@ -824,97 +253,29 @@
         overflow-y: auto;
       ">${escapeHtml(textContent)}</pre>`;
 
-      // 복사 버튼 활성화
-      const copyBtn = document.getElementById("copyBtn");
-      copyBtn.style.display = "inline-block";
-      copyBtn.disabled = false;
+        document.getElementById("copyBtn").style.display = "inline-block";
+        document.getElementById("copyBtn").disabled = false;
+        document.getElementById("s3UploadBtn").style.display = "inline-block";
+        document.getElementById("s3UploadBtn").disabled = false;
 
-       // 1126 새로추가
-       // S3 업로드 버튼 활성화
-       const s3Btn = document.getElementById("s3UploadBtn");
-       s3Btn.style.display = "inline-block";
-       s3Btn.disabled = false;
+        // 보고서 버튼 초기화
+        const reportBtn = document.getElementById("generateReportBtn");
+        reportBtn.disabled = true;
+        reportBtn.style.display = "none";
     }
 
-
-    // 텍스트로 내보내기
-    // 텍스트 복사 함수
     async function copyCommitsText() {
-      if (!currentCommitsText) {
-        showMessage("복사할 커밋 데이터가 없습니다.", "error");
-        return;
-      }
-
-      try {
-        await navigator.clipboard.writeText(currentCommitsText);
-        showMessage("✅ 클립보드에 복사되었습니다!", "success");
-
-        // 버튼 텍스트 임시 변경
-        const copyBtn = document.getElementById("copyBtn");
-        const originalText = copyBtn.innerHTML;
-        copyBtn.innerHTML = "복사됨!";
-        copyBtn.style.background = "#28a745";
-
-        setTimeout(() => {
-          copyBtn.innerHTML = originalText;
-          copyBtn.style.background = "";
-        }, 2000);
-      } catch (error) {
-        console.error("복사 실패:", error);
-        showMessage("❌ 복사에 실패했습니다: " + error.message, "error");
-      }
-    }
-
-    // 로그아웃
-    async function logout() {
-      try {
-        await fetch(`${API_BASE}/api/logout`, {
-          method: "POST",
-          credentials: "include",
-        });
-
-        sessionStorage.clear();
-        window.location.href = "index.html";
-      } catch (error) {
-        console.error("로그아웃 실패:", error);
-        sessionStorage.clear();
-        window.location.href = "index.html";
-      }
-    }
-
-    // 메시지 표시
-    function showMessage(message, type = "info") {
-      const messageBox = document.getElementById("messageBox");
-      const className =
-        type === "error"
-          ? "error-message"
-          : type === "success"
-          ? "success-message"
-          : "info-message";
-
-      messageBox.innerHTML = `<div class="${className}">${message}</div>`;
-
-      setTimeout(() => {
-        messageBox.innerHTML = "";
-      }, 5000);
-    }
-
-    // HTML 이스케이프
-    function escapeHtml(text) {
-      const div = document.createElement("div");
-      div.textContent = text;
-      return div.innerHTML;
-    }
-
-    // 페이지 로드 시 초기화
-    window.addEventListener("DOMContentLoaded", init);
-
-    // 1126 새로추가
-    async function uploadToS3() {
-        if (!currentCommitsText) {
-            showMessage("업로드할 데이터가 없습니다.", "error");
-            return;
+        if (!currentCommitsText) { showMessage("복사할 커밋 데이터가 없습니다.", "error"); return; }
+        try {
+            await navigator.clipboard.writeText(currentCommitsText);
+            showMessage("✅ 클립보드에 복사되었습니다!", "success");
+        } catch (error) {
+            showMessage("❌ 복사에 실패했습니다: " + error.message, "error");
         }
+    }
+
+    async function uploadToS3() {
+        if (!currentCommitsText) { showMessage("업로드할 데이터가 없습니다.", "error"); return; }
 
         const s3Btn = document.getElementById("s3UploadBtn");
         const originalText = s3Btn.innerHTML;
@@ -931,7 +292,6 @@
         s3Btn.innerHTML = "☁️ 업로드 중...";
 
         try {
-            // 백엔드로 보낼 데이터 구성
             const payload = {
                 // [추가 2] username 필드 추가 (S3Controller에서 필수로 요청함)
                 username: username,
@@ -943,9 +303,7 @@
 
             const response = await fetch(`${API_BASE}/api/s3/upload`, {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
+                headers: { "Content-Type": "application/json" },
                 credentials: "include",
                 body: JSON.stringify(payload)
             });
@@ -956,20 +314,52 @@
             }
 
             const result = await response.json();
-            // result.url은 백엔드에서 반환해주는 파일 접근 URL이라고 가정
+            uploadedFileUrl = result.url; // 서버에서 반환된 URL 저장
             showMessage(`✅ S3 업로드 성공!`, "success");
-            console.log("Uploaded URL:", result.url);
+
+            // 보고서 생성 버튼 활성화
+            const reportBtn = document.getElementById("generateReportBtn");
+            reportBtn.disabled = false;
+            reportBtn.style.display = "inline-block";
 
         } catch (error) {
             console.error("S3 Upload Error:", error);
             // 백엔드에서 받은 에러 메시지 표시
             showMessage("❌ 업로드 실패: " + error.message, "error");
         } finally {
-            // 버튼 상태 복구
             s3Btn.disabled = false;
             s3Btn.innerHTML = originalText;
         }
     }
+
+    function goToReport() {
+        if (!uploadedFileUrl) {
+            showMessage("❌ 업로드된 파일이 없습니다.", "error");
+            return;
+        }
+        window.location.href = `report.html?s3Url=${encodeURIComponent(uploadedFileUrl)}`;
+    }
+
+    async function logout() {
+        try { await fetch(`${API_BASE}/api/logout`, { method: "POST", credentials: "include" }); } catch (e) {}
+        sessionStorage.clear();
+        window.location.href = "index.html";
+    }
+
+    function showMessage(message, type = "info") {
+        const messageBox = document.getElementById("messageBox");
+        const className = type === "error" ? "error-message" : type === "success" ? "success-message" : "info-message";
+        messageBox.innerHTML = `<div class="${className}">${message}</div>`;
+        setTimeout(() => { messageBox.innerHTML = ""; }, 5000);
+    }
+
+    function escapeHtml(text) {
+        const div = document.createElement("div");
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    window.addEventListener("DOMContentLoaded", init);
 </script>
 </body>
 </html>

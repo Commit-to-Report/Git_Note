@@ -39,9 +39,16 @@ public class GeminiApiService {
      * @param prompt 모델에게 전달할 요청 프롬프트
      * @return 생성된 텍스트만 추출한 결과 문자열
      */
-    public String generateContent(String prompt) {
+    public String generateContent(String prompt, String style) {
         System.out.println("[GeminiApiService] generateContent 시작 - prompt 길이: " + (prompt != null ? prompt.length() : 0));
         System.out.println("[GeminiApiService] prompt 내용: " + (prompt != null ? prompt.substring(0, Math.min(100, prompt.length())) + "..." : "null"));
+
+        String styleInstruction = switch (style) {
+            case "summary" -> "**스타일:** 간결하게 요약된 보고서를 작성하세요. 핵심 포인트 위주로 표현합니다.\n";
+            case "detailed" -> "**스타일:** 상세 분석 보고서를 작성하세요. 각 커밋의 기능/문제점과 작업 흐름을 자세히 설명합니다.\n";
+            case "statistics" -> "**스타일:** 통계 중심 보고서를 작성하세요. 커밋 유형, 수정 빈도, 기능 추가 비율 등을 강조합니다.\n";
+            default -> "";
+        };
 
         try {
             // URI에 API 키를 쿼리 파라미터로 추가
@@ -49,11 +56,10 @@ public class GeminiApiService {
 
             String fullPrompt = (prompt != null ? prompt : "") +
                     "**보고서 작성 지침:**\n" +
-                    "\n" +
-                    "1.  **언어:** 보고서의 모든 내용은 **한국어**로 작성되어야 합니다.\n" +
-                    "2.  **형식:** 전체 보고서는 **서술식(narrative)** 문장으로 구성되어야 하며, 단순히 커밋 목록을 나열하는 형식은 피해야 합니다.\n" +
-                    "3.  **내용:** 커밋 메시지(특히 'fix', 'feat', 'refactor' 등의 접두사)를 기반으로 하여, **어떤 기능이 추가/개선되었는지** 또는 **어떤 문제(버그/오류)가 해결되었는지**에 초점을 맞추어 작업의 흐름과 중요도를 자연스럽게 설명해 주세요.\n" +
-                    "4.  **정보 포함:** 보고서의 시작 부분에는 [--- 커밋 내역 ---]에 명시된 **리포지토리 이름**과 **조회 기간**을 명확하게 포함해 주세요.";
+                    styleInstruction +
+                    "**언어:** 한국어\n" +
+                    "**형식:** 서술식(narrative) 문장, 단순 목록 나열 금지\n" +
+                    "**정보 포함:** 리포지토리 이름과 조회 기간 명시";
 
             String escapedPrompt = escapeJson(fullPrompt);
             String jsonBody = String.format(
