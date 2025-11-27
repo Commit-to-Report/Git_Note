@@ -1,8 +1,5 @@
 # GitNote
 
-![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
-> 뱃지가 Failing(빨간색)으로 바뀌면 김지윤에게 알려주세요.
-
 GitNote는 GitHub OAuth를 통해 로그인하여 리포지토리의 커밋 내역을 조회하고 텍스트 파일로 내보낼 수 있는 웹 애플리케이션입니다.
 
 ## ✨ 주요 기능
