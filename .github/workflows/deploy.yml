@@ -41,7 +41,7 @@ jobs:
 
     - name: Build, tag, and push image to Amazon ECR
       env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REGISTRY: 061039804626.dkr.ecr.ap-northeast-2.amazonaws.com
         ECR_REPOSITORY: gitnote-repo
         IMAGE_TAG: latest
       run: |
