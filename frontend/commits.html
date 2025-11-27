@@ -919,6 +919,13 @@
         const s3Btn = document.getElementById("s3UploadBtn");
         const originalText = s3Btn.innerHTML;
 
+        // [추가 1] 사용자 아이디 가져오기
+        const username = sessionStorage.getItem("username");
+        if (!username) {
+            showMessage("❌ 로그인 정보(사용자명)를 찾을 수 없습니다.", "error");
+            return;
+        }
+
         // 로딩 상태 표시
         s3Btn.disabled = true;
         s3Btn.innerHTML = "☁️ 업로드 중...";
@@ -926,9 +933,11 @@
         try {
             // 백엔드로 보낼 데이터 구성
             const payload = {
+                // [추가 2] username 필드 추가 (S3Controller에서 필수로 요청함)
+                username: username,
                 repositoryName: selectedRepo.fullName,
-                startDate: document.getElementById("sinceDate").value,
-                endDate: document.getElementById("untilDate").value,
+                startDate: document.getElementById("sinceDate").value, // startDate는 현재 DTO에 없지만, 추후 필요할 경우를 위해 유지
+                endDate: document.getElementById("untilDate").value,   // endDate는 현재 DTO에 없지만, 추후 필요할 경우를 위해 유지
                 content: currentCommitsText
             };
 
@@ -953,14 +962,14 @@
 
         } catch (error) {
             console.error("S3 Upload Error:", error);
-            showMessage("❌ " + error.message, "error");
+            // 백엔드에서 받은 에러 메시지 표시
+            showMessage("❌ 업로드 실패: " + error.message, "error");
         } finally {
             // 버튼 상태 복구
             s3Btn.disabled = false;
             s3Btn.innerHTML = originalText;
         }
     }
-// ▲▲▲ [여기까지 추가] ▲▲▲
 </script>
 </body>
 </html>

@@ -47,6 +47,8 @@ dependencies {
 	testImplementation "org.wiremock:wiremock-standalone:3.2.0"
 	implementation 'io.netty:netty-resolver-dns-native-macos:4.1.99.Final:osx-aarch_64'
 	implementation("org.springframework.ai:spring-ai-client-chat:1.1.0")
+
+    implementation 'io.github.cdimascio:dotenv-java:3.0.0'
     // AWS S3 SDK
     implementation 'io.awspring.cloud:spring-cloud-aws-starter-s3:3.1.1'
 
