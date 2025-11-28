@@ -272,7 +272,7 @@
 
             const result = await response.json();
             uploadedFileUrl = result.url;
-            showMessage("✅ S3 업로드 성공!", "success");
+            showMessage("✅ 저장 성공!", "success");
 
             // 보고서 버튼 활성화
             const reportBtn = document.getElementById("generateReportBtn");
@@ -284,7 +284,7 @@
             showMessage("❌ " + error.message, "error");
         } finally {
             s3Btn.disabled = false;
-            s3Btn.innerHTML = "☁️ S3 업로드";
+            s3Btn.innerHTML = "☁️ 저장하기 ";
         }
     }
 
