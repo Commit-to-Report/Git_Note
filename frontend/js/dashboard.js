@@ -46,6 +46,7 @@ window.addEventListener("load", async () => {
 
     // User Preset 초기화 및 불러오기
     initializePresetUI();
+    loadUserRepositories();
     loadUserPreset();
   } catch (error) {
     console.error("Error:", error);
@@ -126,6 +127,45 @@ document.getElementById("logoutBtn").addEventListener("click", async () => {
   }
 });
 
+// 사용자의 리포지토리 목록 불러오기
+async function loadUserRepositories() {
+  const repositoryLoadingEl = document.getElementById("repositoryLoading");
+  const repositorySelectEl = document.getElementById("repositorySelect");
+
+  try {
+    repositoryLoadingEl.style.display = "block";
+
+    const response = await fetch(`${API_BASE_URL}/api/github/repositories`, {
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch repositories");
+    }
+
+    const data = await response.json();
+    const repositories = data.repositories || [];
+    console.log("✅ 리포지토리 목록:", repositories);
+    console.log("✅ 첫 번째 리포지토리:", repositories[0]);
+
+    // 드롭다운에 리포지토리 추가
+    repositories.forEach(repo => {
+      console.log("리포지토리:", repo);
+      const option = document.createElement("option");
+      // full_name 또는 fullName 모두 시도
+      const fullName = repo.full_name || repo.fullName;
+      option.value = fullName;
+      option.textContent = `${fullName} ${repo.private ? '🔒' : ''}`;
+      repositorySelectEl.appendChild(option);
+    });
+
+  } catch (error) {
+    console.error("Error loading repositories:", error);
+  } finally {
+    repositoryLoadingEl.style.display = "none";
+  }
+}
+
 // User Preset 불러오기
 async function loadUserPreset() {
   const presetLoadingEl = document.getElementById("presetLoading");
@@ -163,6 +203,11 @@ async function loadUserPreset() {
       // 보고서 생성 주기 버튼 선택
       if (preset.reportFrequency) {
         selectFrequencyButton(preset.reportFrequency);
+      }
+
+      // 리포지토리 선택
+      if (preset.repository) {
+        document.getElementById("repositorySelect").value = preset.repository;
       }
 
       console.log("✅ User Preset 불러오기 성공", preset);
@@ -305,12 +350,15 @@ async function saveUserPreset() {
     const selectedFrequencyBtn = document.querySelector('[data-frequency].selected');
     const reportFrequency = selectedFrequencyBtn ? selectedFrequencyBtn.dataset.frequency : null;
 
+    const selectedRepository = document.getElementById("repositorySelect").value;
+
     const presetData = {
       autoReportEnabled: document.getElementById("autoReportEnabled").checked,
       email: githubEmail || null, // GitHub 이메일 사용, 없으면 null
       emailNotificationEnabled: document.getElementById("emailNotificationEnabled").checked,
       reportStyle: reportStyle,
       reportFrequency: reportFrequency,
+      repository: selectedRepository || null,
     };
 
     console.log("📤 전송할 데이터:", presetData);

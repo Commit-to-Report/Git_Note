@@ -34,6 +34,7 @@ public class UserPresetService {
                     existing.setEmailNotificationEnabled(preset.getEmailNotificationEnabled());
                     existing.setReportStyle(preset.getReportStyle());
                     existing.setReportFrequency(preset.getReportFrequency());
+                    existing.setRepository(preset.getRepository());
                     existing.setUpdatedAt(Instant.now());
                     return userPresetRepository.save(existing);
                 })

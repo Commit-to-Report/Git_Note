@@ -78,6 +78,11 @@ public class UserPresetController {
                 reportFrequency = null;
             }
 
+            String repository = request.getRepository();
+            if (repository != null && repository.trim().isEmpty()) {
+                repository = null;
+            }
+
             // UserPreset 객체 생성 (Builder 패턴, null 아닌 값 처리)
             UserPreset preset = UserPreset.builder()
                     .userId(username)
@@ -86,6 +91,7 @@ public class UserPresetController {
                     .emailNotificationEnabled(request.getEmailNotificationEnabled())
                     .reportStyle(reportStyle)
                     .reportFrequency(reportFrequency)
+                    .repository(repository)
                     .build();
 
             System.out.println("🔍 저장할 Preset: " + preset);
