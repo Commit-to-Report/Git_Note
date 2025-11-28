@@ -332,13 +332,26 @@
         }
     }
 
-    function goToReport() {
-        if (!uploadedFileUrl) {
-            showMessage("❌ 업로드된 파일이 없습니다.", "error");
-            return;
-        }
-        window.location.href = `report.html?s3Url=${encodeURIComponent(uploadedFileUrl)}`;
+// commit.html 내부
+
+function goToReport() {
+    if (!uploadedFileUrl) {
+        showMessage("❌ 업로드된 파일이 없습니다.", "error");
+        return;
     }
+
+    try {
+        // 전체 URL에서 도메인을 떼고 경로(Key)만 추출
+        const urlObj = new URL(uploadedFileUrl);
+        const fileKey = urlObj.pathname.substring(1); // 앞의 '/' 제거
+
+        // fileKey 파라미터로 이동
+        window.location.href = `report.html?fileKey=${encodeURIComponent(fileKey)}`;
+    } catch (e) {
+        console.error(e);
+        showMessage("❌ 파일 경로 추출 실패", "error");
+    }
+}
 
     async function logout() {
         try { await fetch(`${API_BASE}/api/logout`, { method: "POST", credentials: "include" }); } catch (e) {}
