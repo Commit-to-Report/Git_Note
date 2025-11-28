@@ -60,6 +60,82 @@
             </div>
           </div>
 
+          <!-- User Preset 설정 섹션 -->
+          <div class="preset-section">
+            <h3>⚙️ 보고서 자동 생성 설정</h3>
+            <div id="presetLoading" class="loading" style="display: none;">설정을 불러오는 중...</div>
+            <div id="presetError" class="error-message" style="display: none;"></div>
+
+            <div class="preset-form">
+              <!-- 자동 보고서 생성 활성화 -->
+              <div class="form-group">
+                <label class="toggle-label">
+                  <span>자동 보고서 생성</span>
+                  <label class="toggle-switch">
+                    <input type="checkbox" id="autoReportEnabled">
+                    <span class="toggle-slider"></span>
+                  </label>
+                </label>
+              </div>
+
+              <!-- 자동 보고서 생성이 ON일 때만 표시되는 섹션 -->
+              <div id="presetOptions" style="display: none;">
+                <!-- 이메일 알림 활성화 -->
+                <div class="form-group">
+                  <label class="toggle-label">
+                    <span>이메일 알림</span>
+                    <label class="toggle-switch">
+                      <input type="checkbox" id="emailNotificationEnabled">
+                      <span class="toggle-slider"></span>
+                    </label>
+                  </label>
+                  <div id="emailInfo" class="email-info" style="display: none;">
+                    <span class="info-icon">📧</span>
+                    <span>보고서가 <strong id="userEmail"></strong>로 전송됩니다</span>
+                  </div>
+                </div>
+
+                <!-- 보고서 스타일 -->
+                <div class="form-group">
+                  <label>보고서 스타일</label>
+                  <div class="button-group">
+                    <button type="button" class="option-button" data-style="CONCISE">
+                      📋 간결요약
+                    </button>
+                    <button type="button" class="option-button" data-style="DETAILED">
+                      📊 상세분석
+                    </button>
+                    <button type="button" class="option-button" data-style="STATISTICAL">
+                      📈 통계중심
+                    </button>
+                  </div>
+                </div>
+
+                <!-- 보고서 생성 주기 -->
+                <div class="form-group">
+                  <label>보고서 생성 주기</label>
+                  <div class="button-group">
+                    <button type="button" class="option-button" data-frequency="DAILY">
+                      📅 매일
+                    </button>
+                    <button type="button" class="option-button" data-frequency="WEEKLY">
+                      📆 매주
+                    </button>
+                    <button type="button" class="option-button" data-frequency="MONTHLY">
+                      🗓️ 매월
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 저장 버튼 -->
+              <div class="form-actions">
+                <button id="savePresetBtn" class="save-button">💾 설정 저장</button>
+                <span id="saveStatus" class="save-status"></span>
+              </div>
+            </div>
+          </div>
+
           <div
             style="
               display: flex;

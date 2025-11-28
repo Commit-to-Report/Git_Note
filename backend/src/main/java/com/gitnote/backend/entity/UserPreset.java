@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbAttribute;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
 
@@ -26,6 +27,7 @@ public class UserPreset {
     private Instant updatedAt;          // 수정 시간
 
     @DynamoDbPartitionKey
+    @DynamoDbAttribute("PK")  // DynamoDB 테이블의 파티션 키 이름과 매핑
     public String getUserId() {
         return userId;
     }

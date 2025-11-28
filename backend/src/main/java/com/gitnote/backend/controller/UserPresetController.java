@@ -52,9 +52,31 @@ public class UserPresetController {
         if (result instanceof ResponseEntity) return (ResponseEntity<?>) result;
         String username = (String) result;
 
+        // 디버깅: username 확인
+        System.out.println("🔍 세션 username: " + username);
+        System.out.println("🔍 세션 ID: " + session.getId());
+        System.out.println("🔍 요청 데이터: " + request);
+
         try {
             String sessionEmail = (String) session.getAttribute("email");
             String email = sessionEmail != null ? sessionEmail : request.getEmail();
+
+            System.out.println("🔍 email: " + email);
+
+            // DynamoDB는 빈 문자열을 허용하지 않으므로 null로 변환
+            if (email != null && email.trim().isEmpty()) {
+                email = null;
+            }
+
+            String reportStyle = request.getReportStyle();
+            if (reportStyle != null && reportStyle.trim().isEmpty()) {
+                reportStyle = null;
+            }
+
+            String reportFrequency = request.getReportFrequency();
+            if (reportFrequency != null && reportFrequency.trim().isEmpty()) {
+                reportFrequency = null;
+            }
 
             // UserPreset 객체 생성 (Builder 패턴, null 아닌 값 처리)
             UserPreset preset = UserPreset.builder()
@@ -62,9 +84,11 @@ public class UserPresetController {
                     .autoReportEnabled(Boolean.TRUE.equals(request.getAutoReportEnabled()))
                     .email(email)
                     .emailNotificationEnabled(request.getEmailNotificationEnabled())
-                    .reportStyle(request.getReportStyle())
-                    .reportFrequency(request.getReportFrequency())
+                    .reportStyle(reportStyle)
+                    .reportFrequency(reportFrequency)
                     .build();
+
+            System.out.println("🔍 저장할 Preset: " + preset);
 
             UserPreset savedPreset = userPresetService.createOrUpdatePreset(preset);
             return ResponseEntity.ok(UserPresetResponse.from(savedPreset));
