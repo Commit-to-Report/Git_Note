@@ -1,22 +1,33 @@
-@import url('https://cdn.jsdelivr.net/gh/wanteddev/wanted-sans@v1.0.1/packages/wanted-sans/fonts/webfonts/variable/split/WantedSansVariable.min.css');
+@import url('https://cdn.jsdelivr.net/gh/wanteddev/wanted-sans@v1.0.3/packages/wanted-sans/dist/css/wanted-sans.css');
+
+* {
+    font-family: "Wanted Sans Variable", "Wanted Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+    box-sizing: border-box;
+}
 
 body {
-    font-family: 'Wanted Sans Variable', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #fafafa;
     margin: 0;
     padding: 20px;
-    background: #f2f4f7;
+    min-height: 100vh;
     color: #1e1e1e;
 }
+
 h1 {
     text-align: center;
-    margin-bottom: 20px;
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 40px;
+    color: #212121;
 }
+
 #status {
     text-align: center;
     font-weight: bold;
     margin-bottom: 20px;
     color: #555;
 }
+
 #summaryContainer {
     position: relative;
     width: 100%;
@@ -26,28 +37,31 @@ h1 {
     border-radius: 10px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     padding: 15px;
-    box-sizing: border-box;
 }
+
 #summaryEdit, #summaryPreview, #summaryView {
     width: 100%;
     min-height: 300px;
     padding: 15px;
     border: 1px solid #ddd;
     border-radius: 8px;
-    box-sizing: border-box;
     font-size: 16px;
     line-height: 1.6;
     background: #fafafa;
     transition: all 0.3s ease;
+    display: none;
 }
+
 #summaryEdit:focus {
     outline: none;
     border-color: #F55600;
 }
+
 #summaryPreview {
     overflow-y: auto;
     background: #fefefe;
 }
+
 #actionButtons, .style-buttons {
     display: flex;
     justify-content: center;
@@ -55,6 +69,7 @@ h1 {
     gap: 10px;
     margin: 15px 0;
 }
+
 #actionButtons button, .style-buttons button {
     padding: 8px 16px;
     border-radius: 6px;
@@ -64,13 +79,12 @@ h1 {
     font-weight: bold;
     transition: all 0.2s ease;
 }
+
 #actionButtons button:disabled {
     opacity: 0.5;
     cursor: not-allowed;
 }
-#summaryEdit, #summaryPreview {
-    display: none;
-}
+
 #loadingSpinner {
     width: 40px;
     height: 40px;
@@ -86,58 +100,89 @@ h1 {
     display: none;
 }
 
-
 @keyframes spin {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
-}
-
-#editBtn, #previewBtn, #saveBtn {
-    color: #333;
-    border: none;
-    transition: all 0.2s ease;
 }
 
 #editBtn { background-color: #DDE1E7; }
 #previewBtn { background-color: #E8E8E8; }
 #saveBtn { background-color: #E0E0E0; }
 
-#editBtn:hover { background-color: #C4C9D3; }
-#previewBtn:hover { background-color: #D0D0D0; }
-#saveBtn:hover { background-color: #C8C8C8; }
-
 #editBtn:hover, #previewBtn:hover, #saveBtn:hover {
     background-color: #F55600;
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-#styleSummaryBtn, #styleDetailedBtn, #styleStatisticsBtn {
-    background-color: #fff;
     color: #333;
-    border: 2px solid;
-    padding: 8px 16px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: bold;
-    transition: all 0.2s ease;
 }
 
-#styleSummaryBtn { border-color: #B0E0E6; }
-#styleDetailedBtn { border-color: #FFD3B6; }
-#styleStatisticsBtn { border-color: #FFAAA5; }
+#styleSummaryBtn { background-color: #fff; border: 2px solid #B0E0E6; color: #333; }
+#styleDetailedBtn { background-color: #fff; border: 2px solid #FFD3B6; color: #333; }
+#styleStatisticsBtn { background-color: #fff; border: 2px solid #FFAAA5; color: #333; }
 
 #styleSummaryBtn:hover { background-color: #e6f7fa; border-color: #7ecfe0; }
 #styleDetailedBtn:hover { background-color: #fff5eb; border-color: #ffb87f; }
 #styleStatisticsBtn:hover { background-color: #fff0f0; border-color: #ff7f7f; }
-
 
 #summaryPreview h1, #summaryView h1 { font-size: 24px; color: #1e1e1e; }
 #summaryPreview h2, #summaryView h2 { font-size: 20px; color: #1e1e1e; }
 #summaryPreview p, #summaryView p { color: #555; }
 #summaryPreview code, #summaryView code { background: #f4f4f4; padding: 2px 5px; border-radius: 4px; font-family: monospace; }
 #summaryPreview pre, #summaryView pre { background: #f4f4f4; padding: 10px; border-radius: 6px; overflow-x: auto; }
+
+#reportTable {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+
+#reportTable thead { background: #f5f5f5; }
+#reportTable th, #reportTable td {
+    padding: 16px 24px;
+    text-align: left;
+    font-size: 14px;
+    color: #333;
+}
+#reportTable th {
+    font-weight: 600;
+    color: #111827;
+    border-bottom: 1px solid #e0e0e0;
+}
+#reportTable tbody tr { transition: background-color 0.2s; cursor: pointer; }
+#reportTable tbody tr:hover { background-color: #fafafa; }
+#reportTable tbody td { border-bottom: 1px solid #f0f0f0; }
+#reportTable tbody tr:last-child td { border-bottom: none; }
+
+.error { color: #ef4444; font-weight: 500; text-align: center; }
+.loading { text-align: center; color: #9e9e9e; }
+
+.btn-report {
+    padding: 8px 20px;
+    background: #F55600;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-report:hover {
+    background: #d94d00;
+    transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+    #reportTable th, #reportTable td { padding: 12px 16px; font-size: 13px; }
+    h1 { font-size: 24px; margin-bottom: 30px; }
+}
+
 @media (max-width: 600px) {
     #actionButtons button, .style-buttons button { font-size: 12px; padding: 6px 12px; }
     #summaryContainer { padding: 10px; }

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>보고서 목록</title>
+    <link rel="stylesheet" href="./css/header.css" />
+    <link rel="stylesheet" href="./css/report.css" />
+</head>
+<body>
+<div id="header-container"></div>
+<h1>보고서 목록</h1>
+<table id="reportTable">
+    <thead>
+    <tr>
+        <th>SK</th>
+        <th>User</th>
+        <th>Content</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr><td colspan="3">데이터 로딩 중</td></tr>
+    </tbody>
+</table>
+
+<script>
+    async function loadReports() {
+        try {
+            const res = await fetch("http://localhost:8080/api/user/report/list");
+            if (!res.ok) throw new Error("서버에서 데이터를 가져올 수 없음");
+
+            const reports = await res.json();
+            const tbody = document.querySelector("#reportTable tbody");
+            tbody.innerHTML = "";
+
+            if (reports.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="3">보고서가 없습니다!</td></tr>`;
+                return;
+            }
+
+            reports.forEach(report => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                <td>${report.SK}</td>
+                <td>${report.User}</td>
+                <td>
+                    <button class="view-btn">보고서 보러가기</button>
+                </td>
+            `;
+                tbody.appendChild(tr);
+
+                const btn = tr.querySelector(".view-btn");
+                btn.addEventListener("click", () => {
+                    window.location.href = `report-detail.html?pk=${encodeURIComponent(report.PK)}&sk=${encodeURIComponent(report.SK)}`;
+                });
+            });
+        } catch (err) {
+            const tbody = document.querySelector("#reportTable tbody");
+            tbody.innerHTML = `<tr><td colspan="3" class="error">${err.message}</td></tr>`;
+            console.error(err);
+        }
+    }
+
+    loadReports();
+</script>
+<script src="js/header.js"></script>
+</body>
+</html>
