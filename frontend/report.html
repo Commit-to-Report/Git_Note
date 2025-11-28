@@ -5,9 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <title>GitNote 보고서</title>
+
+    <link rel="stylesheet" href="css/header.css">
     <link rel="stylesheet" href="./css/report.css" />
 </head>
 <body>
+<div id="header-container"></div>
 <h1>GitNote 보고서</h1>
 <p id="status">보고서를 준비 중입니다...</p>
 
@@ -173,12 +176,12 @@
         }
     });
 
-
     document.getElementById("styleSummaryBtn").addEventListener("click", () => generateReport("summary"));
     document.getElementById("styleDetailedBtn").addEventListener("click", () => generateReport("detailed"));
     document.getElementById("styleStatisticsBtn").addEventListener("click", () => generateReport("statistics"));
 
     generateReport("summary");
 </script>
+<script src="js/header.js"></script>
 </body>
 </html>
