@@ -6,35 +6,208 @@
     <title>GitNote - 커밋 조회</title>
 
     <link href="https://cdn.jsdelivr.net/gh/wanteddev/wanted-sans@v1.0.3/packages/wanted-sans/dist/css/wanted-sans.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="css/header.css" />
+
     <link rel="stylesheet" href="./css/commits.css" />
 
     <style>
-        /* [수정 1] 폰트 강제 적용 스타일 추가 */
+        /* 배경에 그라데이션 패턴 추가 */
         body {
-            font-family: 'Wanted Sans', -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+            background: #f8f9fa;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                radial-gradient(circle at 20% 50%, rgba(245, 86, 0, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(245, 86, 0, 0.03) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* [수정됨] 컨테이너 가운데 정렬 스타일 적용 */
+        .container {
+            background: white;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            border-radius: 16px;
+
+            /* 핵심 수정 사항: 가운데 정렬 및 너비 제한 */
+            width: 100%;
+            max-width: 1100px; /* 대시보드와 비슷한 너비로 제한 */
+            margin: 40px auto; /* 상하 40px 띄우고, 좌우는 자동(가운데) 정렬 */
+            padding: 30px;     /* 내부 여백 추가 */
+            box-sizing: border-box; /* 패딩 포함 너비 계산 */
         }
 
         /* 버튼 그룹을 아래로 내리기 위한 스타일 */
         .action-button-group {
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
-            text-align: right; /* 버튼 오른쪽 정렬 */
-            display: none; /* 초기엔 숨김 */
+            margin-top: 28px;
+            padding-top: 28px;
+            border-top: 2px solid #f1f3f5;
+            text-align: right;
+            display: none;
+            gap: 12px;
+        }
+
+        /* 개선된 버튼 스타일 - 오렌지 포인트 컬러 적용 */
+        .btn {
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.4s, height 0.4s;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        /* 버튼 색상 - 오렌지 메인 컬러 */
+        .btn-primary {
+            background: #F55600;
+            color: white;
+        }
+        .btn-primary:hover:not(:disabled) {
+            background: #dc4d00;
+        }
+
+        .btn-success {
+            background: #ff7d0d;
+            color: white;
+        }
+        .btn-success:hover:not(:disabled) {
+            background: #ffa330;
+        }
+
+        .btn-aws {
+            background: #ff7d0d;
+            color: white;
+        }
+        .btn-aws:hover:not(:disabled) {
+            background: #ffa330;
+        }
+
+        .btn-report {
+            background: #ff7d0d;
+            color: white;
+        }
+        .btn-report:hover:not(:disabled) {
+            background: #ffa330;
+        }
+
+        /* 필터 섹션 */
+        .filter-section {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            padding: 24px;
+            border-radius: 12px;
+        }
+
+        /* 입력 필드 포커스 시 오렌지 강조 */
+        select:focus,
+        input[type="date"]:focus {
+            border-color: #F55600 !important;
+            box-shadow: 0 0 0 3px rgba(245, 86, 0, 0.1) !important;
+        }
+
+        /* 커밋 헤더 */
+        .commits-header {
+            border-left-color: #F55600 !important;
+        }
+
+        .commit-count {
+            background: #fff5f0;
+            color: #F55600;
+            border: 1px solid #ffe0cc;
+        }
+
+        /* 커밋 리스트 박스 */
+        #commitsList pre {
+            background: #f8f9fa !important;
+            color: #212529 !important;
+            border: 1px solid #dee2e6 !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+        }
+
+        /* Empty State */
+        .empty-state {
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
+        }
+
+        /* 로딩 박스 */
+        .loading {
+            background: white;
+            padding: 24px 48px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            border-radius: 12px;
+            display: inline-block;
+            color: #495057;
+        }
+
+        #loadingBox {
+            text-align: center;
+        }
+
+        /* 선택된 리포지토리 정보 스타일 개선 */
+        #selectedRepoInfo {
+            background: #fff5f0;
+            border: 1px solid #ffe0cc;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        /* 메시지 박스 오렌지 테마 */
+        .success-message {
+            background: #fff5f0 !important;
+            color: #F55600 !important;
+            border: 1px solid #ffe0cc !important;
+        }
+
+        .error-message {
+            background: #fff5f5 !important;
+            color: #dc2626 !important;
+            border: 1px solid #fecaca !important;
         }
     </style>
 </head>
 <body>
-<div class="container">
-    <div class="header">
-        <h1>GitNote - 커밋 조회</h1>
-        <div class="user-info">
-            <img id="userAvatar" src="" alt="User" />
-            <span class="username" id="username"></span>
-            <button class="btn-logout" onclick="logout()">로그아웃</button>
-        </div>
-    </div>
+<div id="header-container"></div>
 
+<div class="container">
     <div id="messageBox"></div>
 
     <div class="filter-section">
@@ -105,21 +278,17 @@
     const API_BASE = "http://localhost:8080";
     let currentCommits = [];
     let selectedRepo = null;
-    let currentCommitsText = ""; // [중요] 전역 변수 초기화
+    let currentCommitsText = "";
     let uploadedFileUrl = "";
 
     async function init() {
         const username = sessionStorage.getItem("username");
-        const avatar = sessionStorage.getItem("avatar");
 
         if (!username) {
             showMessage("⚠️ 로그인이 필요합니다.", "error");
             setTimeout(() => { window.location.href = "index.html"; }, 2000);
             return;
         }
-
-        document.getElementById("username").textContent = username;
-        if(avatar) document.getElementById("userAvatar").src = avatar;
 
         const today = new Date();
         const weekAgo = new Date(today);
@@ -179,7 +348,6 @@
         document.getElementById("emptyState").style.display = "none";
         document.getElementById("searchBtn").disabled = true;
 
-        // [중요] 새 검색 시 기존 데이터 초기화
         currentCommitsText = "";
         uploadedFileUrl = "";
         document.getElementById("generateReportBtn").style.display = "none";
@@ -209,7 +377,6 @@
         document.getElementById("commitsSection").style.display = "block";
         document.getElementById("commitCount").textContent = `${commits.length}개`;
 
-        // 텍스트 생성
         let textContent = `리포지토리: ${selectedRepo?.fullName}\n`;
         textContent += `조회 기간: ${document.getElementById("sinceDate").value} ~ ${document.getElementById("untilDate").value}\n`;
         textContent += `총 커밋 수: ${commits.length}\n${"=".repeat(50)}\n\n`;
@@ -220,14 +387,9 @@
             textContent += `[${index + 1}] ${date.substring(0, 10)} - ${message}\n`;
         });
 
-        // [수정 3] 여기서 전역 변수에 값을 할당해야 S3 업로드 시 "파일 없음" 에러가 안 뜸
         currentCommitsText = textContent;
-        console.log("Commits loaded, length:", currentCommitsText.length); // 디버깅용
 
-        // 화면 렌더링
         document.getElementById("commitsList").innerHTML = `<pre>${escapeHtml(textContent)}</pre>`;
-
-        // [수정 4] 하단 버튼 그룹 표시
         document.getElementById("actionButtons").style.display = "block";
     }
 
@@ -240,9 +402,7 @@
     }
 
     async function uploadToS3() {
-        // [중요] 변수 체크
         if (!currentCommitsText) {
-            console.error("currentCommitsText is empty!");
             showMessage("⚠️ 업로드할 커밋 파일이 없습니다. 다시 조회해주세요.", "error");
             return;
         }
@@ -258,7 +418,7 @@
                 repositoryName: selectedRepo.fullName,
                 startDate: document.getElementById("sinceDate").value,
                 endDate: document.getElementById("untilDate").value,
-                content: currentCommitsText // 여기 값이 들어가야 함
+                content: currentCommitsText
             };
 
             const response = await fetch(`${API_BASE}/api/s3/upload`, {
@@ -274,7 +434,6 @@
             uploadedFileUrl = result.url;
             showMessage("✅ 저장 성공!", "success");
 
-            // 보고서 버튼 활성화
             const reportBtn = document.getElementById("generateReportBtn");
             reportBtn.disabled = false;
             reportBtn.style.display = "inline-block";
@@ -296,12 +455,6 @@
         } catch (e) { showMessage("경로 오류", "error"); }
     }
 
-    async function logout() {
-        // 로그아웃 로직 (간소화)
-        sessionStorage.clear();
-        window.location.href = "index.html";
-    }
-
     function showMessage(msg, type="info") {
         const box = document.getElementById("messageBox");
         box.innerHTML = `<div class="${type === 'error' ? 'error-message' : 'success-message'}">${msg}</div>`;
@@ -316,5 +469,7 @@
 
     window.addEventListener("DOMContentLoaded", init);
 </script>
+
+<script src="./js/header.js"></script>
 </body>
 </html>
