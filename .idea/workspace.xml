@@ -5,7 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8647ef0c-f9b2-4cc5-99fb-d35060f7c106" name="변경" comment="">
-      <change afterPath="$PROJECT_DIR$/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/gitnote/backend/service/GeminiApiService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/gitnote/backend/service/GeminiApiService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/css/report.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/css/report.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/report.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/report.html" afterDir="false" />
@@ -45,23 +45,23 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Gradle.backend 빌드.executor": "Run",
-    "JavaScript 디버그.report.html.executor": "Run",
-    "RequestMappingsPanelOrder0": "0",
-    "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelWidth0": "75",
-    "RequestMappingsPanelWidth1": "75",
-    "Spring Boot.BackendApplication.executor": "Run",
-    "git-widget-placeholder": "Recover-report.html",
-    "node.js.selected.package.tslint": "(autodetect)"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Gradle.backend 빌드.executor&quot;: &quot;Run&quot;,
+    &quot;JavaScript 디버그.report.html.executor&quot;: &quot;Run&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;Spring Boot.BackendApplication.executor&quot;: &quot;Run&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="BackendApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <option name="envFilePaths">
-        <option value="$PROJECT_DIR$/.env" />
+        <option value="$PROJECT_DIR$/backend/.env" />
       </option>
       <module name="backend.main" />
       <selectedOptions>
