@@ -3,24 +3,34 @@
 body {
     font-family: 'Wanted Sans Variable', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
-    padding: 20px;
     background: #f2f4f7;
     color: #1e1e1e;
+    /* flexbox 레이아웃을 위해 padding 제거, main에 추가 */
+}
+
+main {
+    padding: 40px 20px;
 }
 h1 {
     text-align: center;
     margin-bottom: 20px;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
 }
 #status {
     text-align: center;
     font-weight: bold;
     margin-bottom: 20px;
     color: #555;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
 }
 #summaryContainer {
     position: relative;
     width: 100%;
-    max-width: 900px;
+    max-width: 1200px;
     margin: 0 auto 20px auto;
     background: #fff;
     border-radius: 10px;
@@ -53,7 +63,8 @@ h1 {
     justify-content: center;
     flex-wrap: wrap;
     gap: 10px;
-    margin: 15px 0;
+    margin: 15px auto;
+    max-width: 1200px;
 }
 #actionButtons button, .style-buttons button {
     padding: 8px 16px;

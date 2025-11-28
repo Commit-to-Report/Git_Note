@@ -1,35 +1,51 @@
-/* header.css */
+/* header.css - Dashboard 스타일 적용 */
 
-/* 다크모드 지원을 위한 CSS 변수 상속 */
+/* Dashboard CSS 변수 상속 */
 :root {
-    --header-bg: #ffffff;
-    --header-text: #4a4a4a;
-    --header-text-hover: #007bff;
+    --brand-color: #f55600;
+    --brand-color-light: #ff7a2f;
+    --brand-color-dark: #d94a00;
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8f9fa;
+    --bg-body: #fafbfc;
+    --text-primary: #2d3748;
+    --text-secondary: #718096;
+    --text-muted: #a0aec0;
+    
+    /* 헤더 전용 변수 */
+    --header-bg: var(--bg-primary);
+    --header-text: var(--text-primary);
+    --header-text-hover: var(--brand-color);
     --header-shadow: rgba(0, 0, 0, 0.05);
-    --header-border: #e0e0e0;
-    --header-hover-bg: rgba(0, 123, 255, 0.08);
-    --header-user-hover: #f1f3f5;
+    --header-border: #e5e7eb;
+    --header-hover-bg: rgba(245, 86, 0, 0.08);
+    --header-user-hover: var(--bg-secondary);
 }
 
 [data-theme="dark"] {
-    --header-bg: #1a202c;
-    --header-text: #e2e8f0;
-    --header-text-hover: #667eea;
+    --bg-primary: #1a202c;
+    --bg-secondary: #2d3748;
+    --bg-body: #111827;
+    --text-primary: #f7fafc;
+    --text-secondary: #cbd5e0;
+    --text-muted: #a0aec0;
+    
+    /* 헤더 전용 변수 */
+    --header-bg: var(--bg-primary);
+    --header-text: var(--text-primary);
+    --header-text-hover: var(--brand-color-light);
     --header-shadow: rgba(0, 0, 0, 0.3);
     --header-border: #4a5568;
-    --header-hover-bg: rgba(102, 126, 234, 0.15);
-    --header-user-hover: #2d3748;
+    --header-hover-bg: rgba(255, 122, 47, 0.15);
+    --header-user-hover: var(--bg-secondary);
 }
 
-body {
-    margin: 0;
-    font-family: 'Noto Sans KR', sans-serif;
-    background-color: #f8f9fa;
-}
+/* body 스타일은 style.css에서 통합 관리하므로 제거 */
 
 .app-header {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 24px;
     align-items: center;
     padding: 0 24px;
     height: 64px;
@@ -41,10 +57,33 @@ body {
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* 왼쪽 네비게이션 메뉴 */
+/* 로고 섹션 */
+.logo-section {
+    display: flex;
+    align-items: center;
+}
+
+.logo-section a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.header-logo {
+    height: 36px;
+    width: auto;
+    transition: transform 0.2s ease;
+}
+
+.header-logo:hover {
+    transform: scale(1.05);
+}
+
+/* 중앙 네비게이션 메뉴 */
 .nav-menu {
     display: flex;
     gap: 10px;
+    justify-self: center;
 }
 
 .nav-link {
@@ -67,6 +106,11 @@ body {
     transform: translateY(-1px);
 }
 
+.nav-link.active {
+    color: var(--brand-color);
+    font-weight: 600;
+}
+
 .nav-icon {
     width: 24px;
     height: 24px;
@@ -81,7 +125,8 @@ body {
 .user-section {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 10px;
+    justify-self: end;
 }
 
 .user-profile {
@@ -96,6 +141,12 @@ body {
 
 .user-profile:hover {
     background-color: var(--header-user-hover);
+}
+
+.user-profile .username {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--header-text);
 }
 
 /* === [중요 수정] 아이콘 틀 === */
@@ -124,15 +175,7 @@ body {
     display: block; /* 하단 빈 공간 제거 */
 }
 
-/* 구분선 */
-.user-section::before {
-    content: '';
-    display: block;
-    width: 1px;
-    height: 24px;
-    background-color: var(--header-border);
-    margin: 0 4px;
-}
+/* 구분선 제거 (dashboard 스타일과 일치) */
 
 /* 로그아웃 버튼 */
 .logout-btn {
@@ -159,4 +202,16 @@ body {
 .logout-btn:hover {
     color: #fa5252;
     background-color: rgba(250, 82, 82, 0.08);
+}
+
+/* 반응형 디자인 - Dashboard 스타일과 일치 */
+@media (max-width: 768px) {
+    .app-header {
+        grid-template-columns: auto 1fr;
+        gap: 12px;
+    }
+
+    .nav-menu {
+        display: none;
+    }
 }

@@ -1,89 +1,101 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <title>GitNote 보고서</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/header.css" />
+    <link rel="stylesheet" href="css/footer.css" />
     <link rel="stylesheet" href="./css/report.css" />
-</head>
-<body>
-<h1>GitNote 보고서</h1>
-<p id="status">보고서를 준비 중입니다...</p>
+  </head>
+  <body>
+    <div id="header-container"></div>
 
-<div class="style-buttons">
-<button id="styleSummaryBtn">간결 요약</button>
-<button id="styleDetailedBtn">상세 분석</button>
-<button id="styleStatisticsBtn">통계 중심</button>
-</div>
+    <main>
+      <h1>GitNote 보고서</h1>
+      <p id="status">보고서를 준비 중입니다...</p>
 
-<div id="summaryContainer">
-    <div id="loadingSpinner" class="hidden"></div>
+      <div class="style-buttons">
+        <button id="styleSummaryBtn">간결 요약</button>
+        <button id="styleDetailedBtn">상세 분석</button>
+        <button id="styleStatisticsBtn">통계 중심</button>
+      </div>
 
-    <div id="summaryView"></div>
-    <textarea id="summaryEdit"></textarea>
-    <div id="summaryPreview"></div>
-</div>
+      <div id="summaryContainer">
+        <div id="loadingSpinner" class="hidden"></div>
 
+        <div id="summaryView"></div>
+        <textarea id="summaryEdit"></textarea>
+        <div id="summaryPreview"></div>
+      </div>
 
-<div id="actionButtons">
-    <button id="editBtn" disabled>수정</button>
-    <button id="previewBtn" disabled>미리보기</button>
-    <button id="saveBtn" disabled>보고서 저장</button>
-</div>
+      <div id="actionButtons">
+        <button id="editBtn" disabled>수정</button>
+        <button id="previewBtn" disabled>미리보기</button>
+        <button id="saveBtn" disabled>보고서 저장</button>
+      </div>
+    </main>
 
-<script>
-    const statusEl = document.getElementById("status");
-    const summaryView = document.getElementById("summaryView");
-    const summaryEdit = document.getElementById("summaryEdit");
-    const summaryPreview = document.getElementById("summaryPreview");
-    const editBtn = document.getElementById("editBtn");
-    const previewBtn = document.getElementById("previewBtn");
-    const saveBtn = document.getElementById("saveBtn");
+    <div id="footer-container"></div>
 
-    let originalMarkdown = "";
-    let isEditInitialized = false;
-    function showLoading() {
+    <script src="js/header.js"></script>
+    <script src="js/footer.js"></script>
+    <script>
+      const statusEl = document.getElementById("status");
+      const summaryView = document.getElementById("summaryView");
+      const summaryEdit = document.getElementById("summaryEdit");
+      const summaryPreview = document.getElementById("summaryPreview");
+      const editBtn = document.getElementById("editBtn");
+      const previewBtn = document.getElementById("previewBtn");
+      const saveBtn = document.getElementById("saveBtn");
+
+      let originalMarkdown = "";
+      let isEditInitialized = false;
+      function showLoading() {
         const spinner = document.getElementById("loadingSpinner");
         spinner.classList.remove("hidden");
         spinner.style.display = "block";
         summaryView.style.display = "none";
         summaryEdit.style.display = "none";
         summaryPreview.style.display = "none";
-    }
+      }
 
-    function hideLoading() {
+      function hideLoading() {
         const spinner = document.getElementById("loadingSpinner");
         spinner.classList.add("hidden");
         spinner.style.display = "none";
         summaryEdit.style.display = "none";
         summaryPreview.style.display = "none";
         summaryView.style.display = "block";
-    }
+      }
 
+      // [수정 1] URL 파라미터 처리 로직 개선 (fileKey 우선)
+      const urlParams = new URLSearchParams(window.location.search);
+      let targetKey = urlParams.get("fileKey");
 
-    // [수정 1] URL 파라미터 처리 로직 개선 (fileKey 우선)
-    const urlParams = new URLSearchParams(window.location.search);
-    let targetKey = urlParams.get("fileKey");
-
-    // 2순위: 만약 fileKey가 없고 s3Url로 들어왔다면 추출 (호환성 유지)
-    if (!targetKey && urlParams.get("s3Url")) {
+      // 2순위: 만약 fileKey가 없고 s3Url로 들어왔다면 추출 (호환성 유지)
+      if (!targetKey && urlParams.get("s3Url")) {
         try {
-            const s3Url = urlParams.get("s3Url");
-            targetKey = decodeURIComponent(s3Url.split(".com/")[1]);
-        } catch (e) { console.error("Key 추출 실패:", e); }
-    }
-    console.log("최종 분석할 Key:", targetKey);
+          const s3Url = urlParams.get("s3Url");
+          targetKey = decodeURIComponent(s3Url.split(".com/")[1]);
+        } catch (e) {
+          console.error("Key 추출 실패:", e);
+        }
+      }
+      console.log("최종 분석할 Key:", targetKey);
 
-    async function generateReport(style) {
+      async function generateReport(style) {
         showLoading();
 
         if (!targetKey) {
-            statusEl.textContent = "분석할 파일 정보(fileKey)가 없습니다.";
-            return;
+          statusEl.textContent = "분석할 파일 정보(fileKey)가 없습니다.";
+          return;
         }
 
-        statusEl.textContent = "AI가 보고서를 작성 중입니다... (약 5~10초 소요)";
+        statusEl.textContent =
+          "AI가 보고서를 작성 중입니다... (약 5~10초 소요)";
         summaryView.innerHTML = "";
         summaryEdit.value = "";
         summaryPreview.innerHTML = "";
@@ -93,92 +105,104 @@
         saveBtn.disabled = true;
 
         try {
-            const res = await fetch(`http://localhost:8080/api/s3/report?key=${encodeURIComponent(targetKey)}&style=${style}`);
-            const text = await res.text();
+          const res = await fetch(
+            `http://localhost:8080/api/s3/report?key=${encodeURIComponent(
+              targetKey
+            )}&style=${style}`
+          );
+          const text = await res.text();
 
-            try {
-                const data = JSON.parse(text);
-                if (res.ok) {
-                    originalMarkdown = data.summary;
-                    originalMarkdown = originalMarkdown.replace(/<[^>]*>/g, "");
-                    summaryView.innerHTML = marked.parse(originalMarkdown);
-                    if(!isEditInitialized) summaryEdit.value = originalMarkdown;
+          try {
+            const data = JSON.parse(text);
+            if (res.ok) {
+              originalMarkdown = data.summary;
+              originalMarkdown = originalMarkdown.replace(/<[^>]*>/g, "");
+              summaryView.innerHTML = marked.parse(originalMarkdown);
+              if (!isEditInitialized) summaryEdit.value = originalMarkdown;
 
-                    editBtn.disabled = false;
-                    previewBtn.disabled = false;
-                    saveBtn.disabled = false;
-                    statusEl.textContent = `보고서 생성 완료!`;
-                } else {
-                    summaryView.textContent = data.error || "알 수 없는 오류가 발생했습니다.";
-                    statusEl.textContent = `보고서 생성 실패! (${style})`;
-                }
-            } catch (e) {
-                summaryView.textContent = "서버 응답 형식이 올바르지 않습니다:\n" + text;
-                statusEl.textContent = `보고서 생성 실패! (${style})`;
+              editBtn.disabled = false;
+              previewBtn.disabled = false;
+              saveBtn.disabled = false;
+              statusEl.textContent = `보고서 생성 완료!`;
+            } else {
+              summaryView.textContent =
+                data.error || "알 수 없는 오류가 발생했습니다.";
+              statusEl.textContent = `보고서 생성 실패! (${style})`;
             }
-
-        } catch (err) {
-            summaryView.textContent = "서버 요청 실패: " + err.message;
+          } catch (e) {
+            summaryView.textContent =
+              "서버 응답 형식이 올바르지 않습니다:\n" + text;
             statusEl.textContent = `보고서 생성 실패! (${style})`;
-        }finally {
-            hideLoading();
+          }
+        } catch (err) {
+          summaryView.textContent = "서버 요청 실패: " + err.message;
+          statusEl.textContent = `보고서 생성 실패! (${style})`;
+        } finally {
+          hideLoading();
         }
+      }
 
-    }
-
-    editBtn.addEventListener("click", () => {
+      editBtn.addEventListener("click", () => {
         summaryView.style.display = "none";
         summaryPreview.style.display = "none";
         summaryEdit.style.display = "block";
         summaryEdit.focus();
         isEditInitialized = true;
-    });
+      });
 
-    previewBtn.addEventListener("click", () => {
+      previewBtn.addEventListener("click", () => {
         summaryPreview.innerHTML = marked.parse(summaryEdit.value);
         summaryEdit.style.display = "none";
         summaryPreview.style.display = "block";
-    });
+      });
 
-    saveBtn.addEventListener("click", async () => {
-        const updatedReport = summaryEdit.style.display === "block" ? summaryEdit.value : originalMarkdown;
+      saveBtn.addEventListener("click", async () => {
+        const updatedReport =
+          summaryEdit.style.display === "block"
+            ? summaryEdit.value
+            : originalMarkdown;
         const reportId = targetKey;
         const userId = sessionStorage.getItem("username");
 
         if (!userId) {
-            alert("로그인 정보가 없습니다. 다시 로그인해주세요.");
-            return;
+          alert("로그인 정보가 없습니다. 다시 로그인해주세요.");
+          return;
         }
 
         try {
-            const res = await fetch("http://localhost:8080/api/user/report", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ userId, reportId, content: updatedReport })
-            });
+          const res = await fetch("http://localhost:8080/api/user/report", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ userId, reportId, content: updatedReport }),
+          });
 
-            const data = await res.json();
-            if(res.ok){
-                alert("보고서가 성공적으로 저장되었습니다!");
-                originalMarkdown = updatedReport;
-                summaryView.innerHTML = marked.parse(originalMarkdown);
-                summaryView.style.display = "block";
-                summaryEdit.style.display = "none";
-                summaryPreview.style.display = "none";
-            } else {
-                alert("저장 실패: " + (data.message || "알 수 없는 오류"));
-            }
-        } catch(err) {
-            alert("저장 중 네트워크 오류 발생: " + err.message);
+          const data = await res.json();
+          if (res.ok) {
+            alert("보고서가 성공적으로 저장되었습니다!");
+            originalMarkdown = updatedReport;
+            summaryView.innerHTML = marked.parse(originalMarkdown);
+            summaryView.style.display = "block";
+            summaryEdit.style.display = "none";
+            summaryPreview.style.display = "none";
+          } else {
+            alert("저장 실패: " + (data.message || "알 수 없는 오류"));
+          }
+        } catch (err) {
+          alert("저장 중 네트워크 오류 발생: " + err.message);
         }
-    });
+      });
 
+      document
+        .getElementById("styleSummaryBtn")
+        .addEventListener("click", () => generateReport("summary"));
+      document
+        .getElementById("styleDetailedBtn")
+        .addEventListener("click", () => generateReport("detailed"));
+      document
+        .getElementById("styleStatisticsBtn")
+        .addEventListener("click", () => generateReport("statistics"));
 
-    document.getElementById("styleSummaryBtn").addEventListener("click", () => generateReport("summary"));
-    document.getElementById("styleDetailedBtn").addEventListener("click", () => generateReport("detailed"));
-    document.getElementById("styleStatisticsBtn").addEventListener("click", () => generateReport("statistics"));
-
-    generateReport("summary");
-</script>
-</body>
+      generateReport("summary");
+    </script>
+  </body>
 </html>
