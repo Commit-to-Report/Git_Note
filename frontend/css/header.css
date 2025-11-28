@@ -1,4 +1,26 @@
 /* header.css */
+
+/* 다크모드 지원을 위한 CSS 변수 상속 */
+:root {
+    --header-bg: #ffffff;
+    --header-text: #4a4a4a;
+    --header-text-hover: #007bff;
+    --header-shadow: rgba(0, 0, 0, 0.05);
+    --header-border: #e0e0e0;
+    --header-hover-bg: rgba(0, 123, 255, 0.08);
+    --header-user-hover: #f1f3f5;
+}
+
+[data-theme="dark"] {
+    --header-bg: #1a202c;
+    --header-text: #e2e8f0;
+    --header-text-hover: #667eea;
+    --header-shadow: rgba(0, 0, 0, 0.3);
+    --header-border: #4a5568;
+    --header-hover-bg: rgba(102, 126, 234, 0.15);
+    --header-user-hover: #2d3748;
+}
+
 body {
     margin: 0;
     font-family: 'Noto Sans KR', sans-serif;
@@ -11,12 +33,12 @@ body {
     align-items: center;
     padding: 0 24px;
     height: 64px;
-    background-color: #ffffff;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-
+    background-color: var(--header-bg);
+    box-shadow: 0 4px 12px var(--header-shadow);
     position: sticky;
     top: 0;
     z-index: 1000;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 /* 왼쪽 네비게이션 메뉴 */
@@ -27,7 +49,7 @@ body {
 
 .nav-link {
     text-decoration: none;
-    color: #4a4a4a;
+    color: var(--header-text);
     font-size: 15px;
     font-weight: 500;
     letter-spacing: -0.02em;
@@ -40,8 +62,8 @@ body {
 }
 
 .nav-link:hover {
-    color: #007bff;
-    background-color: rgba(0, 123, 255, 0.08);
+    color: var(--header-text-hover);
+    background-color: var(--header-hover-bg);
     transform: translateY(-1px);
 }
 
@@ -73,7 +95,7 @@ body {
 }
 
 .user-profile:hover {
-    background-color: #f1f3f5;
+    background-color: var(--header-user-hover);
 }
 
 /* === [중요 수정] 아이콘 틀 === */
@@ -81,7 +103,7 @@ body {
     width: 36px;
     height: 36px;
     /* 배경이 있을 경우를 대비 */
-    background: linear-gradient(135deg, #e9ecef, #dee2e6);
+    background: linear-gradient(135deg, var(--header-border), var(--header-user-hover));
     border-radius: 50%;
     display: flex;
     justify-content: center;
@@ -90,6 +112,7 @@ body {
     /* 🚨 핵심: 이미지가 둥근 원 밖으로 넘치지 않게 자름 */
     overflow: hidden;
     flex-shrink: 0; /* 화면이 줄어들어도 찌그러지지 않게 고정 */
+    transition: background 0.3s ease;
 }
 
 /* === [중요 수정] 틀 안의 이미지 강제 축소 === */
@@ -107,7 +130,7 @@ body {
     display: block;
     width: 1px;
     height: 24px;
-    background-color: #e0e0e0;
+    background-color: var(--header-border);
     margin: 0 4px;
 }
 
@@ -116,7 +139,7 @@ body {
     display: flex;
     align-items: center;
     text-decoration: none;
-    color: #868e96;
+    color: var(--header-text);
     font-size: 13px;
     font-weight: 500;
     cursor: pointer;
