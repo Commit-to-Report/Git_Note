@@ -1,5 +1,3 @@
-const API_BASE_URL = "http://localhost:8080";
-
 // 전역 변수로 GitHub 이메일 저장
 let githubEmail = "";
 
@@ -66,7 +64,7 @@ window.addEventListener("load", async () => {
     if (code) {
       console.log("🔑 GitHub code로 로그인 중...");
       const response = await fetch(
-        `${API_BASE_URL}/api/github/user?code=${code}`,
+        `${window.API_BASE_URL}/api/github/user?code=${code}`,
         {
           credentials: "include",
         }
@@ -88,9 +86,12 @@ window.addEventListener("load", async () => {
       console.log("🔍 저장된 세션 확인 중...");
 
       // 세션이 유효한지 체크
-      const sessionResponse = await fetch(`${API_BASE_URL}/api/user/session`, {
-        credentials: "include",
-      });
+      const sessionResponse = await fetch(
+        `${window.API_BASE_URL}/api/user/session`,
+        {
+          credentials: "include",
+        }
+      );
 
       if (sessionResponse.ok) {
         // 세션이 유효하면 저장된 정보 사용
@@ -256,7 +257,7 @@ function initializeLogoutButton() {
       localStorage.removeItem("github_code");
 
       // 백엔드 로그아웃 엔드포인트 호출 (선택적)
-      await fetch(`${API_BASE_URL}/api/logout`, {
+      await fetch(`${window.API_BASE_URL}/api/logout`, {
         method: "POST",
         credentials: "include",
       });
@@ -279,9 +280,12 @@ async function loadUserRepositories() {
   try {
     repositoryLoadingEl.style.display = "block";
 
-    const response = await fetch(`${API_BASE_URL}/api/github/repositories`, {
-      credentials: "include",
-    });
+    const response = await fetch(
+      `${window.API_BASE_URL}/api/github/repositories`,
+      {
+        credentials: "include",
+      }
+    );
 
     if (!response.ok) {
       throw new Error("Failed to fetch repositories");
@@ -323,7 +327,7 @@ async function loadUserPreset() {
     presetLoadingEl.style.display = "block";
     presetErrorEl.style.display = "none";
 
-    const response = await fetch(`${API_BASE_URL}/api/user/preset`, {
+    const response = await fetch(`${window.API_BASE_URL}/api/user/preset`, {
       credentials: "include",
     });
 
@@ -522,7 +526,7 @@ async function saveUserPreset() {
 
     console.log("📤 전송할 데이터:", presetData);
 
-    const response = await fetch(`${API_BASE_URL}/api/user/preset`, {
+    const response = await fetch(`${window.API_BASE_URL}/api/user/preset`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

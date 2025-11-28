@@ -47,49 +47,19 @@
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-/* 폰트 적용 */
+/* 폰트 적용 - flexbox 레이아웃 유지 */
 body {
   font-family: "Wanted Sans Variable", "Wanted Sans", -apple-system,
     BlinkMacSystemFont, system-ui, sans-serif;
   background: var(--bg-body);
   color: var(--text-primary);
-  min-height: 100vh;
   font-size: 15px;
   line-height: 1.6;
+  /* min-height와 display는 style.css에서 관리 */
 }
 
-/* Dashboard 전용 헤더 스타일 */
-.app-header {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: 24px;
-  align-items: center;
-}
-
-.logo-section {
-  display: flex;
-  align-items: center;
-}
-
-.logo-section a {
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-}
-
-.header-logo {
-  height: 36px;
-  width: auto;
-  transition: transform 0.2s ease;
-}
-
-.header-logo:hover {
-  transform: scale(1.05);
-}
-
-.nav-menu {
-  justify-self: center;
-}
+/* Dashboard 전용 헤더 스타일 - header.css로 이동됨 */
+/* 헤더 스타일은 이제 header.css에서 통합 관리됩니다 */
 
 /* 다크모드 토글 버튼 */
 .theme-toggle {
@@ -111,14 +81,9 @@ body {
   color: white;
 }
 
+/* user-section 스타일은 header.css에서 관리됩니다 */
 .user-section .theme-toggle {
   margin-right: 10px;
-}
-
-.user-section {
-  display: flex;
-  align-items: center;
-  gap: 10px;
 }
 
 /* 컨테이너 */
@@ -646,14 +611,7 @@ select {
     padding: 20px;
   }
 
-  .app-header {
-    grid-template-columns: auto 1fr;
-    gap: 12px;
-  }
-
-  .nav-menu {
-    display: none;
-  }
+  /* 헤더 반응형 스타일은 header.css에서 관리됩니다 */
 
   .theme-toggle span#themeText {
     display: none;

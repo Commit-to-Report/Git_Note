@@ -1,0 +1,163 @@
+/* footer.css */
+
+/* 다크모드 지원을 위한 CSS 변수 상속 */
+:root {
+    --brand-color: #f55600;
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8f9fa;
+    --text-primary: #2d3748;
+    --text-secondary: #718096;
+    
+    --footer-bg: var(--bg-primary);
+    --footer-text: #6b7280;
+    --footer-text-hover: var(--brand-color);
+    --footer-border: #e5e7eb;
+    --footer-shadow: rgba(0, 0, 0, 0.05);
+    --header-hover-bg: rgba(245, 86, 0, 0.08);
+}
+
+[data-theme="dark"] {
+    --bg-primary: #1a202c;
+    --bg-secondary: #2d3748;
+    --text-primary: #f7fafc;
+    --text-secondary: #cbd5e0;
+    
+    --footer-bg: var(--bg-primary);
+    --footer-text: #9ca3af;
+    --footer-text-hover: #ff7a2f;
+    --footer-border: #4a5568;
+    --footer-shadow: rgba(0, 0, 0, 0.3);
+    --header-hover-bg: rgba(255, 122, 47, 0.15);
+}
+
+.app-footer {
+    background-color: var(--footer-bg);
+    border-top: 1px solid var(--footer-border);
+    padding: 24px;
+    margin-top: auto;
+    box-shadow: 0 -2px 8px var(--footer-shadow);
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.footer-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--footer-text);
+    font-size: 14px;
+}
+
+.footer-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    color: var(--footer-text);
+    font-size: 13px;
+}
+
+.footer-link {
+    color: var(--footer-text);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+}
+
+.footer-link:hover {
+    color: var(--footer-text-hover);
+    background-color: rgba(0, 0, 0, 0.05);
+    transform: translateY(-1px);
+}
+
+[data-theme="dark"] .footer-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.footer-link svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* 테마 토글 버튼 */
+.theme-toggle-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--footer-border);
+    border-radius: 8px;
+    padding: 8px 16px;
+    color: var(--footer-text);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-right: 12px;
+}
+
+.theme-toggle-btn:hover {
+    background: var(--header-hover-bg);
+    border-color: var(--header-text-hover);
+    color: var(--header-text-hover);
+}
+
+.theme-toggle-btn:active {
+    transform: scale(0.98);
+}
+
+.theme-toggle-btn span:first-child {
+    font-size: 18px;
+    line-height: 1;
+}
+
+[data-theme="dark"] .theme-toggle-btn {
+    background: var(--bg-secondary);
+    border-color: var(--footer-border);
+}
+
+[data-theme="dark"] .theme-toggle-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--header-text-hover);
+}
+
+.footer-copyright {
+    color: var(--footer-text);
+    font-size: 13px;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 20px;
+    }
+    
+    .footer-left,
+    .footer-right {
+        justify-content: center;
+    }
+    
+    .theme-toggle-btn {
+        margin-right: 0;
+        margin-bottom: 8px;
+    }
+    
+    .theme-toggle-btn span:last-child {
+        display: none;
+    }
+}
+
