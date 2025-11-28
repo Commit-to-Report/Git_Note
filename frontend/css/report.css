@@ -68,6 +68,10 @@ h1 {
     opacity: 0.5;
     cursor: not-allowed;
 }
+#summaryEdit, #summaryPreview {
+    display: none;
+}
+
 #editBtn { background-color: #3498db; color: #fff; }
 #previewBtn { background-color: #2ecc71; color: #fff; }
 #saveBtn { background-color: #e67e22; color: #fff; }

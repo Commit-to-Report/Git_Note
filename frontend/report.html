@@ -11,7 +11,6 @@
 <h1>GitNote 보고서</h1>
 <p id="status">보고서를 준비 중입니다...</p>
 
-<<<<<<< HEAD
 <div id="summaryContainer">
     <div id="summaryView"></div>
     <textarea id="summaryEdit"></textarea>
@@ -23,11 +22,6 @@
     <button id="previewBtn" disabled>미리보기</button>
     <button id="saveBtn" disabled>보고서 저장</button>
 </div>
-=======
-<pre id="summary" contenteditable="false"></pre>
-<button id="editBtn" disabled>수정 가능</button>
-<button id="saveBtn" disabled>보고서 저장</button>
->>>>>>> main
 
 <div class="style-buttons">
     <button id="styleSummaryBtn">간결 요약</button>
@@ -36,13 +30,6 @@
 </div>
 
 <script>
-<<<<<<< HEAD
-    let originalMarkdown = "";
-    let isEditInitialized = false;
-    const urlParams = new URLSearchParams(window.location.search);
-    const s3Url = urlParams.get("s3Url");
-=======
->>>>>>> main
     const statusEl = document.getElementById("status");
     const summaryView = document.getElementById("summaryView");
     const summaryEdit = document.getElementById("summaryEdit");
@@ -50,97 +37,68 @@
     const editBtn = document.getElementById("editBtn");
     const previewBtn = document.getElementById("previewBtn");
     const saveBtn = document.getElementById("saveBtn");
-<<<<<<< HEAD
-    const s3Key = s3Url ? decodeURIComponent(s3Url.split(".com/")[1]) : null;
-=======
+
+    let originalMarkdown = "";
+    let isEditInitialized = false;
 
     // [수정 1] URL 파라미터 처리 로직 개선 (fileKey 우선)
     const urlParams = new URLSearchParams(window.location.search);
-    let targetKey = urlParams.get("fileKey"); // 1순위: fileKey
->>>>>>> main
+    let targetKey = urlParams.get("fileKey");
 
     // 2순위: 만약 fileKey가 없고 s3Url로 들어왔다면 추출 (호환성 유지)
     if (!targetKey && urlParams.get("s3Url")) {
         try {
             const s3Url = urlParams.get("s3Url");
-            // ".com/" 뒷부분을 잘라서 Key로 사용
             targetKey = decodeURIComponent(s3Url.split(".com/")[1]);
-        } catch (e) {
-            console.error("Key 추출 실패:", e);
-        }
+        } catch (e) { console.error("Key 추출 실패:", e); }
     }
-
     console.log("최종 분석할 Key:", targetKey);
 
-    // 보고서 생성 함수
     async function generateReport(style) {
         if (!targetKey) {
             statusEl.textContent = "분석할 파일 정보(fileKey)가 없습니다.";
             return;
         }
-<<<<<<< HEAD
-        statusEl.innerHTML = `서버에서 S3 파일을 불러와 보고서를 생성 중입니다...`;
-        summaryView.innerHTML = "";
-        summaryPreview.innerHTML = "";
-        summaryView.style.display = "block";
-        summaryEdit.style.display = "none";
-        summaryPreview.style.display = "none";
-=======
 
         statusEl.textContent = "AI가 보고서를 작성 중입니다... (약 5~10초 소요)";
-        summary.textContent = "";
-        summary.contentEditable = "false";
->>>>>>> main
+        summaryView.innerHTML = "";
+        summaryEdit.value = "";
+        summaryPreview.innerHTML = "";
+
         editBtn.disabled = true;
         previewBtn.disabled = true;
         saveBtn.disabled = true;
 
         try {
-            // 백엔드 호출 (targetKey 사용)
             const res = await fetch(`http://localhost:8080/api/s3/report?key=${encodeURIComponent(targetKey)}&style=${style}`);
             const text = await res.text();
-<<<<<<< HEAD
-            const data = JSON.parse(text);
-            if(res.ok){
-                originalMarkdown = data.summary;
-                summaryView.innerHTML = marked.parse(originalMarkdown);
-                if(!isEditInitialized) summaryEdit.value = originalMarkdown;
-                editBtn.disabled = false;
-                previewBtn.disabled = false;
-                saveBtn.disabled = false;
-                statusEl.textContent = `보고서 생성 완료! (${style})`;
-            } else {
-                summaryView.textContent = data.error || "알 수 없는 오류가 발생했습니다.";
-                statusEl.textContent = `보고서 생성 실패! (${style})`;
-            }
-        } catch(err) {
-            summaryView.textContent = "요청 실패: " + err.message;
-=======
 
             try {
                 const data = JSON.parse(text);
                 if (res.ok) {
-                    summary.textContent = data.summary;
+                    originalMarkdown = data.summary;
+                    summaryView.innerHTML = marked.parse(originalMarkdown);
+                    if(!isEditInitialized) summaryEdit.value = originalMarkdown;
+
                     editBtn.disabled = false;
+                    previewBtn.disabled = false;
                     saveBtn.disabled = false;
                     statusEl.textContent = `보고서 생성 완료! (${style})`;
                 } else {
-                    summary.textContent = data.error || "알 수 없는 오류가 발생했습니다.";
+                    summaryView.textContent = data.error || "알 수 없는 오류가 발생했습니다.";
                     statusEl.textContent = `보고서 생성 실패! (${style})`;
                 }
             } catch (e) {
-                summary.textContent = "서버 응답 형식이 올바르지 않습니다:\n" + text;
+                summaryView.textContent = "서버 응답 형식이 올바르지 않습니다:\n" + text;
                 statusEl.textContent = `보고서 생성 실패! (${style})`;
             }
 
         } catch (err) {
-            summary.textContent = "서버 요청 실패: " + err.message;
->>>>>>> main
+            summaryView.textContent = "서버 요청 실패: " + err.message;
             statusEl.textContent = `보고서 생성 실패! (${style})`;
         }
     }
 
-<<<<<<< HEAD
     editBtn.addEventListener("click", () => {
         summaryView.style.display = "none";
         summaryPreview.style.display = "none";
@@ -156,30 +114,14 @@
     });
 
     saveBtn.addEventListener("click", async () => {
-        const updatedReport = summaryEdit.style.display === "block" ? summaryEdit.value : summaryPreview.innerText || originalMarkdown;
-        const reportId = s3Key;
-        const userId = "exampleUserId";
-=======
-    // 수정 버튼 클릭
-    editBtn.addEventListener("click", () => {
-        summary.contentEditable = "true";
-        summary.style.backgroundColor = "#fffbe6"; // 편집 모드임을 시각적으로 표시
-        summary.focus();
-    });
-
-    // 저장 버튼 클릭
-    saveBtn.addEventListener("click", async () => {
-        const updatedReport = summary.textContent;
-        const reportId = targetKey; // S3 Key를 리포트 ID로 사용
-
-        // [수정 2] 세션에서 실제 로그인한 사용자 ID 가져오기
+        const updatedReport = summaryEdit.style.display === "block" ? summaryEdit.value : originalMarkdown;
+        const reportId = targetKey;
         const userId = sessionStorage.getItem("username");
 
         if (!userId) {
             alert("로그인 정보가 없습니다. 다시 로그인해주세요.");
             return;
         }
->>>>>>> main
 
         try {
             const res = await fetch("http://localhost:8080/api/user/report", {
@@ -189,21 +131,13 @@
             });
 
             const data = await res.json();
-<<<<<<< HEAD
             if(res.ok){
-                alert("보고서 저장 완료!");
+                alert("✅ 보고서가 성공적으로 저장되었습니다!");
                 originalMarkdown = updatedReport;
                 summaryView.innerHTML = marked.parse(originalMarkdown);
                 summaryView.style.display = "block";
                 summaryEdit.style.display = "none";
                 summaryPreview.style.display = "none";
-=======
-
-            if(res.ok) {
-                alert("✅ 보고서가 성공적으로 저장되었습니다!");
-                summary.contentEditable = "false";
-                summary.style.backgroundColor = "#fff";
->>>>>>> main
             } else {
                 alert("저장 실패: " + (data.message || "알 수 없는 오류"));
             }
@@ -212,18 +146,11 @@
         }
     });
 
-<<<<<<< HEAD
-=======
-    // 스타일 버튼 이벤트
->>>>>>> main
+
     document.getElementById("styleSummaryBtn").addEventListener("click", () => generateReport("summary"));
     document.getElementById("styleDetailedBtn").addEventListener("click", () => generateReport("detailed"));
     document.getElementById("styleStatisticsBtn").addEventListener("click", () => generateReport("statistics"));
 
-<<<<<<< HEAD
-=======
-    // 페이지 로드 시 자동 실행
->>>>>>> main
     generateReport("summary");
 </script>
 </body>
