@@ -1,93 +1,211 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>GitNote - Dashboard</title>
-    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/header.css" />
     <link rel="stylesheet" href="css/style.css" />
-</head>
-<body>
-<div id="header-container"></div>
-<div class="container">
-    <h1>로그인 성공</h1>
+    <link rel="stylesheet" href="css/dashboard.css" />
+  </head>
+  <body>
+    <div id="header-container"></div>
 
-    <div class="success-box">
+    <div class="container">
+      <div class="success-box">
         <div id="loading" class="loading">로딩 중...</div>
         <div id="error" class="error-message" style="display: none"></div>
 
         <div id="userProfile" style="display: none">
-            <div class="profile">
-                <img id="avatar" src="" alt="Profile" />
-                <div class="profile-info">
-                    <h2 id="name"></h2>
-                    <p id="username"></p>
-                    <p id="bio"></p>
-                    <p id="location"></p>
-                    <p id="company"></p>
-                </div>
+          <div class="profile">
+            <img id="avatar" src="" alt="Profile" />
+            <div class="profile-info">
+              <h2 id="name"></h2>
+              <p id="username"></p>
+              <p id="bio"></p>
+              <p id="location"></p>
+              <p id="company"></p>
+            </div>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card" id="emailRow" style="display: none">
+              <div class="stat-icon">📧</div>
+              <div class="stat-label">이메일</div>
+              <div class="stat-value" id="email"></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">📚</div>
+              <div class="stat-label">리포지토리</div>
+              <div class="stat-value" id="repos"></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">📅</div>
+              <div class="stat-label">생성일</div>
+              <div class="stat-value" id="created"></div>
+            </div>
+          </div>
+
+          <!-- 자동 보고서 생성 설정 -->
+          <div class="settings-section">
+            <h3>⚙️ 설정</h3>
+
+            <div id="presetLoading" class="preset-loading">
+              설정 불러오는 중...
+            </div>
+            <div id="presetError" class="preset-error"></div>
+
+            <!-- 자동 보고서 생성 토글 -->
+            <div class="toggle-section">
+              <label class="toggle-label">
+                <input
+                  type="checkbox"
+                  id="autoReportEnabled"
+                  class="toggle-checkbox"
+                />
+                <span class="toggle-switch">
+                  <span class="toggle-slider"></span>
+                </span>
+                <span class="toggle-title">자동 보고서 생성</span>
+              </label>
+              <p class="toggle-description">
+                설정한 주기에 따라 자동으로 보고서를 생성하고 이메일로
+                받아보세요.
+              </p>
             </div>
 
-            <div class="details">
-                <h3>계정 정보</h3>
-                <div class="info-row">
-                    <span class="info-label">User ID:</span>
-                    <span class="info-value" id="userId"></span>
+            <!-- 프리셋 옵션 (자동 보고서 활성화 시 표시) -->
+            <div id="presetOptions" class="preset-options">
+              <div class="options-grid">
+                <!-- 리포지토리 선택 -->
+                <div class="option-card">
+                  <div class="option-card-header">
+                    <span class="option-icon">📁</span>
+                    <h4 class="option-title">리포지토리</h4>
+                  </div>
+                  <div class="option-card-body">
+                    <div id="repositoryLoading" class="repository-loading">
+                      리포지토리 불러오는 중...
+                    </div>
+                    <select id="repositorySelect" class="select-input">
+                      <option value="">선택하세요</option>
+                    </select>
+                    <p class="option-hint">분석할 리포지토리를 선택하세요</p>
+                  </div>
                 </div>
-                <div class="info-row">
-                    <span class="info-label">Username:</span>
-                    <span class="info-value" id="login"></span>
+
+                <!-- 보고서 스타일 -->
+                <div class="option-card">
+                  <div class="option-card-header">
+                    <span class="option-icon">🎨</span>
+                    <h4 class="option-title">보고서 스타일</h4>
+                  </div>
+                  <div class="option-card-body">
+                    <div class="button-group">
+                      <button
+                        type="button"
+                        data-style="SIMPLE"
+                        class="option-button"
+                      >
+                        <span class="button-label">간단</span>
+                        <span class="button-desc">핵심만</span>
+                      </button>
+                      <button
+                        type="button"
+                        data-style="DETAILED"
+                        class="option-button"
+                      >
+                        <span class="button-label">상세</span>
+                        <span class="button-desc">자세히</span>
+                      </button>
+                      <button
+                        type="button"
+                        data-style="TECHNICAL"
+                        class="option-button"
+                      >
+                        <span class="button-label">기술적</span>
+                        <span class="button-desc">전문적</span>
+                      </button>
+                    </div>
+                  </div>
                 </div>
-                <div class="info-row" id="emailRow" style="display: none">
-                    <span class="info-label">Email:</span>
-                    <span class="info-value" id="email"></span>
+
+                <!-- 보고서 생성 주기 -->
+                <div class="option-card">
+                  <div class="option-card-header">
+                    <span class="option-icon">📅</span>
+                    <h4 class="option-title">생성 주기</h4>
+                  </div>
+                  <div class="option-card-body">
+                    <div class="button-group">
+                      <button
+                        type="button"
+                        data-frequency="DAILY"
+                        class="option-button"
+                      >
+                        <span class="button-label">매일</span>
+                        <span class="button-desc">Daily</span>
+                      </button>
+                      <button
+                        type="button"
+                        data-frequency="WEEKLY"
+                        class="option-button"
+                      >
+                        <span class="button-label">매주</span>
+                        <span class="button-desc">Weekly</span>
+                      </button>
+                      <button
+                        type="button"
+                        data-frequency="MONTHLY"
+                        class="option-button"
+                      >
+                        <span class="button-label">매월</span>
+                        <span class="button-desc">Monthly</span>
+                      </button>
+                    </div>
+                  </div>
                 </div>
-                <div class="info-row">
-                    <span class="info-label">Repositories:</span>
-                    <span class="info-value" id="repos"></span>
+
+                <!-- 이메일 알림 -->
+                <div class="option-card full-width">
+                  <div class="option-card-header">
+                    <span class="option-icon">📧</span>
+                    <h4 class="option-title">이메일 알림</h4>
+                  </div>
+                  <div class="option-card-body">
+                    <label class="email-label">
+                      <input
+                        type="checkbox"
+                        id="emailNotificationEnabled"
+                        class="toggle-checkbox"
+                      />
+                      <span class="toggle-switch">
+                        <span class="toggle-slider"></span>
+                      </span>
+                      <span>보고서 생성 시 이메일로 알림 받기</span>
+                    </label>
+                    <div id="emailInfo" class="email-info">
+                      <span class="email-icon">✉️</span>
+                      <span id="userEmail"></span>로 보고서가 전송됩니다.
+                    </div>
+                  </div>
                 </div>
-                <div class="info-row">
-                    <span class="info-label">Followers:</span>
-                    <span class="info-value" id="followers"></span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Following:</span>
-                    <span class="info-value" id="following"></span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Created:</span>
-                    <span class="info-value" id="created"></span>
-                </div>
+              </div>
             </div>
 
-            <div
-                    style="
-              display: flex;
-              gap: 10px;
-              flex-wrap: wrap;
-              align-items: center;
-            "
-            >
-                <a
-                        href="commits.html"
-                        style="
-                padding: 12px 24px;
-                background: #667eea;
-                color: white;
-                text-decoration: none;
-                border-radius: 8px;
-                font-weight: 600;
-                transition: all 0.3s;
-              "
-                >
-                    📝 커밋 조회하기
-                </a>
+            <!-- 저장 버튼 -->
+            <div class="save-section">
+              <button id="savePresetBtn" class="save-button">
+                💾 설정 저장
+              </button>
+              <span id="saveStatus" class="save-status"></span>
             </div>
+          </div>
         </div>
+      </div>
     </div>
-</div>
 
-<script src="js/dashboard.js"></script>
-<script src="js/header.js"></script>
-</body>
+    <script src="js/dashboard.js"></script>
+    <script src="js/header.js"></script>
+  </body>
 </html>
