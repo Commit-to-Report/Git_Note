@@ -1,13 +1,12 @@
 package com.gitnote.backend.controller;
 
-import com.gitnote.backend.service.ReportService;
+import com.gitnote.backend.service.DDBReportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.util.Map;
 
 @RestController
@@ -15,7 +14,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class DDBReportController {
 
-    private final ReportService reportService;
+    private final DDBReportService reportService;
 
     @PostMapping("/report")
     public ResponseEntity<?> saveReport(@RequestBody Map<String, String> request) {
