@@ -7,26 +7,41 @@
     <link rel="stylesheet" href="css/header.css">
     <link rel="stylesheet" href="css/style.css">
     <style>
+        @import url('https://cdn.jsdelivr.net/gh/wanteddev/wanted-sans@v1.0.3/packages/wanted-sans/dist/css/wanted-sans.css');
+
+        * {
+            font-family: "Wanted Sans Variable", "Wanted Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+        }
+
+        body {
+            background-color: #fafafa;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
         .list-container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 40px auto;
             background: white;
-            border: 1px solid #ddd;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border: 1px solid #e0e0e0;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
             overflow: hidden;
         }
 
         .list-header {
-            padding: 20px;
-            border-bottom: 1px solid #eee;
-            background-color: #fff;
+            padding: 28px 32px;
+            background: white;
+            color: #111827;
+            border-bottom: 1px solid #f0f0f0;
         }
 
         .list-header h2 {
             margin: 0;
-            font-size: 20px;
-            color: #333;
+            font-size: 22px;
+            font-weight: 700;
+            color: #212121;
+            letter-spacing: -0.5px;
         }
 
         .commit-list {
@@ -39,8 +54,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px;
-            border-bottom: 1px solid #f0f0f0;
+            padding: 24px 32px;
+            border-bottom: 1px solid #f5f5f5;
             transition: background-color 0.2s;
             cursor: pointer;
         }
@@ -50,42 +65,43 @@
         }
 
         .commit-item:hover {
-            background-color: #f8f9fa;
+            background-color: #fafafa;
         }
 
         .item-info {
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            gap: 8px;
+            flex: 1;
         }
 
         .file-name {
             font-weight: 600;
             font-size: 16px;
-            color: #333;
+            color: #212121;
         }
 
         .file-date {
             font-size: 13px;
-            color: #888;
+            color: #9e9e9e;
+            font-weight: 400;
         }
 
         .btn-report {
-            padding: 8px 16px;
-            background-color: white;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            color: #555;
+            padding: 10px 24px;
+            background: #F55600;
+            border: none;
+            border-radius: 8px;
+            color: white;
             font-size: 14px;
-            font-weight: 500;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.2s;
         }
 
         .btn-report:hover {
-            background-color: #24292e;
-            color: white;
-            border-color: #24292e;
+            background: #d94d00;
+            transform: translateY(-1px);
         }
 
         .modal-overlay {
@@ -104,49 +120,97 @@
         .modal-content {
             background: white;
             width: 90%;
-            max-width: 700px;
-            border-radius: 12px;
-            padding: 30px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            max-width: 800px;
+            border-radius: 16px;
+            padding: 0;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
             position: relative;
-            max-height: 80vh;
+            max-height: 85vh;
             display: flex;
             flex-direction: column;
+            overflow: hidden;
         }
 
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #eee;
+            padding: 24px 28px;
+            background: white;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 700;
+            color: #212121;
         }
 
         .close-btn {
-            background: none;
+            background: #f5f5f5;
             border: none;
             font-size: 24px;
             cursor: pointer;
-            color: #999;
+            color: #757575;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .close-btn:hover {
+            background: #e0e0e0;
+            color: #424242;
         }
 
         .modal-body {
             overflow-y: auto;
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 6px;
-            font-family: monospace;
+            background: #fafafa;
+            padding: 20px;
+            margin: 20px 28px;
+            border-radius: 8px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace !important;
             white-space: pre-wrap;
             font-size: 13px;
-            line-height: 1.5;
-            color: #333;
+            line-height: 1.6;
+            color: #212121;
+            border: 1px solid #e0e0e0;
+            flex: 1;
+        }
+
+        .modal-footer {
+            padding: 20px 28px;
+            text-align: right;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        #modalReportBtn {
+            padding: 12px 28px;
+            background: #F55600;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        #modalReportBtn:hover {
+            background: #d94d00;
+            transform: translateY(-1px);
         }
 
         .empty-message {
             text-align: center;
-            padding: 50px;
-            color: #999;
+            padding: 60px 20px;
+            color: #9e9e9e;
+            font-size: 15px;
+            font-weight: 500;
         }
     </style>
 </head>
@@ -155,7 +219,7 @@
 
 <div class="list-container">
     <div class="list-header">
-        <h2>📂 저장된 커밋 목록</h2>
+        <h2>📂 나의 커밋 목록</h2>
     </div>
 
     <ul id="fileList" class="commit-list">
@@ -171,8 +235,8 @@
         </div>
         <pre id="modalBody" class="modal-body">내용을 불러오는 중...</pre>
 
-        <div style="margin-top: 20px; text-align: right;">
-            <button id="modalReportBtn" class="btn-report">✨ 이 내용으로 보고서 만들기</button>
+        <div class="modal-footer">
+            <button id="modalReportBtn" class="btn-report">✨보고서 생성</button>
         </div>
     </div>
 </div>
@@ -244,7 +308,7 @@
 
         } catch (error) {
             console.error(error);
-            listElement.innerHTML = '<li class="empty-message" style="color:red">목록을 불러오지 못했습니다.</li>';
+            listElement.innerHTML = '<li class="empty-message" style="color:#ef4444">목록을 불러오지 못했습니다.</li>';
         }
     }
 
