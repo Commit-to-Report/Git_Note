@@ -1,73 +1,139 @@
 /* header.css */
 body {
     margin: 0;
-    font-family: 'Noto Sans KR', sans-serif; /* 폰트는 임의 설정 */
+    font-family: 'Noto Sans KR', sans-serif;
+    background-color: #f8f9fa;
 }
 
 .app-header {
     display: flex;
-    justify-content: space-between; /* 양쪽 끝으로 배치 */
+    justify-content: space-between;
     align-items: center;
-    padding: 0 20px;
-    height: 60px;
-    background-color: #fff;
-    border-bottom: 1px solid #ddd; /* 하단 구분선 */
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    padding: 0 24px;
+    height: 64px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 
 /* 왼쪽 네비게이션 메뉴 */
 .nav-menu {
     display: flex;
-    gap: 20px; /* 메뉴 사이 간격 */
+    gap: 10px;
 }
 
 .nav-link {
     text-decoration: none;
-    color: #333;
-    font-size: 16px;
+    color: #4a4a4a;
+    font-size: 15px;
     font-weight: 500;
+    letter-spacing: -0.02em;
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
 }
 
 .nav-link:hover {
-    color: #007bff; /* 마우스 올렸을 때 색상 */
+    color: #007bff;
+    background-color: rgba(0, 123, 255, 0.08);
+    transform: translateY(-1px);
+}
+
+.nav-icon {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
 }
 
 /* 오른쪽 사용자 영역 */
 .user-section {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 20px;
 }
 
 .user-profile {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 20px;
+    transition: background-color 0.2s ease;
 }
 
+.user-profile:hover {
+    background-color: #f1f3f5;
+}
+
+/* === [중요 수정] 아이콘 틀 === */
 .user-icon {
-    width: 32px;
-    height: 32px;
-    background-color: #333;
-    color: #fff;
-    border-radius: 50%; /* 원형 아이콘 */
+    width: 36px;
+    height: 36px;
+    /* 배경이 있을 경우를 대비 */
+    background: linear-gradient(135deg, #e9ecef, #dee2e6);
+    border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 14px;
+
+    /* 🚨 핵심: 이미지가 둥근 원 밖으로 넘치지 않게 자름 */
+    overflow: hidden;
+    flex-shrink: 0; /* 화면이 줄어들어도 찌그러지지 않게 고정 */
 }
 
+/* === [중요 수정] 틀 안의 이미지 강제 축소 === */
+.user-icon img,
+.user-icon svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* 비율 유지하며 꽉 채우기 */
+    display: block; /* 하단 빈 공간 제거 */
+}
+
+/* 구분선 */
+.user-section::before {
+    content: '';
+    display: block;
+    width: 1px;
+    height: 24px;
+    background-color: #e0e0e0;
+    margin: 0 4px;
+}
+
+/* 로그아웃 버튼 */
 .logout-btn {
+    display: flex;
+    align-items: center;
     text-decoration: none;
-    color: #666;
-    font-size: 14px;
+    color: #868e96;
+    font-size: 13px;
+    font-weight: 500;
     cursor: pointer;
+    padding: 6px 10px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.logout-icon {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+    margin-right: 6px;
+    opacity: 0.7;
 }
 
 .logout-btn:hover {
-    color: #d9534f; /* 로그아웃 호버 시 빨간색 계열 */
+    color: #fa5252;
+    background-color: rgba(250, 82, 82, 0.08);
 }
