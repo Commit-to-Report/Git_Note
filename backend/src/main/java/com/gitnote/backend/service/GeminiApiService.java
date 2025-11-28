@@ -91,8 +91,12 @@ public class GeminiApiService {
 
             String extractedText = extractTextFromJson(rawJsonResult);
 
-            System.out.println("[GeminiApiService] 추출된 텍스트 길이: " + extractedText.length());
-            return extractedText;
+            String safeText = extractedText
+                    .replace("\\", "\\\\")
+                    .replaceAll("\\\\(\\s|$)", "");
+
+            System.out.println("[GeminiApiService] 추출된 텍스트 길이: " + safeText.length());
+            return safeText;
 
         } catch (WebClientResponseException e) {
             System.err.println("[GeminiApiService] Gemini API 호출 실패 - 상태 코드: " + e.getStatusCode());
