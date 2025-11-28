@@ -4,6 +4,35 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>GitNote - 디버그</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://gitnote.app/debug.html" />
+    <meta property="og:title" content="GitNote - 디버그 도구" />
+    <meta
+      property="og:description"
+      content="GitNote 디버그 도구로 서버 상태와 API를 확인하세요."
+    />
+    <meta property="og:image" content="https://gitnote.app/img/logo_text.png" />
+    <meta property="og:site_name" content="GitNote" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="GitNote - 디버그 도구" />
+    <meta
+      name="twitter:description"
+      content="GitNote 디버그 도구로 서버 상태와 API를 확인하세요."
+    />
+
+    <!-- Meta Description -->
+    <meta
+      name="description"
+      content="GitNote 디버그 도구로 서버 상태와 API를 확인하세요."
+    />
+
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/header.css" />
     <link rel="stylesheet" href="css/footer.css" />
@@ -142,10 +171,11 @@
 
     <div id="footer-container"></div>
 
+    <script src="js/config.js"></script>
     <script src="js/header.js"></script>
     <script src="js/footer.js"></script>
     <script>
-      const API_BASE = "http://localhost:8080";
+      const API_BASE = window.API_BASE_URL;
 
       async function checkBackendServer() {
         const output = document.getElementById("serverStatus");

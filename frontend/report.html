@@ -5,11 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <title>GitNote 보고서</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://gitnote.app/report.html" />
+    <meta property="og:title" content="GitNote 보고서" />
+    <meta
+      property="og:description"
+      content="AI가 생성한 GitHub 커밋 분석 보고서를 확인하고 편집하세요."
+    />
+    <meta property="og:image" content="https://gitnote.app/img/logo_text.png" />
+    <meta property="og:site_name" content="GitNote" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="GitNote 보고서" />
+    <meta
+      name="twitter:description"
+      content="AI가 생성한 GitHub 커밋 분석 보고서를 확인하고 편집하세요."
+    />
+
+    <!-- Meta Description -->
+    <meta
+      name="description"
+      content="AI가 생성한 GitHub 커밋 분석 보고서를 확인하고 편집하세요."
+    />
+
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/header.css" />
+    <link rel="stylesheet" href="css/footer.css" />
     <link rel="stylesheet" href="./css/report.css" />
-</head>
-<body>
-<h1>GitNote 보고서</h1>
-<p id="status">보고서를 준비 중입니다...</p>
+  </head>
+  <body>
+    <div id="header-container"></div>
+
+    <main>
+      <h1>GitNote 보고서</h1>
+      <p id="status">보고서를 준비 중입니다...</p>
 
       <div class="style-buttons">
         <button id="styleSummaryBtn">간결 요약</button>
@@ -34,6 +69,7 @@
 
     <div id="footer-container"></div>
 
+    <script src="js/config.js"></script>
     <script src="js/header.js"></script>
     <script src="js/footer.js"></script>
     <script>
@@ -100,7 +136,7 @@
 
         try {
           const res = await fetch(
-            `http://localhost:8080/api/s3/report?key=${encodeURIComponent(
+            `${window.API_BASE_URL}/api/s3/report?key=${encodeURIComponent(
               targetKey
             )}&style=${style}`
           );
@@ -164,7 +200,7 @@
         }
 
         try {
-          const res = await fetch("http://localhost:8080/api/user/report", {
+          const res = await fetch(`${window.API_BASE_URL}/api/user/report`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ userId, reportId, content: updatedReport }),
@@ -184,14 +220,19 @@
         } catch (err) {
           alert("저장 중 네트워크 오류 발생: " + err.message);
         }
-    });
+      });
 
+      document
+        .getElementById("styleSummaryBtn")
+        .addEventListener("click", () => generateReport("summary"));
+      document
+        .getElementById("styleDetailedBtn")
+        .addEventListener("click", () => generateReport("detailed"));
+      document
+        .getElementById("styleStatisticsBtn")
+        .addEventListener("click", () => generateReport("statistics"));
 
-    document.getElementById("styleSummaryBtn").addEventListener("click", () => generateReport("summary"));
-    document.getElementById("styleDetailedBtn").addEventListener("click", () => generateReport("detailed"));
-    document.getElementById("styleStatisticsBtn").addEventListener("click", () => generateReport("statistics"));
-
-    generateReport("summary");
-</script>
-</body>
+      generateReport("summary");
+    </script>
+  </body>
 </html>
