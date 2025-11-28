@@ -2,7 +2,7 @@ package com.gitnote.backend.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gitnote.backend.RestDocsConfiguration;
-import com.gitnote.backend.service.ReportService;
+import com.gitnote.backend.service.DDBReportService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -38,7 +38,7 @@ public class DDBReportControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private ReportService reportService;
+    private DDBReportService reportService;
 
     @Test
     public void saveReport() throws Exception {
@@ -48,7 +48,7 @@ public class DDBReportControllerTest {
         request.put("reportId", "report_2024-11-27");
         request.put("content", "보고서 내용입니다...");
 
-        doNothing().when(reportService).saveUserReport(anyString(), anyString(), anyString());
+        doNothing().when(reportService).hashCode(anyString(), anyString());
 
         // when & then
         mockMvc.perform(post("/api/user/report")
