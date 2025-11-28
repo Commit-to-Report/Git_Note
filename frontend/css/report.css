@@ -1,13 +1,14 @@
+@import url('https://cdn.jsdelivr.net/gh/wanteddev/wanted-sans@v1.0.1/packages/wanted-sans/fonts/webfonts/variable/split/WantedSansVariable.min.css');
+
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Wanted Sans Variable', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 20px;
     background: #f2f4f7;
-    color: #333;
+    color: #1e1e1e;
 }
 h1 {
     text-align: center;
-    color: #2c3e50;
     margin-bottom: 20px;
 }
 #status {
@@ -41,8 +42,7 @@ h1 {
 }
 #summaryEdit:focus {
     outline: none;
-    border-color: #3498db;
-    box-shadow: 0 0 5px rgba(52,152,219,0.5);
+    border-color: #F55600;
 }
 #summaryPreview {
     overflow-y: auto;
@@ -71,19 +71,70 @@ h1 {
 #summaryEdit, #summaryPreview {
     display: none;
 }
-
-#editBtn { background-color: #3498db; color: #fff; }
-#previewBtn { background-color: #2ecc71; color: #fff; }
-#saveBtn { background-color: #e67e22; color: #fff; }
-#styleSummaryBtn { background-color: #9b59b6; color: #fff; }
-#styleDetailedBtn { background-color: #34495e; color: #fff; }
-#styleStatisticsBtn { background-color: #16a085; color: #fff; }
-button:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+#loadingSpinner {
+    width: 40px;
+    height: 40px;
+    border: 5px solid #ccc;
+    border-top-color: #F55600;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 20px auto;
+    display: block;
 }
-#summaryPreview h1, #summaryView h1 { font-size: 24px; color: #2c3e50; }
-#summaryPreview h2, #summaryView h2 { font-size: 20px; color: #34495e; }
+
+.hidden {
+    display: none;
+}
+
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+#editBtn, #previewBtn, #saveBtn {
+    color: #333;
+    border: none;
+    transition: all 0.2s ease;
+}
+
+#editBtn { background-color: #DDE1E7; }
+#previewBtn { background-color: #E8E8E8; }
+#saveBtn { background-color: #E0E0E0; }
+
+#editBtn:hover { background-color: #C4C9D3; }
+#previewBtn:hover { background-color: #D0D0D0; }
+#saveBtn:hover { background-color: #C8C8C8; }
+
+#editBtn:hover, #previewBtn:hover, #saveBtn:hover {
+    background-color: #F55600;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+#styleSummaryBtn, #styleDetailedBtn, #styleStatisticsBtn {
+    background-color: #fff;
+    color: #333;
+    border: 2px solid;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: all 0.2s ease;
+}
+
+#styleSummaryBtn { border-color: #B0E0E6; }
+#styleDetailedBtn { border-color: #FFD3B6; }
+#styleStatisticsBtn { border-color: #FFAAA5; }
+
+#styleSummaryBtn:hover { background-color: #e6f7fa; border-color: #7ecfe0; }
+#styleDetailedBtn:hover { background-color: #fff5eb; border-color: #ffb87f; }
+#styleStatisticsBtn:hover { background-color: #fff0f0; border-color: #ff7f7f; }
+
+
+#summaryPreview h1, #summaryView h1 { font-size: 24px; color: #1e1e1e; }
+#summaryPreview h2, #summaryView h2 { font-size: 20px; color: #1e1e1e; }
 #summaryPreview p, #summaryView p { color: #555; }
 #summaryPreview code, #summaryView code { background: #f4f4f4; padding: 2px 5px; border-radius: 4px; font-family: monospace; }
 #summaryPreview pre, #summaryView pre { background: #f4f4f4; padding: 10px; border-radius: 6px; overflow-x: auto; }
