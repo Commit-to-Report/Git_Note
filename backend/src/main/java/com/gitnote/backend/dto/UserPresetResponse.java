@@ -19,6 +19,7 @@ public class UserPresetResponse {
     private Boolean emailNotificationEnabled;
     private String reportStyle;
     private String reportFrequency;
+    private String repository;
     private Instant createdAt;
     private Instant updatedAt;
 
@@ -30,6 +31,7 @@ public class UserPresetResponse {
                 .emailNotificationEnabled(preset.getEmailNotificationEnabled())
                 .reportStyle(preset.getReportStyle())
                 .reportFrequency(preset.getReportFrequency())
+                .repository(preset.getRepository())
                 .createdAt(preset.getCreatedAt())
                 .updatedAt(preset.getUpdatedAt())
                 .build();
