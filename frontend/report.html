@@ -5,17 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <title>GitNote 보고서</title>
-    <link rel="stylesheet" href="css/style.css" />
-    <link rel="stylesheet" href="css/header.css" />
-    <link rel="stylesheet" href="css/footer.css" />
     <link rel="stylesheet" href="./css/report.css" />
-  </head>
-  <body>
-    <div id="header-container"></div>
-
-    <main>
-      <h1>GitNote 보고서</h1>
-      <p id="status">보고서를 준비 중입니다...</p>
+</head>
+<body>
+<h1>GitNote 보고서</h1>
+<p id="status">보고서를 준비 중입니다...</p>
 
       <div class="style-buttons">
         <button id="styleSummaryBtn">간결 요약</button>
@@ -190,19 +184,14 @@
         } catch (err) {
           alert("저장 중 네트워크 오류 발생: " + err.message);
         }
-      });
+    });
 
-      document
-        .getElementById("styleSummaryBtn")
-        .addEventListener("click", () => generateReport("summary"));
-      document
-        .getElementById("styleDetailedBtn")
-        .addEventListener("click", () => generateReport("detailed"));
-      document
-        .getElementById("styleStatisticsBtn")
-        .addEventListener("click", () => generateReport("statistics"));
 
-      generateReport("summary");
-    </script>
-  </body>
+    document.getElementById("styleSummaryBtn").addEventListener("click", () => generateReport("summary"));
+    document.getElementById("styleDetailedBtn").addEventListener("click", () => generateReport("detailed"));
+    document.getElementById("styleStatisticsBtn").addEventListener("click", () => generateReport("statistics"));
+
+    generateReport("summary");
+</script>
+</body>
 </html>

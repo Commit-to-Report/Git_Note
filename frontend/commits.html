@@ -5,16 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>GitNote - 커밋 조회</title>
 
-    <link rel="stylesheet" href="css/style.css" />
-    <link rel="stylesheet" href="css/header.css" />
-    <link rel="stylesheet" href="css/footer.css" />
     <link
       href="https://cdn.jsdelivr.net/gh/wanteddev/wanted-sans@v1.0.3/packages/wanted-sans/dist/css/wanted-sans.css"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/header.css" />
+    <link rel="stylesheet" href="css/footer.css" />
     <link rel="stylesheet" href="./css/commits.css" />
 
     <style>
+      /* [수정 1] 폰트 강제 적용 스타일 추가 */
+      body {
+        font-family: "Wanted Sans", -apple-system, BlinkMacSystemFont, system-ui,
+          Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo",
+          "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji",
+          "Segoe UI Symbol", sans-serif;
+      }
+
       /* 버튼 그룹을 아래로 내리기 위한 스타일 */
       .action-button-group {
         margin-top: 20px;
@@ -30,6 +38,10 @@
 
     <main>
       <div class="container">
+        <div class="page-header">
+          <h1>GitNote - 커밋 조회</h1>
+        </div>
+
         <div id="messageBox"></div>
 
         <div class="filter-section">
@@ -211,7 +223,6 @@
         document.getElementById("emptyState").style.display = "none";
         document.getElementById("searchBtn").disabled = true;
 
-        // [중요] 새 검색 시 기존 데이터 초기화
         currentCommitsText = "";
         uploadedFileUrl = "";
         document.getElementById("generateReportBtn").style.display = "none";
@@ -246,7 +257,6 @@
           "commitCount"
         ).textContent = `${commits.length}개`;
 
-        // 텍스트 생성
         let textContent = `리포지토리: ${selectedRepo?.fullName}\n`;
         textContent += `조회 기간: ${
           document.getElementById("sinceDate").value
@@ -262,9 +272,7 @@
           )} - ${message}\n`;
         });
 
-        // [수정 3] 여기서 전역 변수에 값을 할당해야 S3 업로드 시 "파일 없음" 에러가 안 뜸
         currentCommitsText = textContent;
-        console.log("Commits loaded, length:", currentCommitsText.length); // 디버깅용
 
         // 화면 렌더링
         document.getElementById("commitsList").innerHTML = `<pre>${escapeHtml(
