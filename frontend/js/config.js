@@ -10,7 +10,7 @@
   // HTTPS를 사용하여 Mixed Content 오류 방지
   // CloudFront를 통해 배포되는 경우 HTTPS를 사용해야 합니다
   const PRODUCTION_API_URL =
-    "https://gitnot-Gitno-CMVc8qxDvMZ1-202218994.ap-northeast-2.elb.amazonaws.com"; // HTTPS 사용
+    "http://gitnot-Gitno-CMVc8qxDvMZ1-202218994.ap-northeast-2.elb.amazonaws.com"; // HTTPS 사용
 
   // 로컬 개발 환경 API 주소
   const LOCAL_API_URL = "http://localhost:8080";
