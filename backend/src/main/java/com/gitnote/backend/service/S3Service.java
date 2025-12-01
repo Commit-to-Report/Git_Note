@@ -98,6 +98,22 @@ public class S3Service {
         return result.contents().stream().map(S3Object::key).collect(Collectors.toList());
     }
 
+    // [수정/추가] ★정보(날짜, 크기 등)를 통째로 주는 메서드★
+    public List<S3Object> getUserFileSummaries(String username) {
+        String prefix = username + "/";
+
+        ListObjectsV2Request request = ListObjectsV2Request.builder()
+                .bucket(bucketName)
+                .prefix(prefix)
+                .build();
+
+        // s3Client를 사용해야 합니다! (amazonS3 아님)
+        ListObjectsV2Response result = s3Client.listObjectsV2(request);
+
+        // v2에서는 getObjectSummaries()가 아니라 contents()입니다.
+        return result.contents();
+    }
+
     private String getUniqueFileName(String username, String originalFileName) {
         String fileName = originalFileName;
         String nameWithoutExt = fileName.contains(".") ? fileName.substring(0, fileName.lastIndexOf(".")) : fileName;

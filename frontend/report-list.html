@@ -7,6 +7,7 @@
 
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/header.css" />
+    <link rel="stylesheet" href="css/footer.css" />
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
     <style>
@@ -202,6 +203,13 @@
             if (!res.ok) throw new Error("서버 오류");
 
             const reports = await res.json();
+
+            // [추가된 부분] 데이터를 최신 날짜순(내림차순)으로 정렬
+            reports.sort((a, b) => {
+                // b.SK(최신) - a.SK(과거) -> 양수면 b가 앞으로 옴
+                return new Date(b.SK) - new Date(a.SK);
+            });
+
             tbody.innerHTML = "";
 
             if (!reports || reports.length === 0) {
@@ -213,7 +221,6 @@
                 const tr = document.createElement("tr");
                 const dt = formatDateTime(report.SK);
 
-                // 버튼을 없애고 대신 깔끔한 화살표(chevron) 아이콘만 넣음
                 tr.innerHTML = `
                     <td>
                         <span class="date-main">📅 ${dt.date}</span>
@@ -231,7 +238,6 @@
                 `;
                 tbody.appendChild(tr);
 
-                // [핵심 변경] 버튼이 아니라 '줄(tr)' 전체에 클릭 이벤트 추가
                 tr.addEventListener("click", () => {
                     openModal(report);
                 });
@@ -277,5 +283,6 @@
     document.addEventListener("DOMContentLoaded", loadReports);
 </script>
 <script src="js/header.js"></script>
+<script src="js/footer.js"></script>
 </body>
 </html>
