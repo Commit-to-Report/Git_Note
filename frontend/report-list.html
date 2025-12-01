@@ -7,146 +7,9 @@
 
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/header.css" />
+    <link rel="stylesheet" href="css/footer.css" />
+    <link rel="stylesheet" href="css/report-list.css" />
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-
-    <style>
-        /* 컨테이너 스타일 */
-        .container {
-            width: 100%;
-            max-width: 900px;
-            margin: 60px auto;
-            padding: 40px;
-            background: white;
-            border-radius: 16px;
-            border-top: 5px solid #F55600;
-            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
-        }
-
-        h2 {
-            margin-top: 0;
-            margin-bottom: 30px;
-            font-size: 26px;
-            font-weight: 700;
-            color: #333;
-            display: flex; align-items: center; gap: 10px;
-        }
-
-        /* 테이블 스타일 */
-        .report-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-
-        .report-table th {
-            background-color: #fff5f0;
-            color: #F55600;
-            padding: 16px;
-            text-align: left;
-            font-weight: 700;
-            border-bottom: 2px solid #F55600;
-        }
-
-        .report-table td {
-            padding: 20px 16px;
-            border-bottom: 1px solid #eee;
-            vertical-align: middle;
-        }
-
-        /* [핵심] 줄 전체에 마우스 올렸을 때 스타일 */
-        .report-table tbody tr {
-            cursor: pointer; /* 손가락 모양 커서 */
-            transition: background-color 0.2s;
-        }
-
-        /* 마우스 올리면 회색 배경 */
-        .report-table tbody tr:hover {
-            background-color: #f1f3f5;
-        }
-
-        .date-main { font-weight: 600; font-size: 16px; color: #333; }
-        .date-sub { font-size: 13px; color: #999; margin-left: 8px; }
-        .empty-msg { text-align: center; padding: 50px; color: #888; cursor: default !important; }
-
-        /* 화살표 아이콘 스타일 (버튼 대신) */
-        .arrow-icon {
-            color: #ccc;
-            font-weight: bold;
-            font-size: 18px;
-            transition: color 0.2s, transform 0.2s;
-        }
-
-        /* 줄에 마우스 올리면 화살표가 오렌지색으로 변하고 살짝 이동 */
-        .report-table tbody tr:hover .arrow-icon {
-            color: #F55600;
-            transform: translateX(5px);
-        }
-
-        /* --- 팝업(모달) 스타일 --- */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background-color: rgba(0, 0, 0, 0.6);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-            backdrop-filter: blur(2px);
-        }
-
-        .modal-window {
-            background: white;
-            width: 90%;
-            max-width: 800px;
-            max-height: 85vh;
-            border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            animation: slideUp 0.3s ease-out;
-        }
-
-        @keyframes slideUp {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        .modal-header {
-            padding: 20px 24px;
-            background: #fff;
-            border-bottom: 1px solid #eee;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .modal-title { font-size: 18px; font-weight: 700; color: #333; }
-
-        .close-btn {
-            background: none; border: none; font-size: 24px;
-            cursor: pointer; color: #888; transition: color 0.2s;
-        }
-        .close-btn:hover { color: #F55600; }
-
-        .modal-body {
-            padding: 30px;
-            overflow-y: auto;
-            font-size: 15px;
-            line-height: 1.6;
-            color: #333;
-        }
-
-        /* 모달 내부 마크다운 스타일 */
-        .modal-body h1 { font-size: 24px; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 20px; }
-        .modal-body h2 { font-size: 20px; color: #F55600; margin-top: 20px; }
-        .modal-body strong { color: #F55600; }
-        .modal-body blockquote { background: #fff5f0; border-left: 4px solid #F55600; padding: 10px 20px; margin: 20px 0; color: #555;}
-        .modal-body code { background: #f1f3f5; color: #c92a2a; padding: 2px 5px; border-radius: 4px; font-family: monospace; }
-        .modal-body p { margin-bottom: 15px; word-break: keep-all; }
-
-    </style>
 </head>
 <body>
 
@@ -166,6 +29,11 @@
         <tr><td colspan="3" class="empty-msg">데이터 로딩 중...</td></tr>
         </tbody>
     </table>
+    <div id="pagination" style="margin-top:10px; display:flex; justify-content:center; gap:10px;">
+        <button id="prevPage" disabled>◀ 이전</button>
+        <span id="pageInfo">1 / 1</span>
+        <button id="nextPage" disabled>다음 ▶</button>
+    </div>
 </div>
 
 <div id="reportModal" class="modal-overlay">
@@ -178,7 +46,13 @@
     </div>
 </div>
 
+<div id="footer-container"></div>
+
+<script src="js/config.js"></script>
+<script src="js/header.js"></script>
+<script src="js/footer.js"></script>
 <script>
+    // 날짜 형식 변환
     function formatDateTime(isoString) {
         if (!isoString) return { date: '-', time: '' };
         try {
@@ -195,55 +69,90 @@
         } catch (e) { return { date: isoString, time: '' }; }
     }
 
+    // 페이지네이션 변수
+    let currentPage = 1;
+    const pageSize = 10;
+    let allReports = [];
+
     async function loadReports() {
         const tbody = document.querySelector("#reportTable tbody");
         try {
             const res = await fetch("http://localhost:8080/api/user/report/list");
             if (!res.ok) throw new Error("서버 오류");
 
-            const reports = await res.json();
-            tbody.innerHTML = "";
+            allReports = await res.json();
 
-            if (!reports || reports.length === 0) {
+            if (!allReports || allReports.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="3" class="empty-msg">저장된 보고서가 없습니다.</td></tr>`;
+                document.getElementById("prevPage").disabled = true;
+                document.getElementById("nextPage").disabled = true;
+                document.getElementById("pageInfo").textContent = "0 / 0";
                 return;
             }
 
-            reports.forEach(report => {
-                const tr = document.createElement("tr");
-                const dt = formatDateTime(report.SK);
+            allReports.sort((a, b) => new Date(b.SK) - new Date(a.SK));
 
-                // 버튼을 없애고 대신 깔끔한 화살표(chevron) 아이콘만 넣음
-                tr.innerHTML = `
-                    <td>
-                        <span class="date-main">📅 ${dt.date}</span>
-                        <span class="date-sub">${dt.time}</span>
-                    </td>
-                    <td>
-                        <div style="display:flex; align-items:center; gap:8px;">
-                            <span style="background:#eee; padding:4px 8px; border-radius:12px; font-size:12px; font-weight:bold; color:#555;">User</span>
-                            <b style="font-size:15px;">${report.User}</b>
-                        </div>
-                    </td>
-                    <td style="text-align: center;">
-                        <span class="arrow-icon">›</span>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-
-                // [핵심 변경] 버튼이 아니라 '줄(tr)' 전체에 클릭 이벤트 추가
-                tr.addEventListener("click", () => {
-                    openModal(report);
-                });
-            });
-
+            renderPage();
         } catch (err) {
             console.error(err);
             tbody.innerHTML = `<tr><td colspan="3" class="empty-msg" style="color:red;">데이터 로드 실패</td></tr>`;
         }
     }
 
-    // --- 팝업 로직 ---
+    function renderPage() {
+        const tbody = document.querySelector("#reportTable tbody");
+        tbody.innerHTML = "";
+
+        const totalPages = Math.ceil(allReports.length / pageSize);
+        const start = (currentPage - 1) * pageSize;
+        const end = start + pageSize;
+        const pageReports = allReports.slice(start, end);
+
+        pageReports.forEach(report => {
+            const tr = document.createElement("tr");
+            const dt = formatDateTime(report.SK);
+
+            tr.innerHTML = `
+                <td>
+                    <span class="date-main">📅 ${dt.date}</span>
+                    <span class="date-sub">${dt.time}</span>
+                </td>
+                <td>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span style="background:#eee; padding:4px 8px; border-radius:12px; font-size:12px; font-weight:bold; color:#555;">User</span>
+                        <b style="font-size:15px;">${report.User}</b>
+                    </div>
+                </td>
+                <td style="text-align: center;">
+                    <span class="arrow-icon">›</span>
+                </td>
+            `;
+            tbody.appendChild(tr);
+
+            tr.addEventListener("click", () => {
+                openModal(report);
+            });
+        });
+
+        document.getElementById("prevPage").disabled = currentPage === 1;
+        document.getElementById("nextPage").disabled = currentPage === totalPages;
+        document.getElementById("pageInfo").textContent = `${currentPage} / ${totalPages}`;
+    }
+
+    document.getElementById("prevPage").addEventListener("click", () => {
+        if (currentPage > 1) {
+            currentPage--;
+            renderPage();
+        }
+    });
+    document.getElementById("nextPage").addEventListener("click", () => {
+        const totalPages = Math.ceil(allReports.length / pageSize);
+        if (currentPage < totalPages) {
+            currentPage++;
+            renderPage();
+        }
+    });
+
     function openModal(report) {
         const modal = document.getElementById('reportModal');
         const contentDiv = document.getElementById('modalContent');

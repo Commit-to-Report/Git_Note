@@ -1,18 +1,49 @@
 @import url("https://cdn.jsdelivr.net/gh/wanteddev/wanted-sans@v1.0.3/packages/wanted-sans/dist/css/wanted-sans.css");
 
-* {
-  font-family: "Wanted Sans Variable", "Wanted Sans", -apple-system,
-    BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
-  box-sizing: border-box;
+:root {
+  --brand-color: #F55600;
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --text-primary: #333333;
+  --text-secondary: #999999;
+  --table-header-bg: #fff5f0;
+  --table-header-text: #F55600;
+  --table-row-hover: #f1f3f5;
+  --modal-bg: #ffffff;
+  --modal-text: #333;
+  --code-bg: #f1f3f5;
+  --blockquote-bg: #fff5f0;
+  --blockquote-border: #F55600;
+  --button-bg: #fff;
+  --button-hover-bg: #f0f0f0;
+  --button-text: #333;
+}
+
+[data-theme="dark"] {
+  --bg-primary: #1a202c;
+  --bg-secondary: #2d3748;
+  --text-primary: #ffffff;
+  --text-secondary: #cbd5e0;
+  --table-header-bg: #2d3748;
+  --table-header-text: #F55600;
+  --table-row-hover: #3a3f4b;
+  --modal-bg: #2d3748;
+  --modal-text: #f7fafc;
+  --code-bg: #1e293b;
+  --blockquote-bg: #3a3f4b;
+  --blockquote-border: #F55600;
+  --button-bg: #2a2a2a;
+  --button-hover-bg: #444;
+  --button-text: #eee;
 }
 
 body {
-  background-color: #fafafa;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: "Wanted Sans Variable", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
   padding: 20px;
-  background: #f2f4f7;
-  color: #1e1e1e;
-  /* flexbox 레이아웃을 위해 padding 제거, main에 추가 */
+  transition: background-color 0.3s, color 0.3s;
 }
 
 main {
@@ -22,13 +53,14 @@ main {
 h1 {
   text-align: center;
   margin-bottom: 20px;
+  color: var(--text-primary);
 }
 
 #status {
   text-align: center;
   font-weight: bold;
   margin-bottom: 20px;
-  color: #555;
+  color: var(--text-secondary);
   max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
@@ -39,10 +71,9 @@ h1 {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto 20px auto;
-  background: #fff;
   border-radius: 10px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   padding: 15px;
+  box-shadow: none;
 }
 
 #summaryEdit,
@@ -51,23 +82,23 @@ h1 {
   width: 100%;
   min-height: 300px;
   padding: 15px;
-  border: 1px solid #ddd;
   border-radius: 8px;
   font-size: 16px;
   line-height: 1.6;
-  background: #fafafa;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  border: 3px solid #ddd;
   transition: all 0.3s ease;
   display: none;
 }
 
 #summaryEdit:focus {
   outline: none;
-  border-color: #f55600;
+  border-color: var(--brand-color);
 }
 
 #summaryPreview {
   overflow-y: auto;
-  background: #fefefe;
 }
 
 #actionButtons,
@@ -88,6 +119,8 @@ h1 {
   cursor: pointer;
   font-size: 14px;
   font-weight: bold;
+  background: var(--button-bg);
+  color: var(--button-text);
   transition: all 0.2s ease;
 }
 
@@ -96,15 +129,29 @@ h1 {
   cursor: not-allowed;
 }
 
+#actionButtons button:hover,
+.style-buttons button:hover {
+  background: var(--button-hover-bg);
+}
+
+#styleSummaryBtn { border: 2px solid #b0e0e6; }
+#styleDetailedBtn { border: 2px solid #ffd3b6; }
+#styleStatisticsBtn { border: 2px solid #ffaaa5; }
+
+#styleSummaryBtn:hover { border-color: #7ecfe0; }
+#styleDetailedBtn:hover { border-color: #ffb87f; }
+#styleStatisticsBtn:hover { border-color: #ff7f7f; }
+
 #loadingSpinner {
   width: 40px;
   height: 40px;
   border: 5px solid #ccc;
-  border-top-color: #f55600;
+  border-top-color: var(--brand-color);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
   margin: 20px auto;
   display: block;
+  transition: all 0.3s ease;
 }
 
 .hidden {
@@ -112,177 +159,42 @@ h1 {
 }
 
 @keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-#editBtn {
-  background-color: #dde1e7;
-}
-#previewBtn {
-  background-color: #e8e8e8;
-}
-#saveBtn {
-  background-color: #e0e0e0;
-}
-
-#editBtn:hover,
-#previewBtn:hover,
-#saveBtn:hover {
-  background-color: #f55600;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  color: #333;
-}
-
-#styleSummaryBtn {
-  background-color: #fff;
-  border: 2px solid #b0e0e6;
-  color: #333;
-}
-#styleDetailedBtn {
-  background-color: #fff;
-  border: 2px solid #ffd3b6;
-  color: #333;
-}
-#styleStatisticsBtn {
-  background-color: #fff;
-  border: 2px solid #ffaaa5;
-  color: #333;
-}
-
-#styleSummaryBtn:hover {
-  background-color: #e6f7fa;
-  border-color: #7ecfe0;
-}
-#styleDetailedBtn:hover {
-  background-color: #fff5eb;
-  border-color: #ffb87f;
-}
-#styleStatisticsBtn:hover {
-  background-color: #fff0f0;
-  border-color: #ff7f7f;
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 #summaryPreview h1,
-#summaryView h1 {
-  font-size: 24px;
-  color: #1e1e1e;
-}
+#summaryView h1 { font-size: 24px; color: var(--text-primary); }
 #summaryPreview h2,
-#summaryView h2 {
-  font-size: 20px;
-  color: #1e1e1e;
-}
+#summaryView h2 { font-size: 20px; color: var(--text-primary); }
 #summaryPreview p,
-#summaryView p {
-  color: #555;
-}
+#summaryView p { color: var(--text-secondary); }
 #summaryPreview code,
 #summaryView code {
-  background: #f4f4f4;
+  background: var(--code-bg);
   padding: 2px 5px;
   border-radius: 4px;
   font-family: monospace;
+  color: #c92a2a;
 }
 #summaryPreview pre,
 #summaryView pre {
-  background: #f4f4f4;
+  background: var(--code-bg);
   padding: 10px;
   border-radius: 6px;
   overflow-x: auto;
 }
 
-#reportTable {
-  width: 100%;
-  max-width: 1000px;
-  margin: 0 auto;
-  border-collapse: collapse;
-  background: white;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-}
-
-#reportTable thead {
-  background: #f5f5f5;
-}
-#reportTable th,
-#reportTable td {
-  padding: 16px 24px;
-  text-align: left;
-  font-size: 14px;
-  color: #333;
-}
-#reportTable th {
-  font-weight: 600;
-  color: #111827;
-  border-bottom: 1px solid #e0e0e0;
-}
-#reportTable tbody tr {
-  transition: background-color 0.2s;
-  cursor: pointer;
-}
-#reportTable tbody tr:hover {
-  background-color: #fafafa;
-}
-#reportTable tbody td {
-  border-bottom: 1px solid #f0f0f0;
-}
-#reportTable tbody tr:last-child td {
-  border-bottom: none;
-}
-
-.error {
-  color: #ef4444;
-  font-weight: 500;
-  text-align: center;
-}
-.loading {
-  text-align: center;
-  color: #9e9e9e;
-}
-
-.btn-report {
-  padding: 8px 20px;
-  background: #f55600;
-  border: none;
-  border-radius: 8px;
-  color: white;
-  font-weight: 600;
-  font-size: 13px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.btn-report:hover {
-  background: #d94d00;
-  transform: translateY(-1px);
-}
+.error { color: #ef4444; font-weight: 500; text-align: center; }
+.loading { text-align: center; color: var(--text-secondary); }
 
 @media (max-width: 768px) {
-  #reportTable th,
-  #reportTable td {
-    padding: 12px 16px;
-    font-size: 13px;
-  }
-  h1 {
-    font-size: 24px;
-    margin-bottom: 30px;
-  }
+  #reportTable th, #reportTable td { padding: 12px 16px; font-size: 13px; }
+  h1 { font-size: 24px; margin-bottom: 30px; }
 }
 
 @media (max-width: 600px) {
   #actionButtons button,
-  .style-buttons button {
-    font-size: 12px;
-    padding: 6px 12px;
-  }
-  #summaryContainer {
-    padding: 10px;
-  }
+  .style-buttons button { font-size: 12px; padding: 6px 12px; }
+  #summaryContainer { padding: 10px; }
 }

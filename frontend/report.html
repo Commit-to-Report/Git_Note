@@ -181,16 +181,17 @@
       });
 
       previewBtn.addEventListener("click", () => {
+        summaryPreview.innerHTML = "";
         summaryPreview.innerHTML = marked.parse(summaryEdit.value);
         summaryEdit.style.display = "none";
+        summaryView.style.display = "none";
         summaryPreview.style.display = "block";
       });
 
+
+
       saveBtn.addEventListener("click", async () => {
-        const updatedReport =
-          summaryEdit.style.display === "block"
-            ? summaryEdit.value
-            : originalMarkdown;
+        const updatedReport = summaryEdit.value;
         const reportId = targetKey;
         const userId = sessionStorage.getItem("username");
 
