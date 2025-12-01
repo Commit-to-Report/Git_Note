@@ -89,7 +89,7 @@
         const tbody = document.querySelector("#reportTable tbody");
         try {
           const res = await fetch(
-            `${BACKEND_API_URL}/api/user/report/list`,
+            `${API_BASE_URL}/api/user/report/list`,
             {
               credentials: "include",
             }
