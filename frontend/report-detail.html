@@ -17,7 +17,7 @@
 
   async function loadReport() {
     try {
-      const res = await fetch(`http://localhost:8080/api/user/report/view?pk=${encodeURIComponent(pk)}&sk=${encodeURIComponent(sk)}`);
+      const res = await fetch(`http://${BACKEND_API_URL}/api/user/report/view?pk=${encodeURIComponent(pk)}&sk=${encodeURIComponent(sk)}`);
       if (!res.ok) throw new Error("보고서를 가져올 수 없습니다.");
       const report = await res.json();
       document.getElementById("reportContent").textContent = report.Content;

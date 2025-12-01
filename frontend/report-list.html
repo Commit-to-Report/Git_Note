@@ -77,7 +77,7 @@
     async function loadReports() {
         const tbody = document.querySelector("#reportTable tbody");
         try {
-            const res = await fetch("http://localhost:8080/api/user/report/list");
+            const res = await fetch("http://${BACKEND_API_URL}/api/user/report/list");
             if (!res.ok) throw new Error("서버 오류");
 
             const reports = await res.json();
