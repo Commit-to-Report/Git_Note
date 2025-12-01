@@ -169,3 +169,45 @@ h2 {
 .modal-body blockquote { background: var(--blockquote-bg); border-left: 4px solid var(--blockquote-border); padding: 10px 20px; margin: 20px 0; color: var(--text-secondary);}
 .modal-body code { background: var(--code-bg); color: #c92a2a; padding: 2px 5px; border-radius: 4px; font-family: monospace; }
 .modal-body p { margin-bottom: 15px; word-break: keep-all; }
+
+#pagination {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+}
+
+#pagination button {
+    padding: 6px 14px;
+    border: none;
+    border-radius: 8px;
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.2s all;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+#pagination button:hover:not(:disabled) {
+    background-color: var(--brand-color);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+}
+
+#pagination button:disabled {
+    background-color: #5552;
+    color: var(--text-secondary);
+    cursor: default;
+    box-shadow: none;
+}
+
+#pagination span {
+    font-size: 14px;
+    font-weight: bold;
+    color: var(--text-primary);
+}
+
+
