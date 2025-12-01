@@ -35,6 +35,9 @@ function getHeaderHTML() {
                 <a href="commit-list.html" class="nav-link">
                     <img src="img/list.png" alt="목록 아이콘" class="nav-icon"> 커밋 목록
                 </a>
+                <a href="report-list.html" class="nav-link">
+                    <span class="nav-icon">📑</span> 보고서 목록
+                </a>
             </nav>
 
             <div class="user-section">

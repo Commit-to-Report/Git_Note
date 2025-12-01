@@ -12,9 +12,16 @@ import software.amazon.awssdk.services.s3.model.ListObjectsV2Response;
 import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 import software.amazon.awssdk.services.s3.model.S3Object;
 
+// [추가된 import] Presigned URL 관련
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
+import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequest;
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,71 +31,88 @@ public class S3Service {
 
     private final S3Template s3Template;
     private final S3Client s3Client;
+    private final S3Presigner s3Presigner; // [핵심] Config에 있는 프리사이너 주입
 
     @Value("${spring.cloud.aws.s3.bucket}")
     private String bucketName;
 
-    // [변경 1] username을 받아서 폴더 경로로 사용
+    // 1. 파일 업로드 (기존 유지)
     public String uploadLog(String username, String baseFileName, String content) {
-
-        // 1. 중복되지 않는 파일명 생성 (사용자 폴더 내부에서 검사)
         String uniqueFileName = getUniqueFileName(username, baseFileName);
-
-        // 2. 최종 저장 경로: username/파일명
         String fullKey = username + "/" + uniqueFileName;
 
-        // 3. 내용 변환
         InputStream inputStream = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
-
-        // 4. 메타데이터 설정
         ObjectMetadata metadata = ObjectMetadata.builder()
                 .contentType("text/plain; charset=UTF-8")
                 .build();
 
-        // 5. 업로드 (경로 포함)
         s3Template.upload(bucketName, fullKey, inputStream, metadata);
 
-        // URL 반환
-        return "https://" + bucketName + ".s3.ap-northeast-2.amazonaws.com/" + fullKey;
+        // [팁] DB에는 긴 URL 대신 'fullKey'(경로)만 저장하는 게 좋습니다.
+        // 하지만 기존 코드 호환성을 위해 일단 둡니다.
+        return fullKey;
     }
 
-    // [추가] 해당 사용자의 파일 목록 조회하기
+    // 2. [NEW] 임시 열람 URL 생성 (이게 없어서 안 보이는 겁니다!)
+    public String getPresignedUrl(String keyName) {
+        if (keyName == null || keyName.isEmpty()) return "";
+
+        // 혹시 DB에 전체 URL(https://...)로 저장되어 있다면 경로만 잘라냅니다.
+        if (keyName.startsWith("http")) {
+            // ".com/" 뒷부분부터 가져옴
+            int index = keyName.indexOf(".com/");
+            if (index != -1) {
+                keyName = keyName.substring(index + 5);
+            }
+        }
+
+        try {
+            // S3에게 "이 파일 10분만 보여줘" 요청 생성
+            GetObjectRequest objectRequest = GetObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(keyName) // 파일 경로 (예: MinJ-i/file.txt)
+                    .build();
+
+            GetObjectPresignRequest presignRequest = GetObjectPresignRequest.builder()
+                    .signatureDuration(Duration.ofMinutes(10)) // 10분 유효
+                    .getObjectRequest(objectRequest)
+                    .build();
+
+            PresignedGetObjectRequest presignedRequest = s3Presigner.presignGetObject(presignRequest);
+
+            // 암호가 잔뜩 붙은 긴 URL 반환
+            return presignedRequest.url().toString();
+        } catch (Exception e) {
+            System.err.println("URL 생성 실패: " + e.getMessage());
+            return "";
+        }
+    }
+
+    // ... (나머지 getUserFileList, getUniqueFileName 등 기존 코드 유지) ...
     public List<String> getUserFileList(String username) {
         ListObjectsV2Request request = ListObjectsV2Request.builder()
                 .bucket(bucketName)
-                .prefix(username + "/") // "username/" 으로 시작하는 것만 검색
+                .prefix(username + "/")
                 .build();
-
         ListObjectsV2Response result = s3Client.listObjectsV2(request);
-
-        return result.contents().stream()
-                .map(S3Object::key) // 전체 경로(키)를 가져옴
-                .collect(Collectors.toList());
+        return result.contents().stream().map(S3Object::key).collect(Collectors.toList());
     }
 
-    // [변경 2] 중복 파일명 처리 로직 (사용자 폴더까지 고려)
     private String getUniqueFileName(String username, String originalFileName) {
         String fileName = originalFileName;
-        String nameWithoutExt = fileName.substring(0, fileName.lastIndexOf("."));
-        String ext = fileName.substring(fileName.lastIndexOf("."));
-
+        String nameWithoutExt = fileName.contains(".") ? fileName.substring(0, fileName.lastIndexOf(".")) : fileName;
+        String ext = fileName.contains(".") ? fileName.substring(fileName.lastIndexOf(".")) : "";
         int count = 1;
-
-        // username/파일명 경로에 파일이 있는지 확인
         while (doesFileExist(username + "/" + fileName)) {
             fileName = nameWithoutExt + "(" + count + ")" + ext;
             count++;
         }
-        return fileName; // 경로를 뺀 순수 파일명만 리턴
+        return fileName;
     }
 
-    // 파일 존재 여부 확인 (전체 경로인 Key를 받음)
     private boolean doesFileExist(String fullKey) {
         try {
-            s3Client.headObject(HeadObjectRequest.builder()
-                    .bucket(bucketName)
-                    .key(fullKey)
-                    .build());
+            s3Client.headObject(HeadObjectRequest.builder().bucket(bucketName).key(fullKey).build());
             return true;
         } catch (NoSuchKeyException e) {
             return false;

@@ -37,4 +37,6 @@ out/
 .vscode/
 
 .env
+
+.idea
 !gradle/wrapper/gradle-wrapper.jar
