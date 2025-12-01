@@ -50,10 +50,13 @@ exports.handler = async (event) => {
         // 3. 각 사용자별로 리포트 생성
         for (const preset of activePresets) {
             try {
-                const userId = preset.userId?.S;
+                // PK를 userId로 사용 (DynamoDB 파티션 키)
+                const userId = preset.PK?.S || preset.userId?.S;
                 const repository = preset.repository?.S;
                 const reportStyle = preset.reportStyle?.S || 'summary';
                 const accessToken = preset.accessToken?.S;
+
+                console.log(`[AutoReportHandler] Processing preset: userId=${userId}, repository=${repository}, hasAccessToken=${!!accessToken}`);
 
                 // repository 또는 accessToken이 없으면 스킵
                 if (!repository) {
