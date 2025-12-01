@@ -63,6 +63,9 @@ dependencies {
 
     // AWS DynamoDB SDK
     implementation 'io.awspring.cloud:spring-cloud-aws-starter-dynamodb:3.1.1'
+
+	// AWS SES SDK for email
+	implementation 'software.amazon.awssdk:ses:2.21.46'
 }
 
 tasks.named('test') {

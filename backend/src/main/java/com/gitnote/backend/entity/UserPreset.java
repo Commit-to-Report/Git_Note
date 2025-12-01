@@ -24,6 +24,7 @@ public class UserPreset {
     private String reportStyle;         // 보고서 스타일/프롬프트
     private String reportFrequency;     // 보고서 생성 주기 (DAILY, WEEKLY, MONTHLY)
     private String repository;          // 자동 보고서 생성할 리포지토리 (fullName 형식: owner/repo)
+    private String accessToken;         // GitHub Access Token (Lambda에서 사용)
     private Instant createdAt;          // 생성 시간
     private Instant updatedAt;          // 수정 시간
 

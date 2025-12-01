@@ -80,7 +80,15 @@
             const res = await fetch("http://localhost:8080/api/user/report/list");
             if (!res.ok) throw new Error("서버 오류");
 
-            allReports = await res.json();
+            const reports = await res.json();
+
+            // [추가된 부분] 데이터를 최신 날짜순(내림차순)으로 정렬
+            reports.sort((a, b) => {
+                // b.SK(최신) - a.SK(과거) -> 양수면 b가 앞으로 옴
+                return new Date(b.SK) - new Date(a.SK);
+            });
+
+            tbody.innerHTML = "";
 
             if (!allReports || allReports.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="3" class="empty-msg">저장된 보고서가 없습니다.</td></tr>`;
@@ -186,5 +194,6 @@
     document.addEventListener("DOMContentLoaded", loadReports);
 </script>
 <script src="js/header.js"></script>
+<script src="js/footer.js"></script>
 </body>
 </html>

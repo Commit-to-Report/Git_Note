@@ -48,7 +48,7 @@ public class DDBReportControllerTest {
         request.put("reportId", "report_2024-11-27");
         request.put("content", "보고서 내용입니다...");
 
-        doNothing().when(reportService).hashCode(anyString(), anyString());
+        doNothing().when(reportService).saveUserReport(anyString(), anyString(), anyString());
 
         // when & then
         mockMvc.perform(post("/api/user/report")
