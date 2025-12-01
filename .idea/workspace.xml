@@ -4,14 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8647ef0c-f9b2-4cc5-99fb-d35060f7c106" name="변경" comment="">
-      <change afterPath="$PROJECT_DIR$/frontend/report-detail.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/report-list.html" afterDir="false" />
+    <list default="true" id="0471f688-5949-4132-a755-b095fee02a2d" name="변경" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/gitnote/backend/controller/DDBReportController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/gitnote/backend/controller/DDBReportController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/gitnote/backend/service/DDBReportService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/gitnote/backend/service/DDBReportService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/css/report.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/css/report.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/report.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/report.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/gitnote/backend/controller/S3Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/gitnote/backend/controller/S3Controller.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/gitnote/backend/service/S3Service.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/gitnote/backend/service/S3Service.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/js/header.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/js/header.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/report-list.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/report-list.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,37 +46,64 @@
     </option>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_BRANCH_BY_REPOSITORY">
-      <map>
-        <entry key="$PROJECT_DIR$" value="main" />
-      </map>
-    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 8
+}</component>
+  <component name="ProjectId" id="365kEtsCQBdqa5ltX3MhvJog0WH" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;Gradle.backend [:com.gitnote.backend.BackendApplication.main()].executor&quot;: &quot;Run&quot;,
     &quot;Gradle.backend 빌드.executor&quot;: &quot;Run&quot;,
-    &quot;JavaScript 디버그.report.html.executor&quot;: &quot;Run&quot;,
-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
-    &quot;Spring Boot.BackendApplication.executor&quot;: &quot;Run&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;ReportList&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Projecttest/Git_Note&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;프로젝트&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;애플리케이션.BackendApplication.executor&quot;: &quot;Run&quot;
   }
 }</component>
-  <component name="RunManager">
-    <configuration name="BackendApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Projecttest\Git_Note" />
+      <recent name="C:\Projecttest\Git_Note\frontend\img" />
+    </key>
+  </component>
+  <component name="RunManager" selected="애플리케이션.BackendApplication (2)">
+    <configuration name="BackendApplication (2)" type="Application" factoryName="Application" nameIsGenerated="true">
       <option name="envFilePaths">
-        <option value="$PROJECT_DIR$/backend/.env" />
+        <option value="$USER_HOME$/OneDrive/Documents/.env" />
       </option>
+      <option name="MAIN_CLASS_NAME" value="com.gitnote.backend.BackendApplication" />
       <module name="backend.main" />
-      <selectedOptions>
-        <option name="environmentVariables" />
-      </selectedOptions>
-      <option name="SPRING_BOOT_MAIN_CLASS" value="com.gitnote.backend.BackendApplication" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.gitnote.backend.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <extension name="net.ashald.envfile">
+        <option name="IS_ENABLED" value="false" />
+        <option name="IS_SUBST" value="false" />
+        <option name="IS_PATH_MACRO_SUPPORTED" value="false" />
+        <option name="IS_IGNORE_MISSING_FILES" value="false" />
+        <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false" />
+        <ENTRIES>
+          <ENTRY IS_ENABLED="true" PARSER="runconfig" IS_EXECUTABLE="false" />
+        </ENTRIES>
+      </extension>
       <extension name="software.aws.toolkits.jetbrains.core.execution.JavaAwsConnectionExtension">
         <option name="credential" />
         <option name="region" />
@@ -88,8 +113,68 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="BackendApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="ALTERNATIVE_JRE_PATH" value="17" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="envFilePaths">
+        <option value="$USER_HOME$/OneDrive/Documents/.env" />
+      </option>
+      <option name="MAIN_CLASS_NAME" value="com.gitnote.backend.BackendApplication" />
+      <module name="backend" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.gitnote.backend.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <extension name="net.ashald.envfile">
+        <option name="IS_ENABLED" value="false" />
+        <option name="IS_SUBST" value="false" />
+        <option name="IS_PATH_MACRO_SUPPORTED" value="false" />
+        <option name="IS_IGNORE_MISSING_FILES" value="false" />
+        <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false" />
+        <ENTRIES>
+          <ENTRY IS_ENABLED="true" PARSER="runconfig" IS_EXECUTABLE="false" />
+        </ENTRIES>
+      </extension>
+      <extension name="software.aws.toolkits.jetbrains.core.execution.JavaAwsConnectionExtension">
+        <option name="credential" />
+        <option name="region" />
+        <option name="useCurrentConnection" value="false" />
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="애플리케이션.BackendApplication (2)" />
+      <item itemvalue="애플리케이션.BackendApplication" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="애플리케이션.BackendApplication" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="TaskManager">
+    <task active="true" id="Default" summary="디폴트 작업">
+      <changelist id="0471f688-5949-4132-a755-b095fee02a2d" name="변경" comment="" />
+      <created>1764303712269</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1764303712269</updated>
+    </task>
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>
