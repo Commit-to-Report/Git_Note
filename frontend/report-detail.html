@@ -16,28 +16,17 @@
       const pk = params.get("pk");
       const sk = params.get("sk");
 
-      async function loadReport() {
-        try {
-          const res = await fetch(
-            `${
-              window.API_BASE_URL
-            }/api/user/report/view?pk=${encodeURIComponent(
-              pk
-            )}&sk=${encodeURIComponent(sk)}`,
-            {
-              credentials: "include",
-            }
-          );
-          if (!res.ok) throw new Error("보고서를 가져올 수 없습니다.");
-          const report = await res.json();
-          document.getElementById("reportContent").textContent = report.Content;
-        } catch (err) {
-          document.getElementById(
-            "reportContent"
-          ).textContent = `오류: ${err.message}`;
-          console.error(err);
-        }
-      }
+  async function loadReport() {
+    try {
+      const res = await fetch(`http://${BACKEND_API_URL}/api/user/report/view?pk=${encodeURIComponent(pk)}&sk=${encodeURIComponent(sk)}`);
+      if (!res.ok) throw new Error("보고서를 가져올 수 없습니다.");
+      const report = await res.json();
+      document.getElementById("reportContent").textContent = report.Content;
+    } catch (err) {
+      document.getElementById("reportContent").textContent = `오류: ${err.message}`;
+      console.error(err);
+    }
+  }
 
       loadReport();
     </script>
