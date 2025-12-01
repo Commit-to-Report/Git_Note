@@ -35,6 +35,10 @@ public class UserPresetService {
                     existing.setReportStyle(preset.getReportStyle());
                     existing.setReportFrequency(preset.getReportFrequency());
                     existing.setRepository(preset.getRepository());
+                    // accessToken이 제공된 경우에만 업데이트 (null이 아닐 때만)
+                    if (preset.getAccessToken() != null) {
+                        existing.setAccessToken(preset.getAccessToken());
+                    }
                     existing.setUpdatedAt(Instant.now());
                     return userPresetRepository.save(existing);
                 })
