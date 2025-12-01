@@ -83,6 +83,9 @@ public class UserPresetController {
                 repository = null;
             }
 
+            // 세션에서 accessToken 가져오기 (Lambda에서 사용하기 위해 저장)
+            String accessToken = (String) session.getAttribute("accessToken");
+
             // UserPreset 객체 생성 (Builder 패턴, null 아닌 값 처리)
             UserPreset preset = UserPreset.builder()
                     .userId(username)
@@ -92,6 +95,7 @@ public class UserPresetController {
                     .reportStyle(reportStyle)
                     .reportFrequency(reportFrequency)
                     .repository(repository)
+                    .accessToken(accessToken)  // 세션의 accessToken 저장
                     .build();
 
             System.out.println("🔍 저장할 Preset: " + preset);
