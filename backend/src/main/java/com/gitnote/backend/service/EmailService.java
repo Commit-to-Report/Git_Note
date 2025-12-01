@@ -83,6 +83,7 @@ public class EmailService {
         
         try {
             log.info("[SES 1단계] SendEmailRequest 생성 시작");
+            String sourceEmail = String.format("%s <%s>", senderName, senderEmail);
             
             SendEmailRequest request = SendEmailRequest.builder()
                     .source(sourceEmail)
