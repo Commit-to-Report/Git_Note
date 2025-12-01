@@ -6,10 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="0471f688-5949-4132-a755-b095fee02a2d" name="변경" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/gitnote/backend/controller/S3Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/gitnote/backend/controller/S3Controller.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/gitnote/backend/service/S3Service.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/gitnote/backend/service/S3Service.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/js/header.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/js/header.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/report-list.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/report-list.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/backend/.gitignore" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
