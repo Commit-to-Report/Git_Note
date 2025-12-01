@@ -65,8 +65,6 @@
       function formatDateTime(isoString) {
         if (!isoString) return { date: "-", time: "" };
         try {
-            const res = await fetch("http://${BACKEND_API_URL}/api/user/report/list");
-            if (!res.ok) throw new Error("서버 오류");
           const dateObj = new Date(isoString);
           const year = dateObj.getFullYear();
           const month = String(dateObj.getMonth() + 1).padStart(2, "0");
@@ -91,7 +89,7 @@
         const tbody = document.querySelector("#reportTable tbody");
         try {
           const res = await fetch(
-            `${window.API_BASE_URL}/api/user/report/list`,
+            `${BACKEND_API_URL}/api/user/report/list`,
             {
               credentials: "include",
             }
