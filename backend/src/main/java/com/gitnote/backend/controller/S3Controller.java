@@ -10,7 +10,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import software.amazon.awssdk.services.s3.model.S3Object;
+import java.util.Date;
 
 @RestController
 @RequestMapping("/api/s3")
@@ -50,33 +51,45 @@ public class S3Controller {
     @GetMapping("/list")
     public ResponseEntity<?> getMyCommitLogs(@RequestParam String username) {
         try {
-            // 1. S3에서 파일 키(경로) 목록 가져오기
-            List<String> fileKeys = s3Service.getUserFileList(username);
+            // [변경] 반환 타입이 S3Object로 바뀜
+            List<S3Object> summaries = s3Service.getUserFileSummaries(username);
 
-            // 2. 각 파일마다 '프리사인 URL' 발급해서 리스트로 만들기
-            List<Map<String, String>> fileList = new ArrayList<>();
+            List<Map<String, Object>> fileList = new ArrayList<>();
 
-            for (String key : fileKeys) {
-                // 파일명만 추출 (예: MinJ-i/abc.txt -> abc.txt)
+            for (S3Object summary : summaries) { // 타입 S3Object
+                String key = summary.key(); // .getKey() -> .key()
+
+                if (key.endsWith("/")) continue;
+
                 String fileName = key.contains("/") ? key.substring(key.lastIndexOf("/") + 1) : key;
-
-                // [핵심] 10분짜리 임시 열람 주소 발급
                 String presignedUrl = s3Service.getPresignedUrl(key);
 
-                // 정보 담기
+                // [핵심 변경] v2는 get...()이 아니라 그냥 .size(), .lastModified() 입니다.
+                long size = summary.size();
+
+                // Instant 타입을 Date 타입으로 변환 (프론트엔드 호환용)
+                Date lastModified = Date.from(summary.lastModified());
+
                 fileList.add(Map.of(
-                        "fileName", fileName,   // 화면 표시용 이름
-                        "url", presignedUrl,    // 실제 데이터 가져올 주소 (서명 포함됨)
-                        "key", key              // 원본 경로
+                        "fileName", fileName,
+                        "url", presignedUrl,
+                        "key", key,
+                        "size", size,
+                        "lastModified", lastModified
                 ));
             }
 
-            // 3. 변경된 리스트 반환
-            return ResponseEntity.ok(Map.of(
-                    "files", fileList,
-                    "count", fileList.size()
-            ));
+            // [정렬 로직 유지]
+            fileList.sort((a, b) -> {
+                Date dateA = (Date) a.get("lastModified");
+                Date dateB = (Date) b.get("lastModified");
+                return dateB.compareTo(dateA);
+            });
+
+            return ResponseEntity.ok(Map.of("files", fileList, "count", fileList.size()));
+
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.internalServerError().body(Map.of(
                     "message", "Failed to load list: " + e.getMessage()
             ));
