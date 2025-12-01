@@ -1,19 +1,20 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
-  <meta charset="UTF-8">
-  <title>보고서 내용</title>
-  <link rel="stylesheet" href="./css/header.css" />
-  <link rel="stylesheet" href="./css/report.css" />
-</head>
-<body>
-<h1>보고서 내용</h1>
-<div id="reportContent" class="loading">데이터 로딩 중...</div>
+  <head>
+    <meta charset="UTF-8" />
+    <title>보고서 내용</title>
+    <link rel="stylesheet" href="./css/header.css" />
+    <link rel="stylesheet" href="./css/report.css" />
+  </head>
+  <body>
+    <h1>보고서 내용</h1>
+    <div id="reportContent" class="loading">데이터 로딩 중...</div>
 
-<script>
-  const params = new URLSearchParams(window.location.search);
-  const pk = params.get("pk");
-  const sk = params.get("sk");
+    <script src="js/config.js"></script>
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      const pk = params.get("pk");
+      const sk = params.get("sk");
 
   async function loadReport() {
     try {
@@ -27,7 +28,7 @@
     }
   }
 
-  loadReport();
-</script>
-</body>
+      loadReport();
+    </script>
+  </body>
 </html>

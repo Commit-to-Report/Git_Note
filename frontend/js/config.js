@@ -7,9 +7,10 @@
   // ============================================
 
   // 프로덕션 환경에서 백엔드 API 주소 설정
-  // TODO: 실제 배포 시 아래 주소를 컨테이너 주소로 변경하세요
-  const PRODUCTION_API_URL =
-    "http://gitnot-Gitno-qOFV3HRhbawA-1029291875.ap-northeast-2.elb.amazonaws.com"; // 기본값: 같은 도메인 사용
+  // CloudFront를 통해 백엔드 API로 프록시하도록 설정
+  // CloudFront Distribution에 /api/* behavior를 추가하여 백엔드 ALB로 프록시해야 함
+  // 이렇게 하면 HTTPS 페이지에서 HTTP API 호출 시 Mixed Content 오류를 방지할 수 있음
+  const PRODUCTION_API_URL = "https://d1l3a7dvc3xbrk.cloudfront.net"; // CloudFront 도메인 사용
 
   // 로컬 개발 환경 API 주소
   const LOCAL_API_URL = "http://localhost:8080";

@@ -114,9 +114,9 @@ public class AutoReportController {
             // 3. Gemini API로 리포트 생성
             String reportContent = geminiApiService.generateContent(commitsText, reportStyle);
 
-            // 4. DynamoDB에 리포트 저장
+            // 4. DynamoDB에 리포트 저장 (자동 저장이므로 한국 시간대 사용)
             log.info("보고서 저장 시작: userId={}, repository={}", userId, repository);
-            reportService.saveUserReport(userId, repository, reportContent);
+            reportService.saveUserReport(userId, repository, reportContent, java.time.ZoneId.of("Asia/Seoul"));
             log.info("보고서 저장 완료: userId={}, repository={}", userId, repository);
 
             // 5. 이메일 알림 전송 (사용자 설정에 따라)
