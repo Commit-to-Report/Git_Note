@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>GitNote - 보고서 목록</title>
@@ -10,98 +10,113 @@
     <link rel="stylesheet" href="css/footer.css" />
     <link rel="stylesheet" href="css/report-list.css" />
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-</head>
-<body>
+  </head>
+  <body>
+    <div id="header-container"></div>
 
-<div id="header-container"></div>
-
-<div class="container">
-    <h2>📑 전체보기 </h2>
-    <table class="report-table" id="reportTable">
+    <div class="container">
+      <h2>📑 전체보기</h2>
+      <table class="report-table" id="reportTable">
         <thead>
-        <tr>
+          <tr>
             <th width="45%">날짜</th>
             <th width="35%">사용자</th>
-            <th width="20%" style="text-align: center;">열기</th>
-        </tr>
+            <th width="20%" style="text-align: center">열기</th>
+          </tr>
         </thead>
         <tbody>
-        <tr><td colspan="3" class="empty-msg">데이터 로딩 중...</td></tr>
+          <tr>
+            <td colspan="3" class="empty-msg">데이터 로딩 중...</td>
+          </tr>
         </tbody>
-    </table>
-    <div id="pagination" style="margin-top:10px; display:flex; justify-content:center; gap:10px;">
+      </table>
+      <div
+        id="pagination"
+        style="
+          margin-top: 10px;
+          display: flex;
+          justify-content: center;
+          gap: 10px;
+        "
+      >
         <button id="prevPage" disabled>◀</button>
         <span id="pageInfo">1 / 1</span>
         <button id="nextPage" disabled>▶</button>
+      </div>
     </div>
-</div>
 
-<div id="reportModal" class="modal-overlay">
-    <div class="modal-window">
+    <div id="reportModal" class="modal-overlay">
+      <div class="modal-window">
         <div class="modal-header">
-            <div class="modal-title" id="modalTitle">📄 보고서 상세 내용</div>
-            <button class="close-btn" onclick="closeModal()">×</button>
+          <div class="modal-title" id="modalTitle">📄 보고서 상세 내용</div>
+          <button class="close-btn" onclick="closeModal()">×</button>
         </div>
         <div class="modal-body markdown-body" id="modalContent"></div>
+      </div>
     </div>
-</div>
 
-<div id="footer-container"></div>
+    <div id="footer-container"></div>
 
-<script src="js/config.js"></script>
-<script src="js/header.js"></script>
-<script src="js/footer.js"></script>
-<script>
-    // 날짜 형식 변환
-    function formatDateTime(isoString) {
-        if (!isoString) return { date: '-', time: '' };
+    <script src="js/config.js"></script>
+    <script src="js/header.js"></script>
+    <script src="js/footer.js"></script>
+    <script>
+      // 날짜 형식 변환
+      function formatDateTime(isoString) {
+        if (!isoString) return { date: "-", time: "" };
         try {
-            const dateObj = new Date(isoString);
-            const year = dateObj.getFullYear();
-            const month = String(dateObj.getMonth() + 1).padStart(2, '0');
-            const day = String(dateObj.getDate()).padStart(2, '0');
-            const hours = String(dateObj.getHours()).padStart(2, '0');
-            const minutes = String(dateObj.getMinutes()).padStart(2, '0');
-            return {
-                date: `${year}. ${month}. ${day}.`,
-                time: `${hours}:${minutes}`
-            };
-        } catch (e) { return { date: isoString, time: '' }; }
-    }
+          const dateObj = new Date(isoString);
+          const year = dateObj.getFullYear();
+          const month = String(dateObj.getMonth() + 1).padStart(2, "0");
+          const day = String(dateObj.getDate()).padStart(2, "0");
+          const hours = String(dateObj.getHours()).padStart(2, "0");
+          const minutes = String(dateObj.getMinutes()).padStart(2, "0");
+          return {
+            date: `${year}. ${month}. ${day}.`,
+            time: `${hours}:${minutes}`,
+          };
+        } catch (e) {
+          return { date: isoString, time: "" };
+        }
+      }
 
-    // 페이지네이션 변수
-    let currentPage = 1;
-    const pageSize = 10;
-    let allReports = [];
+      // 페이지네이션 변수
+      let currentPage = 1;
+      const pageSize = 10;
+      let allReports = [];
 
-    async function loadReports() {
+      async function loadReports() {
         const tbody = document.querySelector("#reportTable tbody");
         try {
-            const res = await fetch("http://localhost:8080/api/user/report/list");
-            if (!res.ok) throw new Error("서버 오류");
-
-            const reports = await res.json();
-            allReports = reports.sort((a, b) => new Date(b.SK) - new Date(a.SK)); // 최신순 정렬
-
-            tbody.innerHTML = "";
-
-            if (!allReports || allReports.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="3" class="empty-msg">저장된 보고서가 없습니다.</td></tr>`;
-                document.getElementById("prevPage").disabled = true;
-                document.getElementById("nextPage").disabled = true;
-                document.getElementById("pageInfo").textContent = "0 / 0";
-                return;
+          const res = await fetch(
+            `${window.API_BASE_URL}/api/user/report/list`,
+            {
+              credentials: "include",
             }
+          );
+          if (!res.ok) throw new Error("서버 오류");
 
-            renderPage();
+          const reports = await res.json();
+          allReports = reports.sort((a, b) => new Date(b.SK) - new Date(a.SK)); // 최신순 정렬
+
+          tbody.innerHTML = "";
+
+          if (!allReports || allReports.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="3" class="empty-msg">저장된 보고서가 없습니다.</td></tr>`;
+            document.getElementById("prevPage").disabled = true;
+            document.getElementById("nextPage").disabled = true;
+            document.getElementById("pageInfo").textContent = "0 / 0";
+            return;
+          }
+
+          renderPage();
         } catch (err) {
-            console.error(err);
-            tbody.innerHTML = `<tr><td colspan="3" class="empty-msg" style="color:red;">데이터 로드 실패</td></tr>`;
+          console.error(err);
+          tbody.innerHTML = `<tr><td colspan="3" class="empty-msg" style="color:red;">데이터 로드 실패</td></tr>`;
         }
-    }
+      }
 
-
-    function renderPage() {
+      function renderPage() {
         const tbody = document.querySelector("#reportTable tbody");
         tbody.innerHTML = "";
 
@@ -110,11 +125,11 @@
         const end = start + pageSize;
         const pageReports = allReports.slice(start, end);
 
-        pageReports.forEach(report => {
-            const tr = document.createElement("tr");
-            const dt = formatDateTime(report.SK);
+        pageReports.forEach((report) => {
+          const tr = document.createElement("tr");
+          const dt = formatDateTime(report.SK);
 
-            tr.innerHTML = `
+          tr.innerHTML = `
                 <td>
                     <span class="date-main">📅 ${dt.date}</span>
                     <span class="date-sub">${dt.time}</span>
@@ -129,38 +144,41 @@
                     <span class="arrow-icon">›</span>
                 </td>
             `;
-            tbody.appendChild(tr);
+          tbody.appendChild(tr);
 
-            tr.addEventListener("click", () => {
-                openModal(report);
-            });
+          tr.addEventListener("click", () => {
+            openModal(report);
+          });
         });
 
         document.getElementById("prevPage").disabled = currentPage === 1;
-        document.getElementById("nextPage").disabled = currentPage === totalPages;
-        document.getElementById("pageInfo").textContent = `${currentPage} / ${totalPages}`;
-    }
+        document.getElementById("nextPage").disabled =
+          currentPage === totalPages;
+        document.getElementById(
+          "pageInfo"
+        ).textContent = `${currentPage} / ${totalPages}`;
+      }
 
-    document.getElementById("prevPage").addEventListener("click", () => {
+      document.getElementById("prevPage").addEventListener("click", () => {
         if (currentPage > 1) {
-            currentPage--;
-            renderPage();
+          currentPage--;
+          renderPage();
         }
-    });
-    document.getElementById("nextPage").addEventListener("click", () => {
+      });
+      document.getElementById("nextPage").addEventListener("click", () => {
         const totalPages = Math.ceil(allReports.length / pageSize);
         if (currentPage < totalPages) {
-            currentPage++;
-            renderPage();
+          currentPage++;
+          renderPage();
         }
-    });
+      });
 
-    function openModal(report) {
-        const modal = document.getElementById('reportModal');
-        const contentDiv = document.getElementById('modalContent');
-        const titleDiv = document.getElementById('modalTitle');
+      function openModal(report) {
+        const modal = document.getElementById("reportModal");
+        const contentDiv = document.getElementById("modalContent");
+        const titleDiv = document.getElementById("modalTitle");
 
-        modal.style.display = 'flex';
+        modal.style.display = "flex";
 
         const dt = formatDateTime(report.SK);
         titleDiv.innerHTML = `📄 <b>${dt.date} ${dt.time}</b> 보고서`;
@@ -168,26 +186,27 @@
         let rawContent = report.Content || report.content;
 
         if (!rawContent) {
-            contentDiv.innerHTML = '<p style="color:#888; text-align:center;">내용을 불러올 수 없습니다.</p>';
+          contentDiv.innerHTML =
+            '<p style="color:#888; text-align:center;">내용을 불러올 수 없습니다.</p>';
         } else {
-            contentDiv.innerHTML = marked.parse(rawContent);
+          contentDiv.innerHTML = marked.parse(rawContent);
         }
-    }
+      }
 
-    function closeModal() {
-        document.getElementById('reportModal').style.display = 'none';
-    }
+      function closeModal() {
+        document.getElementById("reportModal").style.display = "none";
+      }
 
-    window.onclick = function(event) {
-        const modal = document.getElementById('reportModal');
+      window.onclick = function (event) {
+        const modal = document.getElementById("reportModal");
         if (event.target == modal) {
-            closeModal();
+          closeModal();
         }
-    }
+      };
 
-    document.addEventListener("DOMContentLoaded", loadReports);
-</script>
-<script src="js/header.js"></script>
-<script src="js/footer.js"></script>
-</body>
+      document.addEventListener("DOMContentLoaded", loadReports);
+    </script>
+    <script src="js/header.js"></script>
+    <script src="js/footer.js"></script>
+  </body>
 </html>

@@ -20,7 +20,7 @@ public class WebConfig implements WebMvcConfigurer {
     /**
      * CORS 매핑 설정
      * - /api/** 경로에 대해서만 허용
-     * - 지정된 프론트엔드 Origin만 허용
+     * - 지정된 프론트엔드 Origin 및 CloudFront 도메인 허용
      * - 주요 HTTP 메소드 허용(GET, POST, PUT, DELETE, OPTIONS)
      * - 모든 헤더 허용
      * - 자격 증명(쿠키 등) 허용
@@ -28,7 +28,11 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/api/**")
-                .allowedOrigins(frontendUrl)      // 허용할 Origin (프론트 URL)
+                .allowedOrigins(
+                        frontendUrl,                                    // 로컬 개발 환경
+                        "https://d1l3a7dvc3xbrk.cloudfront.net",        // CloudFront 도메인
+                        "http://localhost:5173"                         // 로컬 개발 (HTTP)
+                )
                 .allowedMethods(
                         "GET",                   // 조회
                         "POST",                  // 생성
