@@ -81,12 +81,7 @@
             if (!res.ok) throw new Error("서버 오류");
 
             const reports = await res.json();
-
-            // [추가된 부분] 데이터를 최신 날짜순(내림차순)으로 정렬
-            reports.sort((a, b) => {
-                // b.SK(최신) - a.SK(과거) -> 양수면 b가 앞으로 옴
-                return new Date(b.SK) - new Date(a.SK);
-            });
+            allReports = reports.sort((a, b) => new Date(b.SK) - new Date(a.SK)); // 최신순 정렬
 
             tbody.innerHTML = "";
 
@@ -98,14 +93,13 @@
                 return;
             }
 
-            allReports.sort((a, b) => new Date(b.SK) - new Date(a.SK));
-
             renderPage();
         } catch (err) {
             console.error(err);
             tbody.innerHTML = `<tr><td colspan="3" class="empty-msg" style="color:red;">데이터 로드 실패</td></tr>`;
         }
     }
+
 
     function renderPage() {
         const tbody = document.querySelector("#reportTable tbody");
