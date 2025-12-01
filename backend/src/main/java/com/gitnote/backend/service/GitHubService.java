@@ -58,15 +58,17 @@ public class GitHubService {
     /**
      * GitHub OAuth 인증 코드를 사용해 액세스 토큰을 발급받음
      * @param code 인증 코드
+     * @param redirectUri 리다이렉트 URI (인증 요청 시 사용한 것과 동일해야 함)
      * @return 액세스 토큰(문자열). 실패 시 null
      */
-    public String getAccessToken(String code) {
+    public String getAccessToken(String code, String redirectUri) {
         final String tokenUrl = "https://github.com/login/oauth/access_token";
-        // 요청 데이터 셋업
+        // 요청 데이터 셋업 (GitHub OAuth API 요구사항: redirect_uri 필수)
         Map<String, Object> params = Map.of(
                 "client_id", clientId,
                 "client_secret", clientSecret,
-                "code", code
+                "code", code,
+                "redirect_uri", redirectUri
         );
 
         Map<String, Object> response = null;

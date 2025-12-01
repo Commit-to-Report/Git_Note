@@ -52,8 +52,8 @@ public class GitHubOAuthController {
             HttpSession session
     ) {
         try {
-            // 1. 액세스 토큰 발급
-            String accessToken = gitHubService.getAccessToken(code);
+            // 1. 액세스 토큰 발급 (redirect_uri는 application.properties의 값 사용)
+            String accessToken = gitHubService.getAccessToken(code, redirectUri);
             if (accessToken == null) {
                 // 인증 실패: accessToken 획득 불가
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)

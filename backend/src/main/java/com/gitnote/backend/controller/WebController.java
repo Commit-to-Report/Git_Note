@@ -76,7 +76,7 @@ public class WebController {
     @GetMapping("/oauth/callback")
     public String oauthCallback(@RequestParam("code") String code, HttpSession session, Model model) {
         try {
-            String accessToken = gitHubService.getAccessToken(code);
+            String accessToken = gitHubService.getAccessToken(code, redirectUri);
 
             if (accessToken == null) {
                 model.addAttribute("error", "Failed to get access token from GitHub");
