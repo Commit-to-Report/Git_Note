@@ -5,59 +5,163 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>GitNote - 커밋 조회</title>
 
-    <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
 
-    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://gitnote.app/commits.html" />
     <meta property="og:title" content="GitNote - 커밋 조회" />
-    <meta
-            property="og:description"
-            content="GitHub 리포지토리의 커밋을 기간별로 조회하고 분석하세요."
-    />
+    <meta property="og:description" content="GitHub 리포지토리의 커밋을 기간별로 조회하고 분석하세요." />
     <meta property="og:image" content="https://gitnote.app/img/logo_text.png" />
     <meta property="og:site_name" content="GitNote" />
 
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="GitNote - 커밋 조회" />
-    <meta
-            name="twitter:description"
-            content="GitHub 리포지토리의 커밋을 기간별로 조회하고 분석하세요."
-    />
-
-    <!-- Meta Description -->
-    <meta
-            name="description"
-            content="GitHub 리포지토리의 커밋을 기간별로 조회하고 분석하세요."
-    />
-
-    <link
-            href="https://cdn.jsdelivr.net/gh/wanteddev/wanted-sans@v1.0.3/packages/wanted-sans/dist/css/wanted-sans.css"
-            rel="stylesheet"
-    />
+    <link href="https://cdn.jsdelivr.net/gh/wanteddev/wanted-sans@v1.0.3/packages/wanted-sans/dist/css/wanted-sans.css" rel="stylesheet" />
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/header.css" />
     <link rel="stylesheet" href="css/footer.css" />
     <link rel="stylesheet" href="./css/commits.css" />
 
     <style>
-        /* [수정 1] 폰트 강제 적용 스타일 추가 */
+        /* 1. 폰트 불러오기 (최상단) */
+        @import url("https://cdn.jsdelivr.net/gh/wanteddev/wanted-sans@v1.0.3/packages/wanted-sans/dist/css/wanted-sans.css");
+
+        /* [수정 1] body에만 폰트 적용 (중요: * 대신 body 사용) */
+        /* 이렇게 해야 header.css에 있는 굵기(font-weight) 설정이 먹힙니다! */
         body {
             font-family: "Wanted Sans", -apple-system, BlinkMacSystemFont, system-ui,
             Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo",
-            "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji",
-            "Segoe UI Symbol", sans-serif;
+            "Noto Sans KR", "Malgun Gothic", sans-serif !important;
         }
 
-        /* 버튼 그룹을 아래로 내리기 위한 스타일 */
+        /* [수정 2] 입력 필드, 버튼은 폰트 상속 강제 (굵기는 건드리지 않음) */
+        select, input, button, textarea, pre {
+            font-family: "Wanted Sans", sans-serif !important;
+        }
+
+        /* 버튼 그룹 스타일 */
         .action-button-group {
             margin-top: 20px;
             padding-top: 20px;
             border-top: 1px solid #eee;
-            text-align: right; /* 버튼 오른쪽 정렬 */
-            display: none; /* 초기엔 숨김 */
+            text-align: right;
+            display: none;
+        }
+
+        /* =========================================
+           🌙 다크모드 스타일 (부드러운 톤)
+           ========================================= */
+
+        /* 1. 전체 배경 및 텍스트 */
+        body.dark-mode {
+            background-color: #1a1a1a !important;
+            color: #e0e0e0;
+        }
+
+        /* 2. 메인 컨테이너 */
+        body.dark-mode .container {
+            background: #282828;
+            border-color: #444;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+        }
+
+        /* 3. 헤더 및 제목 */
+        body.dark-mode .page-header {
+            border-bottom: 2px solid #444;
+        }
+        body.dark-mode h1 {
+            color: #f0f0f0;
+        }
+
+        /* 4. 사용자 정보 */
+        body.dark-mode .user-info {
+            background-color: #3a3a3a;
+            border-color: #555;
+        }
+        body.dark-mode .user-info img {
+            border: 2px solid #282828;
+            box-shadow: 0 0 0 1px #555;
+        }
+        body.dark-mode .user-info .username {
+            color: #d0d0d0;
+        }
+
+        /* 5. 필터 섹션 */
+        body.dark-mode .filter-section {
+            background: #282828;
+        }
+        body.dark-mode label {
+            color: #d0d0d0;
+        }
+
+        /* 6. 입력 필드 */
+        body.dark-mode select,
+        body.dark-mode input[type="date"] {
+            background-color: #3a3a3a;
+            border-color: #555;
+            color: #f0f0f0;
+        }
+        body.dark-mode select:focus,
+        body.dark-mode input[type="date"]:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+        body.dark-mode #selectedRepoInfo {
+            color: #a0a0a0 !important;
+        }
+        body.dark-mode #selectedRepoInfo strong {
+            color: #81c784 !important;
+        }
+
+        /* 7. 버튼 */
+        body.dark-mode .btn-primary {
+            background: #4f46e5;
+        }
+        body.dark-mode .btn-primary:hover:not(:disabled) {
+            background: #4338ca;
+        }
+
+        /* 8. 로딩, 커밋 카운트 */
+        body.dark-mode .loading {
+            color: #a0a0a0;
+        }
+        body.dark-mode .commit-count {
+            background: #36495c;
+            color: #90caf9;
+        }
+        body.dark-mode .commits-header h2 {
+            color: #f0f0f0;
+        }
+        body.dark-mode .commits-header {
+            border-left-color: #6366f1;
+        }
+
+        /* 9. 커밋 박스 */
+        body.dark-mode #commitsList pre {
+            background: #212121 !important;
+            color: #e0e0e0 !important;
+            border: 1px solid #444;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
+        }
+
+        /* 10. 메시지 박스 */
+        body.dark-mode .error-message { background: #3a1c1c; color: #f47d7d; border: 1px solid #5a2c2c; }
+        body.dark-mode .success-message { background: #1c3a2a; color: #84e4a7; border: 1px solid #2c5a3c; }
+        body.dark-mode .info-message { background: #1c2a3a; color: #84a7e4; border: 1px solid #2c3c5a; }
+
+        /* 11. 구분선 */
+        body.dark-mode .action-button-group {
+            border-top: 1px solid #444;
+        }
+
+        /* 12. 빈 상태 */
+        body.dark-mode .empty-state h3 {
+            color: #d0d0d0;
+        }
+        body.dark-mode .empty-state p {
+            color: #a0a0a0;
+        }
+        body.dark-mode .empty-state-icon {
+            color: #666;
+            border-color: #444;
         }
     </style>
 </head>
@@ -79,10 +183,7 @@
                     <select id="repositorySelect">
                         <option value="">리포지토리를 불러오는 중...</option>
                     </select>
-                    <div
-                            id="selectedRepoInfo"
-                            style="margin-top: 8px; font-size: 12px; color: #666"
-                    ></div>
+                    <div id="selectedRepoInfo" style="margin-top: 8px; font-size: 12px; color: #666"></div>
                 </div>
             </div>
             <div class="form-row">
@@ -97,11 +198,7 @@
             </div>
 
             <div class="button-group" style="margin-top: 10px">
-                <button
-                        class="btn btn-primary"
-                        id="searchBtn"
-                        onclick="searchCommits()"
-                >
+                <button class="btn btn-primary" id="searchBtn" onclick="searchCommits()">
                     🔍 커밋 조회
                 </button>
             </div>
@@ -120,11 +217,7 @@
             <div id="commitsList"></div>
 
             <div class="action-button-group" id="actionButtons">
-                <button
-                        class="btn btn-success"
-                        id="copyBtn"
-                        onclick="copyCommitsText()"
-                >
+                <button class="btn btn-success" id="copyBtn" onclick="copyCommitsText()">
                     텍스트 복사
                 </button>
 
@@ -132,13 +225,7 @@
                     ☁️ 저장하기
                 </button>
 
-                <button
-                        class="btn btn-report"
-                        id="generateReportBtn"
-                        onclick="goToReport()"
-                        disabled
-                        style="display: none; margin-left: 10px"
-                >
+                <button class="btn btn-report" id="generateReportBtn" onclick="goToReport()" disabled style="display: none; margin-left: 10px">
                     📄 보고서 생성
                 </button>
             </div>
@@ -163,7 +250,7 @@
     const API_BASE = window.API_BASE_URL;
     let currentCommits = [];
     let selectedRepo = null;
-    let currentCommitsText = ""; // [중요] 전역 변수 초기화
+    let currentCommitsText = "";
     let uploadedFileUrl = "";
 
     async function init() {
@@ -181,12 +268,8 @@
         const weekAgo = new Date(today);
         weekAgo.setDate(today.getDate() - 7);
 
-        document.getElementById("untilDate").value = today
-            .toISOString()
-            .split("T")[0];
-        document.getElementById("sinceDate").value = weekAgo
-            .toISOString()
-            .split("T")[0];
+        document.getElementById("untilDate").value = today.toISOString().split("T")[0];
+        document.getElementById("sinceDate").value = weekAgo.toISOString().split("T")[0];
 
         await loadRepositories();
     }
@@ -194,19 +277,14 @@
     async function loadRepositories() {
         const select = document.getElementById("repositorySelect");
         try {
-            const response = await fetch(
-                `${window.API_BASE_URL}/api/github/repositories`,
-                {
-                    credentials: "include",
-                }
-            );
+            const response = await fetch(`${window.API_BASE_URL}/api/github/repositories`, {
+                credentials: "include",
+            });
             const data = await response.json();
 
-            if (!response.ok)
-                throw new Error(data.error || "리포지토리 로드 실패");
+            if (!response.ok) throw new Error(data.error || "리포지토리 로드 실패");
 
-            select.innerHTML =
-                '<option value="">리포지토리를 선택하세요</option>';
+            select.innerHTML = '<option value="">리포지토리를 선택하세요</option>';
             if (data.repositories && data.repositories.length > 0) {
                 data.repositories.forEach((repo) => {
                     const fullName = repo.fullName || repo.full_name;
@@ -216,13 +294,11 @@
                         name: repo.name,
                         fullName,
                     });
-                    option.textContent =
-                        fullName + (repo.isPrivate ? " (Private)" : "");
+                    option.textContent = fullName + (repo.isPrivate ? " (Private)" : "");
                     select.appendChild(option);
                 });
             } else {
-                select.innerHTML =
-                    '<option value="">리포지토리가 없습니다</option>';
+                select.innerHTML = '<option value="">리포지토리가 없습니다</option>';
             }
         } catch (error) {
             select.innerHTML = '<option value="">로드 실패</option>';
@@ -260,13 +336,7 @@
         document.getElementById("generateReportBtn").style.display = "none";
 
         try {
-            const url = `${
-                window.API_BASE_URL
-            }/api/github/commits?owner=${encodeURIComponent(
-                selectedRepo.owner
-            )}&repo=${encodeURIComponent(
-                selectedRepo.name
-            )}&since=${since}&until=${until}&includeDetails=false`;
+            const url = `${window.API_BASE_URL}/api/github/commits?owner=${encodeURIComponent(selectedRepo.owner)}&repo=${encodeURIComponent(selectedRepo.name)}&since=${since}&until=${until}&includeDetails=false`;
             const response = await fetch(url, { credentials: "include" });
             if (!response.ok) throw new Error("커밋 조회 실패");
 
@@ -287,33 +357,20 @@
         }
 
         document.getElementById("commitsSection").style.display = "block";
-        document.getElementById(
-            "commitCount"
-        ).textContent = `${commits.length}개`;
+        document.getElementById("commitCount").textContent = `${commits.length}개`;
 
         let textContent = `리포지토리: ${selectedRepo?.fullName}\n`;
-        textContent += `조회 기간: ${
-            document.getElementById("sinceDate").value
-        } ~ ${document.getElementById("untilDate").value}\n`;
+        textContent += `조회 기간: ${document.getElementById("sinceDate").value} ~ ${document.getElementById("untilDate").value}\n`;
         textContent += `총 커밋 수: ${commits.length}\n${"=".repeat(50)}\n\n`;
 
         commits.forEach((commit, index) => {
             const message = commit.commit?.message || "No message";
             const date = commit.commit?.author?.date || "";
-            textContent += `[${index + 1}] ${date.substring(
-                0,
-                10
-            )} - ${message}\n`;
+            textContent += `[${index + 1}] ${date.substring(0, 10)} - ${message}\n`;
         });
 
         currentCommitsText = textContent;
-
-        // 화면 렌더링
-        document.getElementById("commitsList").innerHTML = `<pre>${escapeHtml(
-            textContent
-        )}</pre>`;
-
-        // [수정 4] 하단 버튼 그룹 표시
+        document.getElementById("commitsList").innerHTML = `<pre>${escapeHtml(textContent)}</pre>`;
         document.getElementById("actionButtons").style.display = "block";
     }
 
@@ -331,13 +388,8 @@
     }
 
     async function uploadToS3() {
-        // [중요] 변수 체크
         if (!currentCommitsText) {
-            console.error("currentCommitsText is empty!");
-            showMessage(
-                "⚠️ 업로드할 커밋 파일이 없습니다. 다시 조회해주세요.",
-                "error"
-            );
+            showMessage("⚠️ 업로드할 커밋 파일이 없습니다. 다시 조회해주세요.", "error");
             return;
         }
 
@@ -352,7 +404,7 @@
                 repositoryName: selectedRepo.fullName,
                 startDate: document.getElementById("sinceDate").value,
                 endDate: document.getElementById("untilDate").value,
-                content: currentCommitsText, // 여기 값이 들어가야 함
+                content: currentCommitsText,
             };
 
             const response = await fetch(`${window.API_BASE_URL}/api/s3/upload`, {
@@ -365,10 +417,9 @@
             if (!response.ok) throw new Error("업로드 실패");
 
             const result = await response.json();
-            uploadedFileUrl = result.url; // 이제 여기엔 'MinJ-i/repo_date.txt' 같은 키값이 들어옵니다.
+            uploadedFileUrl = result.url;
             showMessage("✅ 저장 성공!", "success");
 
-            // 보고서 버튼 활성화
             const reportBtn = document.getElementById("generateReportBtn");
             reportBtn.disabled = false;
             reportBtn.style.display = "inline-block";
@@ -383,35 +434,22 @@
 
     function goToReport() {
         if (!uploadedFileUrl) return;
-
-        // [수정된 로직]
-        // 1. 만약 URL 형태(http...)라면 경로만 추출해서 키로 씁니다. (기존 호환)
-        // 2. 그냥 문자열(Key)이라면 그대로 씁니다. (변경된 백엔드 대응)
         let fileKey = uploadedFileUrl;
-
         if (uploadedFileUrl.startsWith("http")) {
             try {
                 const urlObj = new URL(uploadedFileUrl);
-                // pathname에서 앞의 '/' 제거
                 fileKey = urlObj.pathname.substring(1);
             } catch (e) {
-                console.warn("URL 파싱 실패, 문자열 그대로 사용합니다.");
+                console.warn("URL 파싱 실패");
             }
         }
-
         window.location.href = `report.html?fileKey=${encodeURIComponent(fileKey)}`;
     }
 
-    // logout 함수는 header.js에서 처리됨
-
     function showMessage(msg, type = "info") {
         const box = document.getElementById("messageBox");
-        box.innerHTML = `<div class="${
-            type === "error" ? "error-message" : "success-message"
-        }">${msg}</div>`;
-        setTimeout(() => {
-            box.innerHTML = "";
-        }, 3000);
+        box.innerHTML = `<div class="${type === "error" ? "error-message" : "success-message"}">${msg}</div>`;
+        setTimeout(() => { box.innerHTML = ""; }, 3000);
     }
 
     function escapeHtml(text) {
@@ -420,6 +458,20 @@
         return div.innerHTML;
     }
 
+    // [다크모드 실행 함수]
+    function checkDarkMode() {
+        const theme = localStorage.getItem('theme');
+        if (theme === 'dark') {
+            document.body.classList.add('dark-mode');
+        } else {
+            document.body.classList.remove('dark-mode');
+        }
+    }
+
+    checkDarkMode();
+    setInterval(checkDarkMode, 100);
+
+    // [중복 삭제] 마지막에 하나만 남김
     window.addEventListener("DOMContentLoaded", init);
 </script>
 </body>
