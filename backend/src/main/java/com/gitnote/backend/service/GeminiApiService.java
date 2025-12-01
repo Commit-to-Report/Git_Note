@@ -1,5 +1,7 @@
 package com.gitnote.backend.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -37,7 +39,8 @@ public class GeminiApiService {
     /**
      * Gemini API를 호출하여 텍스트를 생성합니다.
      * @param prompt 모델에게 전달할 요청 프롬프트
-     * @return 생성된 텍스트만 추출한 결과 문자열
+     * @param style 보고서 스타일
+     * @return 생성된 텍스트
      */
     public String generateContent(String prompt, String style) {
         System.out.println("[GeminiApiService] generateContent 시작 - prompt 길이: " + (prompt != null ? prompt.length() : 0));
@@ -51,29 +54,20 @@ public class GeminiApiService {
         };
 
         try {
-            // URI에 API 키를 쿼리 파라미터로 추가
             String uri = "/models/" + model + ":generateContent?key=" + apiKey;
 
             String fullPrompt =
                     "당신은 반드시 마크다운(Markdown) 형식으로만 출력해야 한다.\n" +
                             "마크다운을 사용하지 않거나 서식이 유지되지 않으면 잘못된 출력으로 간주된다.\n" +
                             "출력 시 제목, 본문, 구분선, 강조, 코드블록 등 마크다운 요소를 적극 활용한다.\n\n" +
-                            "마크다운이 아닌 특수문자를 사용하지 않도록 주의한다.\n\n" +
-
                             (prompt != null ? prompt : "") + "\n\n" +
-
                             "## 보고서 작성 지침\n" +
                             styleInstruction + "\n\n" +
                             "**언어:** 한국어\n" +
                             "**형식:** 자연스러운 서술식 문장 중심, 단순 목록 나열 금지\n" +
                             "**리포지토리 이름과 조회 기간을 반드시 포함할 것**\n";
 
-            String escapedPrompt = escapeJson(fullPrompt);
-            String jsonBody = String.format(
-                    "{\"contents\":[{\"parts\":[{\"text\":\"%s\"}]}]}",
-                    escapedPrompt
-            );
-
+            String jsonBody = String.format("{\"contents\":[{\"parts\":[{\"text\":\"%s\"}]}]}", fullPrompt.replace("\"", "\\\""));
 
             System.out.println("[GeminiApiService] 호출 URI: " + uri);
             System.out.println("[GeminiApiService] 요청 바디 (부분): " + (jsonBody.length() > 200 ? jsonBody.substring(0, 200) + "..." : jsonBody));
@@ -90,13 +84,8 @@ public class GeminiApiService {
             System.out.println("[GeminiApiService] Gemini API 호출 완료, 응답 길이: " + (rawJsonResult != null ? rawJsonResult.length() : 0));
 
             String extractedText = extractTextFromJson(rawJsonResult);
-
-            String safeText = extractedText
-                    .replace("\\", "\\\\")
-                    .replaceAll("\\\\(\\s|$)", "");
-
-            System.out.println("[GeminiApiService] 추출된 텍스트 길이: " + safeText.length());
-            return safeText;
+            System.out.println("[GeminiApiService] 추출된 텍스트 길이: " + extractedText.length());
+            return extractedText;
 
         } catch (WebClientResponseException e) {
             System.err.println("[GeminiApiService] Gemini API 호출 실패 - 상태 코드: " + e.getStatusCode());
@@ -110,44 +99,32 @@ public class GeminiApiService {
         }
     }
 
-    private String escapeJson(String text) {
-        if (text == null) return "";
-        return text.replace("\\", "\\\\")
-                .replace("\"", "\\\"")
-                .replace("\n", "\\n")
-                .replace("\r", "\\r");
-    }
-
     private String extractTextFromJson(String rawJson) {
-        if (rawJson == null || rawJson.isEmpty()) {
-            return "";
-        }
-
-        String searchKey = "\"text\": \"";
-        int startIndex = rawJson.indexOf(searchKey);
-
-        if (startIndex == -1) {
-            System.err.println("[GeminiApiService] 텍스트 필드를 찾을 수 없습니다.");
-            return rawJson;
-        }
-
-        startIndex += searchKey.length();
-
-        int endIndex = rawJson.indexOf("\"", startIndex);
-
-        if (endIndex == -1) {
-            return rawJson.substring(startIndex);
-        }
+        if (rawJson == null || rawJson.isEmpty()) return "";
 
         try {
-            String extracted = rawJson.substring(startIndex, endIndex);
-            return extracted.replace("\\n", "\n")
-                    .replace("\\\"", "\"")
-                    .replace("\\r", "\r")
-                    .replace("\\\\", "\\");
-        } catch (IndexOutOfBoundsException e) {
-            System.err.println("[GeminiApiService] JSON 파싱 중 인덱스 오류 발생.");
-            return rawJson;
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode root = mapper.readTree(rawJson);
+
+            JsonNode textNode = findFirstTextNode(root);
+            if (textNode != null) {
+                return textNode.asText();
+            }
+        } catch (Exception e) {
+            System.err.println("[GeminiApiService] JSON 파싱 실패: " + e.getMessage());
         }
+        return "";
+    }
+
+    private JsonNode findFirstTextNode(JsonNode node) {
+        if (node.has("text")) return node.get("text");
+
+        if (node.isContainerNode()) {
+            for (JsonNode child : node) {
+                JsonNode result = findFirstTextNode(child);
+                if (result != null) return result;
+            }
+        }
+        return null;
     }
 }
