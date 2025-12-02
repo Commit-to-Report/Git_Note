@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.netty.http.client.HttpClient;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -25,6 +26,7 @@ import java.util.concurrent.TimeUnit;
  * GitHubService
  * - GitHub API 연동, 액세스 토큰 관리 · 사용자, 리포지토리, 커밋 데이터 수집 서비스
  */
+@Slf4j
 @Service
 public class GitHubService {
 
@@ -63,6 +65,16 @@ public class GitHubService {
      */
     public String getAccessToken(String code, String redirectUri) {
         final String tokenUrl = "https://github.com/login/oauth/access_token";
+        
+        log.info("[GitHubService] Access Token 요청 시작");
+        log.info("[GitHubService] 요청 URL: {}", tokenUrl);
+        log.info("[GitHubService] client_id: {}", clientId);
+        log.info("[GitHubService] client_secret 존재 여부: {}", clientSecret != null && !clientSecret.isEmpty());
+        log.info("[GitHubService] code: {} (길이: {})", 
+                code != null && code.length() > 10 ? code.substring(0, 10) + "..." : code,
+                code != null ? code.length() : 0);
+        log.info("[GitHubService] redirect_uri: {}", redirectUri);
+        
         // 요청 데이터 셋업 (GitHub OAuth API 요구사항: redirect_uri 필수)
         Map<String, Object> params = Map.of(
                 "client_id", clientId,
@@ -73,6 +85,7 @@ public class GitHubService {
 
         Map<String, Object> response = null;
         try {
+            log.info("[GitHubService] GitHub API 호출 시작");
             response = webClient.post()
                     .uri(tokenUrl)
                     .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
@@ -80,11 +93,45 @@ public class GitHubService {
                     .retrieve()
                     .bodyToMono(Map.class)
                     .block();
+            
+            log.info("[GitHubService] GitHub API 응답 수신");
+            log.info("[GitHubService] 응답 내용: {}", response);
+            
+            if (response != null) {
+                if (response.containsKey("error")) {
+                    log.error("[GitHubService] GitHub API 오류 응답!");
+                    log.error("[GitHubService] error: {}", response.get("error"));
+                    log.error("[GitHubService] error_description: {}", response.get("error_description"));
+                    log.error("[GitHubService] error_uri: {}", response.get("error_uri"));
+                    return null;
+                }
+                
+                String accessToken = (String) response.get("access_token");
+                if (accessToken != null) {
+                    log.info("[GitHubService] Access Token 획득 성공 (마스킹됨): {}...", 
+                            accessToken.length() > 10 ? accessToken.substring(0, 10) : accessToken);
+                    return accessToken;
+                } else {
+                    log.warn("[GitHubService] 응답에 access_token이 없음");
+                    log.warn("[GitHubService] 응답 전체: {}", response);
+                }
+            } else {
+                log.error("[GitHubService] 응답이 null입니다");
+            }
+        } catch (WebClientResponseException e) {
+            log.error("[GitHubService] WebClientResponseException 발생!");
+            log.error("[GitHubService] HTTP 상태 코드: {}", e.getStatusCode());
+            log.error("[GitHubService] 응답 본문: {}", e.getResponseBodyAsString());
+            log.error("[GitHubService] 예외 메시지: {}", e.getMessage());
         } catch (Exception e) {
-            System.err.println("[getAccessToken] Exception: " + e.getMessage());
-            // 실패 시 null 반환
+            log.error("[GitHubService] 예외 발생!");
+            log.error("[GitHubService] 예외 타입: {}", e.getClass().getName());
+            log.error("[GitHubService] 예외 메시지: {}", e.getMessage());
+            log.error("[GitHubService] 스택 트레이스:", e);
         }
-        return response != null ? (String) response.get("access_token") : null;
+        
+        log.error("[GitHubService] Access Token 획득 실패 - null 반환");
+        return null;
     }
 
     /**
