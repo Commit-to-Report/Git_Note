@@ -49,8 +49,7 @@ GitNote는 개발자들이 GitHub 커밋 내역을 체계적으로 관리하고 
 
 ### 2.1 전체 아키텍처
 
-<img width="1280" height="832" alt="아키텍쳐" src="https://github.com/user-attachments/assets/ea8ad168-d3b8-495f-bc85-68095d859659" />
-
+<img width="1221" height="600" alt="스크린샷 2025-12-02 오전 11 17 04" src="https://github.com/user-attachments/assets/3051592a-3737-4206-a4d5-37cfdb1211fd" />
 
 ### 2.2 데이터 흐름
 
@@ -148,53 +147,47 @@ SES (이메일 전송)
 
 ## 4. AWS 인프라 구성
 
-### 4.1 인프라 구성도
-
-<img width="1221" height="600" alt="스크린샷 2025-12-02 오전 11 17 04" src="https://github.com/user-attachments/assets/3051592a-3737-4206-a4d5-37cfdb1211fd" />
-
-### 4.2 주요 리소스
-
-#### 4.2.1 CloudFront
+### 4.1 CloudFront
 
 - **Distribution ID**: `d1l3a7dvc3xbrk`
 - **Origin**: S3 버킷 (프론트엔드)
 - **Behavior**: `/api/*` → ALB (백엔드)
 - **Viewer Protocol**: HTTPS Only
 
-#### 4.2.2 S3
+### 4.2 S3
 
 - **버킷**: 프론트엔드 정적 파일 저장
 - **용도**: HTML, CSS, JavaScript 파일 호스팅
 
-#### 4.2.3 ECS
+### 4.3 ECS
 
 - **클러스터**: 백엔드 애플리케이션 실행
 - **서비스**: Spring Boot 애플리케이션
 - **Task Definition**: Docker 컨테이너 실행
 
-#### 4.2.4 ALB
+### 4.4 ALB
 
 - **타입**: Application Load Balancer
 - **리스너**: HTTP (80)
 - **타겟 그룹**: ECS 서비스
 
-#### 4.2.5 DynamoDB
+### 4.5 DynamoDB
 
 - **테이블 1**: `UserPreset` - 사용자 설정 저장
 - **테이블 2**: `UserReports` - 생성된 보고서 저장
 
-#### 4.2.6 Lambda
+### 4.6 Lambda
 
 - **함수명**: `auto-report`
 - **런타임**: Node.js 20
 - **트리거**: EventBridge (스케줄)
 
-#### 4.2.7 EventBridge
+### 4.7 EventBridge
 
 - **규칙**: 일/주/월별 보고서 생성 스케줄
 - **타겟**: Lambda 함수
 
-#### 4.2.8 SES
+### 4.8 SES
 
 - **리전**: `ap-northeast-2`
 - **용도**: 보고서 완료 이메일 전송
