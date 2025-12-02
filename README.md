@@ -49,7 +49,8 @@ GitNote는 개발자들이 GitHub 커밋 내역을 체계적으로 관리하고 
 
 ### 2.1 전체 아키텍처
 
-[첨부예정]
+<img width="1280" height="832" alt="아키텍쳐" src="https://github.com/user-attachments/assets/ea8ad168-d3b8-495f-bc85-68095d859659" />
+
 
 ### 2.2 데이터 흐름
 
@@ -149,7 +150,7 @@ SES (이메일 전송)
 
 ### 4.1 인프라 구성도
 
-[첨부예정]
+<img width="1221" height="600" alt="스크린샷 2025-12-02 오전 11 17 04" src="https://github.com/user-attachments/assets/3051592a-3737-4206-a4d5-37cfdb1211fd" />
 
 ### 4.2 주요 리소스
 
