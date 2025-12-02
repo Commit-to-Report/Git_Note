@@ -66,10 +66,18 @@ public class GitHubService {
     public String getAccessToken(String code, String redirectUri) {
         final String tokenUrl = "https://github.com/login/oauth/access_token";
         
-        log.info("[GitHubService] Access Token 요청 시작");
+        log.info("========== [GitHubService] Access Token 요청 시작 ==========");
         log.info("[GitHubService] 요청 URL: {}", tokenUrl);
         log.info("[GitHubService] client_id: {}", clientId);
-        log.info("[GitHubService] client_secret 존재 여부: {}", clientSecret != null && !clientSecret.isEmpty());
+        
+        // client_secret 검증
+        if (clientSecret == null || clientSecret.isEmpty()) {
+            log.error("[GitHubService] ❌ client_secret이 NULL이거나 비어있습니다!");
+            log.error("[GitHubService] 환경 변수 GITHUB_CLIENT_SECRET을 확인하세요.");
+            return null;
+        }
+        log.info("[GitHubService] client_secret 존재 여부: true (길이: {})", clientSecret.length());
+        
         log.info("[GitHubService] code: {} (길이: {})", 
                 code != null && code.length() > 10 ? code.substring(0, 10) + "..." : code,
                 code != null ? code.length() : 0);
@@ -95,14 +103,17 @@ public class GitHubService {
                     .block();
             
             log.info("[GitHubService] GitHub API 응답 수신");
-            log.info("[GitHubService] 응답 내용: {}", response);
+            log.info("[GitHubService] 응답 타입: {}", response != null ? response.getClass().getName() : "null");
+            log.info("[GitHubService] 응답 키 목록: {}", response != null ? response.keySet() : "null");
             
             if (response != null) {
                 if (response.containsKey("error")) {
-                    log.error("[GitHubService] GitHub API 오류 응답!");
+                    log.error("========== [GitHubService] GitHub API 오류 응답 ==========");
                     log.error("[GitHubService] error: {}", response.get("error"));
                     log.error("[GitHubService] error_description: {}", response.get("error_description"));
                     log.error("[GitHubService] error_uri: {}", response.get("error_uri"));
+                    log.error("[GitHubService] 전체 응답: {}", response);
+                    log.error("==========================================");
                     return null;
                 }
                 
