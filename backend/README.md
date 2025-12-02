@@ -1,25 +1,23 @@
 # GitNote Backend API 문서
 
-## 📚 Spring REST Docs
+## Spring REST Docs
 
 이 프로젝트는 **Spring REST Docs**를 사용하여 API 문서를 자동으로 생성합니다.
 
-### 🎯 Spring REST Docs란?
+### Spring REST Docs란?
 
 Spring REST Docs는 테스트 코드를 기반으로 API 문서를 자동 생성하는 도구입니다.
 
-- ✅ 테스트가 통과해야만 문서가 생성되므로 **문서의 정확성 보장**
-- ✅ 코드 변경 시 자동으로 문서 업데이트
-- ✅ AsciiDoc 형식으로 아름답고 읽기 쉬운 HTML 문서 생성
+- 테스트가 통과해야만 문서가 생성되므로 **문서의 정확성 보장**
+- 코드 변경 시 자동으로 문서 업데이트
+- AsciiDoc 형식으로 아름답고 읽기 쉬운 HTML 문서 생성
 
----
-
-## 🚀 API 문서 생성 방법
+## API 문서 생성 방법
 
 ### 1. 테스트 실행 및 문서 생성
 
 ```bash
-cd /Users/krystal/workspace/Git_Note/backend
+cd backend
 
 # 방법 1: 테스트 실행 후 문서 생성
 ./gradlew clean test asciidoctor
@@ -42,29 +40,32 @@ cd /Users/krystal/workspace/Git_Note/backend
 
 ---
 
-## 📖 생성된 API 문서 보기
+## 생성된 API 문서 보기
 
 ### 문서 위치
 
 ```
-/Users/krystal/workspace/Git_Note/backend/build/docs/asciidoc/index.html
+backend/build/docs/asciidoc/index.html
 ```
 
 ### 브라우저에서 열기
 
 ```bash
 # macOS
-open /Users/krystal/workspace/Git_Note/backend/build/docs/asciidoc/index.html
+open backend/build/docs/asciidoc/index.html
 
 # Linux
-xdg-open /Users/krystal/workspace/Git_Note/backend/build/docs/asciidoc/index.html
+xdg-open backend/build/docs/asciidoc/index.html
+
+# Windows
+start backend/build/docs/asciidoc/index.html
 
 # 또는 파일 탐색기에서 직접 열기
 ```
 
 ---
 
-## 📁 프로젝트 구조
+## 프로젝트 구조
 
 ```
 backend/
@@ -77,8 +78,8 @@ backend/
 │           ├── CommitControllerTest.java         # GitHub API 테스트
 │           ├── GitHubOAuthControllerTest.java    # OAuth 인증 테스트
 │           ├── S3ControllerTest.java             # S3 API 테스트
-│           ├── DDBReportControllerTest.java      # DynamoDB API 테스트
-│           └── UserPresetControllerTest.java     # 사용자 설정 테스트
+│           ├── DDBReportControllerTest.java      # DynamoDB 보고서 API 테스트
+│           └── UserPresetControllerTest.java     # 사용자 설정 API 테스트
 └── build/
     ├── generated-snippets/          # 테스트에서 자동 생성된 문서 조각
     │   ├── commit-controller-test/
@@ -90,9 +91,7 @@ backend/
             └── index.html           # 최종 생성된 API 문서
 ```
 
----
-
-## ✍️ 새로운 API 문서 추가 방법
+## 새로운 API 문서 추가 방법
 
 ### 1. Controller 테스트 작성
 
@@ -166,9 +165,9 @@ include::{snippets}/your-controller-test/your-api-test/response-fields.adoc[]
 
 ---
 
-## 📋 문서화된 API 목록
+## 문서화된 API 목록
 
-현재 문서화된 API는 **총 17개 엔드포인트**입니다:
+현재 문서화된 API는 **총 20개 엔드포인트**입니다:
 
 ### 1. OAuth & 인증 API (4개)
 
@@ -192,22 +191,35 @@ include::{snippets}/your-controller-test/your-api-test/response-fields.adoc[]
 
 - `GET /api/s3/report` - AI 보고서 생성
 
-### 5. DynamoDB 보고서 저장 API (1개)
+### 5. DynamoDB 보고서 API (3개)
 
 - `POST /api/user/report` - 보고서 저장
+- `GET /api/user/report/list` - 저장된 보고서 목록 조회
+- `GET /api/user/report/view` - 특정 보고서 상세 조회 (PK, SK)
 
 ### 6. 사용자 설정 API (6개)
 
-- `POST /api/user/preset` - 설정 생성/수정
+- `POST /api/user/preset` - 설정 생성/수정 (전체)
 - `GET /api/user/preset` - 설정 조회
 - `DELETE /api/user/preset` - 설정 삭제
 - `PUT /api/user/preset/email` - 이메일 설정 수정
 - `PUT /api/user/preset/report-style` - 보고서 스타일 수정
 - `PUT /api/user/preset/report-frequency` - 보고서 생성 주기 수정
 
+### 7. 헬스 체크 API (1개)
+
+- `GET /api/health` - 애플리케이션 상태 확인
+
 ---
 
-## 🛠️ 문서 커스터마이징
+### 내부 API
+
+다음 API는 Lambda 함수나 내부 시스템에서만 사용되며, 외부에서 직접 호출하지 않습니다:
+
+- `POST /api/auto-report/generate` - 자동 보고서 생성 (Lambda 호출용)
+- `POST /api/auto-report/generate-batch` - 배치 보고서 생성 (Lambda 호출용)
+
+## 문서 커스터마이징
 
 ### 스타일 수정
 
@@ -217,9 +229,7 @@ include::{snippets}/your-controller-test/your-api-test/response-fields.adoc[]
 
 `index.adoc` 파일에서 원하는 섹션을 추가하거나 제거할 수 있습니다.
 
----
-
-## ❓ 문제 해결
+## 문제 해결
 
 ### 문서가 생성되지 않는 경우
 
@@ -247,41 +257,8 @@ ls -la build/generated-snippets/
 ./gradlew test --tests "YourControllerTest" --info
 ```
 
----
-
-## 📚 참고 자료
+## 참고 자료
 
 - [Spring REST Docs 공식 문서](https://docs.spring.io/spring-restdocs/docs/current/reference/html5/)
 - [AsciiDoc 문법](https://docs.asciidoctor.org/asciidoc/latest/)
 - [MockMvc 가이드](https://docs.spring.io/spring-framework/reference/testing/spring-mvc-test-framework.html)
-
----
-
-## 🔄 CI/CD 통합
-
-### GitHub Actions 예시
-
-```yaml
-name: Generate API Docs
-
-on:
-  push:
-    branches: [main]
-
-jobs:
-  docs:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          java-version: "17"
-      - name: Generate Docs
-        run: ./gradlew asciidoctor
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build/docs/asciidoc
-```

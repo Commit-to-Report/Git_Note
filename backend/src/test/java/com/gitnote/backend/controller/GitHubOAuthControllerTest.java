@@ -70,7 +70,7 @@ public class GitHubOAuthControllerTest {
         userInfo.setFollowing(50);
         userInfo.setCreatedAt("2020-01-01T00:00:00Z");
 
-        BDDMockito.given(gitHubService.getAccessToken(anyString())).willReturn(accessToken);
+        BDDMockito.given(gitHubService.getAccessToken(anyString(), anyString())).willReturn(accessToken);
         BDDMockito.given(gitHubService.getUserInfo(anyString())).willReturn(userInfo);
 
         // when & then

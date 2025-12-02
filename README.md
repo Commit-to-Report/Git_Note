@@ -667,6 +667,15 @@ SES_SENDER_NAME=GitNote
 
 ## 참고 자료
 
+### API 문서
+
+- **[GitNote API 문서](./backend/build/docs/asciidoc/index.html)** - Spring REST Docs로 생성된 상세 API 문서
+  - 로컬에서 문서 생성: `cd backend && ./gradlew clean test asciidoctor`
+  - 문서 위치: `backend/build/docs/asciidoc/index.html` 파일을 브라우저에서 열어 확인할 수 있습니다.
+  - 문서 생성에 대한 자세한 내용은 [backend/README.md](./backend/README.md)를 참고.
+
+### 외부 문서
+
 - [Spring Boot 공식 문서](https://spring.io/projects/spring-boot)
 - [AWS ECS 문서](https://docs.aws.amazon.com/ecs/)
 - [AWS Lambda 문서](https://docs.aws.amazon.com/lambda/)
