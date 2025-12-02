@@ -43,27 +43,29 @@
     <div id="header-container"></div>
 
     <main>
-      <h1>GitNote 보고서</h1>
-      <p id="status">보고서를 준비 중입니다...</p>
+      <div class="container">
+        <h1>GitNote 보고서</h1>
+        <p id="status">보고서를 준비 중입니다...</p>
 
-      <div class="style-buttons">
-        <button id="styleSummaryBtn">간결 요약</button>
-        <button id="styleDetailedBtn">상세 분석</button>
-        <button id="styleStatisticsBtn">통계 중심</button>
-      </div>
+        <div class="style-buttons">
+          <button id="styleSummaryBtn">간결 요약</button>
+          <button id="styleDetailedBtn">상세 분석</button>
+          <button id="styleStatisticsBtn">통계 중심</button>
+        </div>
 
-      <div id="summaryContainer">
-        <div id="loadingSpinner" class="hidden"></div>
+        <div id="summaryContainer">
+          <div id="loadingSpinner" class="hidden"></div>
 
-        <div id="summaryView"></div>
-        <textarea id="summaryEdit"></textarea>
-        <div id="summaryPreview"></div>
-      </div>
+          <div id="summaryView"></div>
+          <textarea id="summaryEdit"></textarea>
+          <div id="summaryPreview"></div>
+        </div>
 
-      <div id="actionButtons">
-        <button id="editBtn" disabled>수정</button>
-        <button id="previewBtn" disabled>미리보기</button>
-        <button id="saveBtn" disabled>보고서 저장</button>
+        <div id="actionButtons">
+          <button id="editBtn" disabled>수정</button>
+          <button id="previewBtn" disabled>미리보기</button>
+          <button id="saveBtn" disabled>보고서 저장</button>
+        </div>
       </div>
     </main>
 
@@ -187,8 +189,6 @@
         summaryView.style.display = "none";
         summaryPreview.style.display = "block";
       });
-
-
 
       saveBtn.addEventListener("click", async () => {
         const updatedReport = summaryEdit.value;
