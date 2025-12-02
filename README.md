@@ -2,9 +2,9 @@
 
 GitNote는 GitHub OAuth를 통해 로그인하여 리포지토리의 커밋 내역을 조회하고, **AI 기반 자동 보고서 생성** 및 **AWS S3 백업** 기능을 제공하는 웹 애플리케이션입니다.
 
----
+<br/>
 
-## 📋 목차
+## 목차
 
 1. [프로젝트 소개](#1-프로젝트-소개)
 2. [시스템 아키텍처](#2-시스템-아키텍처)
@@ -16,7 +16,7 @@ GitNote는 GitHub OAuth를 통해 로그인하여 리포지토리의 커밋 내�
 8. [환경변수/설정 값](#8-환경변수설정-값)
 9. [팀원 및 역할, 진행 과정](#9-팀원-및-역할-진행-과정)
 
----
+<br/>
 
 ## 1. 프로젝트 소개
 
@@ -26,14 +26,14 @@ GitNote는 개발자들이 GitHub 커밋 내역을 체계적으로 관리하고 
 
 ### 1.2 주요 기능
 
-- 🔐 **GitHub OAuth 로그인**: GitHub 계정으로 간편 로그인
-- 📦 **리포지토리 조회**: 사용자의 모든 GitHub 리포지토리 목록 조회
-- 📅 **커밋 검색**: 날짜 범위를 지정한 커밋 내역 검색
-- 📝 **커밋 상세 조회**: 커밋의 변경 파일 및 상세 정보 조회
-- 🤖 **AI 보고서 생성**: Google Gemini API를 활용한 자동 커밋 보고서 생성
-- 📧 **자동 이메일 알림**: 설정한 주기(일/주/월)에 따라 보고서를 이메일로 자동 전송
-- ☁️ **AWS S3 백업**: 커밋 내역을 텍스트 파일로 S3에 영구 저장
-- 💾 **DynamoDB 저장**: 생성된 보고서를 DynamoDB에 저장하여 조회 가능
+- **GitHub OAuth 로그인**: GitHub 계정으로 간편 로그인
+- **리포지토리 조회**: 사용자의 모든 GitHub 리포지토리 목록 조회
+- **커밋 검색**: 날짜 범위를 지정한 커밋 내역 검색
+- **커밋 상세 조회**: 커밋의 변경 파일 및 상세 정보 조회
+- **AI 보고서 생성**: Google Gemini API를 활용한 스타일별 커밋 보고서 생성
+- **자동 이메일 알림**: 설정한 주기(일/주/월)에 따라 보고서 생성 여부를 이메일로 자동 전송
+- **AWS S3 백업**: 커밋 내역을 텍스트 파일로 S3에 저장
+- **DynamoDB 저장**: 생성된 보고서를 DynamoDB에 저장하여 조회 및 수정 가능
 
 ### 1.3 사용 시나리오
 
@@ -43,62 +43,32 @@ GitNote는 개발자들이 GitHub 커밋 내역을 체계적으로 관리하고 
 4. 주기적으로 자동 생성되는 보고서를 이메일로 받아 확인
 5. 중요한 커밋 내역을 S3에 백업하여 보관
 
----
-
 ## 2. 시스템 아키텍처
 
 ### 2.1 전체 아키텍처
 
-```
-┌─────────────────┐
-│   사용자 (브라우저)  │
-└────────┬────────┘
-         │ HTTPS
-         ▼
-┌─────────────────────────────────────┐
-│      CloudFront (CDN)               │
-│  https://d1l3a7dvc3xbrk.cloudfront.net │
-└────────┬────────────────────────────┘
-         │
-         ├─────────────────┬──────────────────┐
-         │                 │                  │
-         ▼                 ▼                  ▼
-┌──────────────┐  ┌──────────────┐  ┌──────────────┐
-│   S3 Bucket  │  │  ALB (ECS)  │  │  Lambda      │
-│  (Frontend)  │  │  (Backend)  │  │  (Auto Report)│
-└──────────────┘  └──────┬──────┘  └──────┬──────┘
-                         │                 │
-                         ▼                 ▼
-                  ┌──────────────┐  ┌──────────────┐
-                  │  DynamoDB    │  │  EventBridge │
-                  │  (UserPreset │  │  (Scheduler) │
-                  │   UserReports)│  └──────────────┘
-                  └──────────────┘
-                         │
-                         ▼
-                  ┌──────────────┐
-                  │  AWS SES     │
-                  │  (Email)     │
-                  └──────────────┘
-```
+[첨부예정]
 
 ### 2.2 데이터 흐름
 
 #### 2.2.1 사용자 인증 흐름
+
 ```
 사용자 → CloudFront → Backend (ALB) → GitHub OAuth API
-         ↓
-    세션 생성 (DynamoDB)
+           ↓
+        세션 생성
 ```
 
 #### 2.2.2 커밋 조회 흐름
+
 ```
 사용자 → CloudFront → Backend → GitHub API
-         ↓
-    커밋 데이터 반환
+           ↓
+     커밋 데이터 반환
 ```
 
 #### 2.2.3 자동 보고서 생성 흐름
+
 ```
 EventBridge (스케줄러)
     ↓
@@ -128,50 +98,46 @@ SES (이메일 전송)
 - **EventBridge**: Lambda 함수 스케줄링
 - **SES**: 이메일 전송 서비스
 
----
-
 ## 3. 사용 기술 스택
 
 ### 3.1 Backend
 
-| 기술 | 버전 | 용도 |
-|------|------|------|
-| Java | 17+ | 백엔드 개발 언어 |
-| Spring Boot | 3.x | 웹 애플리케이션 프레임워크 |
-| Spring WebFlux | 3.x | 비동기 HTTP 클라이언트 (WebClient) |
-| AWS SDK | 3.1.1 | AWS 서비스 연동 (S3, DynamoDB, SES) |
-| Lombok | - | 보일러플레이트 코드 제거 |
-| Gradle | 8.x | 빌드 도구 |
+| 기술        | 버전  | 용도                                |
+| ----------- | ----- | ----------------------------------- |
+| Java        | 17+   | 백엔드 개발 언어                    |
+| Spring Boot | 3.x   | 웹 애플리케이션 프레임워크          |
+| AWS SDK     | 3.1.1 | AWS 서비스 연동 (S3, DynamoDB, SES) |
+| Lombok      | -     | 보일러플레이트 코드 제거            |
+| Gradle      | 8.x   | 빌드 도구                           |
 
 ### 3.2 Frontend
 
-| 기술 | 버전 | 용도 |
-|------|------|------|
-| HTML5 | - | 마크업 |
-| CSS3 | - | 스타일링 |
+| 기술                 | 버전 | 용도            |
+| -------------------- | ---- | --------------- |
+| HTML5                | -    | 마크업          |
+| CSS3                 | -    | 스타일링        |
 | JavaScript (Vanilla) | ES6+ | 클라이언트 로직 |
-| GitHub OAuth 2.0 | - | 인증 |
+| GitHub OAuth 2.0     | -    | 인증            |
 
 ### 3.3 Infrastructure
 
-| 기술 | 용도 |
-|------|------|
-| AWS CloudFront | CDN 및 API 프록시 |
-| AWS S3 | 정적 파일 호스팅 및 백업 |
-| AWS ECS | 컨테이너 오케스트레이션 |
-| AWS ALB | 로드 밸런싱 |
-| AWS DynamoDB | NoSQL 데이터베이스 |
-| AWS Lambda | 서버리스 함수 실행 |
-| AWS EventBridge | 스케줄링 |
-| AWS SES | 이메일 전송 |
-| Docker | 컨테이너화 |
+| 기술            | 용도                     |
+| --------------- | ------------------------ |
+| AWS CloudFront  | CDN 및 API 프록시        |
+| AWS S3          | 정적 파일 호스팅 및 백업 |
+| AWS ECS         | 컨테이너 오케스트레이션  |
+| AWS ALB         | 로드 밸런싱              |
+| AWS DynamoDB    | NoSQL 데이터베이스       |
+| AWS Lambda      | 서버리스 함수 실행       |
+| AWS EventBridge | 스케줄링                 |
+| AWS SES         | 이메일 전송              |
 
 ### 3.4 External APIs
 
-| API | 용도 |
-|-----|------|
+| API                | 용도                         |
+| ------------------ | ---------------------------- |
 | GitHub REST API v3 | 리포지토리 및 커밋 정보 조회 |
-| Google Gemini API | AI 기반 보고서 생성 |
+| Google Gemini API  | AI 기반 보고서 생성          |
 
 ---
 
@@ -179,81 +145,54 @@ SES (이메일 전송)
 
 ### 4.1 인프라 구성도
 
-```
-┌─────────────────────────────────────────────────────────┐
-│                    AWS Cloud                            │
-│                                                         │
-│  ┌──────────────┐                                      │
-│  │ CloudFront   │  Distribution: d1l3a7dvc3xbrk       │
-│  │              │  - Origin: S3 (Frontend)            │
-│  │              │  - Behavior: /api/* → ALB          │
-│  └──────┬───────┘                                      │
-│         │                                              │
-│    ┌────┴────┬──────────────────┐                     │
-│    │         │                  │                     │
-│    ▼         ▼                  ▼                     │
-│  ┌─────┐  ┌──────┐          ┌────────┐               │
-│  │ S3  │  │ ALB  │          │Lambda  │               │
-│  │Bucket│  │      │          │Function│               │
-│  └─────┘  └──┬───┘          └───┬────┘               │
-│              │                   │                    │
-│              ▼                   ▼                    │
-│         ┌─────────┐         ┌──────────┐              │
-│         │  ECS    │         │EventBridge│              │
-│         │ Service │         │  (Rule)   │              │
-│         └────┬────┘         └───────────┘              │
-│              │                                         │
-│    ┌─────────┴─────────┐                              │
-│    │                   │                              │
-│    ▼                   ▼                              │
-│  ┌──────────┐      ┌──────────┐                       │
-│  │DynamoDB  │      │   SES    │                       │
-│  │-UserPreset│      │          │                       │
-│  │-UserReports│     └──────────┘                       │
-│  └──────────┘                                         │
-└─────────────────────────────────────────────────────────┘
-```
+[첨부예정]
 
 ### 4.2 주요 리소스
 
 #### 4.2.1 CloudFront
+
 - **Distribution ID**: `d1l3a7dvc3xbrk`
 - **Origin**: S3 버킷 (프론트엔드)
 - **Behavior**: `/api/*` → ALB (백엔드)
 - **Viewer Protocol**: HTTPS Only
 
 #### 4.2.2 S3
+
 - **버킷**: 프론트엔드 정적 파일 저장
 - **용도**: HTML, CSS, JavaScript 파일 호스팅
 
 #### 4.2.3 ECS
+
 - **클러스터**: 백엔드 애플리케이션 실행
 - **서비스**: Spring Boot 애플리케이션
 - **Task Definition**: Docker 컨테이너 실행
 
 #### 4.2.4 ALB
+
 - **타입**: Application Load Balancer
-- **리스너**: HTTPS (443)
+- **리스너**: HTTP (80)
 - **타겟 그룹**: ECS 서비스
 
 #### 4.2.5 DynamoDB
+
 - **테이블 1**: `UserPreset` - 사용자 설정 저장
 - **테이블 2**: `UserReports` - 생성된 보고서 저장
 
 #### 4.2.6 Lambda
+
 - **함수명**: `auto-report`
 - **런타임**: Node.js 20
 - **트리거**: EventBridge (스케줄)
 
 #### 4.2.7 EventBridge
+
 - **규칙**: 일/주/월별 보고서 생성 스케줄
 - **타겟**: Lambda 함수
 
 #### 4.2.8 SES
+
 - **리전**: `ap-northeast-2`
 - **용도**: 보고서 완료 이메일 전송
-
----
 
 ## 5. 애플리케이션 구조
 
@@ -295,7 +234,6 @@ com.gitnote.backend/
 │   ├── GitHubUserInfo.java          # GitHub 사용자 정보 DTO
 │   ├── S3UploadRequest.java         # S3 업로드 요청 DTO
 │   ├── UserPresetRequest.java       # 사용자 설정 요청 DTO
-│   ├── UserPresetRequests.java      # 사용자 설정 요청 DTO (중첩)
 │   └── UserPresetResponse.java      # 사용자 설정 응답 DTO
 └── exception/                       # 예외 처리
     └── GlobalExceptionHandler.java  # 전역 예외 핸들러
@@ -304,28 +242,34 @@ com.gitnote.backend/
 ### 5.2 주요 기능 모듈
 
 #### 5.2.1 인증 모듈
+
 - **GitHubOAuthController**: OAuth 인증 처리
 - **GitHubService**: GitHub API 연동
 - **세션 관리**: HttpSession을 통한 사용자 세션 관리
 
 #### 5.2.2 커밋 조회 모듈
+
 - **CommitController**: 커밋 조회 API
 - **GitHubService**: GitHub API를 통한 커밋 데이터 조회
 
 #### 5.2.3 보고서 생성 모듈
+
 - **AutoReportController**: 자동 보고서 생성 API
 - **GeminiApiService**: AI 기반 보고서 생성
 - **DDBReportService**: 보고서 저장
 
 #### 5.2.4 이메일 모듈
+
 - **EmailService**: SES를 통한 이메일 전송
 - **AutoReportController**: 보고서 완료 시 이메일 알림
 
 #### 5.2.5 저장소 모듈
+
 - **S3Service**: S3 파일 업로드 및 Presigned URL 생성
 - **DDBReportService**: DynamoDB 보고서 저장/조회
 
 #### 5.2.6 사용자 설정 모듈
+
 - **UserPresetController**: 사용자 설정 API
 - **UserPresetService**: 사용자 설정 비즈니스 로직
 - **UserPresetRepository**: DynamoDB 데이터 접근
@@ -334,7 +278,7 @@ com.gitnote.backend/
 
 ```
 ┌─────────────────────────────────┐
-│      Controller Layer          │  ← REST API 엔드포인트
+│      Controller Layer           │  ← REST API 엔드포인트
 ├─────────────────────────────────┤
 │      Service Layer              │  ← 비즈니스 로직
 ├─────────────────────────────────┤
@@ -344,13 +288,12 @@ com.gitnote.backend/
 └─────────────────────────────────┘
 ```
 
----
-
 ## 6. 배포 방법
 
 ### 6.1 로컬 개발 환경 설정
 
 #### 6.1.1 필수 요구사항
+
 - Java 17+
 - Gradle 8.x
 - Python 3.x (프론트엔드 서버용)
@@ -483,8 +426,6 @@ aws cloudfront create-invalidation \
   --paths "/*"
 ```
 
----
-
 ## 7. 운영/모니터링 방법
 
 ### 7.1 로그 확인
@@ -509,18 +450,21 @@ aws logs tail /aws/lambda/auto-report --follow
 ### 7.2 모니터링 지표
 
 #### 7.2.1 ECS 모니터링
+
 - CPU 사용률
 - 메모리 사용률
 - Task 실행 상태
 - 서비스 상태
 
 #### 7.2.2 Lambda 모니터링
+
 - 함수 실행 횟수
 - 실행 시간
 - 에러율
 - 타임아웃 발생 횟수
 
 #### 7.2.3 DynamoDB 모니터링
+
 - 읽기/쓰기 용량 사용률
 - 에러율
 - 지연 시간
@@ -559,30 +503,28 @@ aws lambda invoke \
   response.json
 ```
 
----
-
 ## 8. 환경변수/설정 값
 
 ### 8.1 필수 환경 변수
 
 #### 8.1.1 Backend (ECS Task Definition)
 
-| 변수명 | 설명 | 예시 값 |
-|--------|------|---------|
-| `AWS_ACCESS_KEY` | AWS 액세스 키 | `AKIAIOSFODNN7EXAMPLE` |
-| `AWS_SECRET_KEY` | AWS 시크릿 키 | `wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY` |
-| `AWS_S3_BUCKET` | S3 버킷 이름 | `gitnote-bucket` |
-| `GITHUB_CLIENT_SECRET` | GitHub OAuth Client Secret | `your-client-secret` |
-| `GEMINI_PROJECT_ID` | Gemini 프로젝트 ID | `your-project-id` |
-| `GEMINI_API_KEY` | Gemini API 키 | `your-api-key` |
-| `FRONTEND_URL` | 프론트엔드 URL | `https://d1l3a7dvc3xbrk.cloudfront.net` |
+| 변수명                 | 설명                       | 예시 값                                    |
+| ---------------------- | -------------------------- | ------------------------------------------ |
+| `AWS_ACCESS_KEY`       | AWS 액세스 키              | `AKIAIOSFODNN7EXAMPLE`                     |
+| `AWS_SECRET_KEY`       | AWS 시크릿 키              | `wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY` |
+| `AWS_S3_BUCKET`        | S3 버킷 이름               | `gitnote-bucket`                           |
+| `GITHUB_CLIENT_SECRET` | GitHub OAuth Client Secret | `your-client-secret`                       |
+| `GEMINI_PROJECT_ID`    | Gemini 프로젝트 ID         | `your-project-id`                          |
+| `GEMINI_API_KEY`       | Gemini API 키              | `your-api-key`                             |
+| `FRONTEND_URL`         | 프론트엔드 URL             | `https://d1l3a7dvc3xbrk.cloudfront.net`    |
 
 #### 8.1.2 Lambda Function
 
-| 변수명 | 설명 | 예시 값 |
-|--------|------|---------|
-| `USER_PRESET_TABLE` | DynamoDB 테이블 이름 | `UserPreset` |
-| `BACKEND_API_URL` | 백엔드 API URL | `http://your-alb-url` |
+| 변수명              | 설명                 | 예시 값               |
+| ------------------- | -------------------- | --------------------- |
+| `USER_PRESET_TABLE` | DynamoDB 테이블 이름 | `UserPreset`          |
+| `BACKEND_API_URL`   | 백엔드 API URL       | `http://your-alb-url` |
 
 ### 8.2 application.properties 설정
 
@@ -657,31 +599,33 @@ SES_SENDER_EMAIL=your-email@gmail.com
 SES_SENDER_NAME=GitNote
 ```
 
----
-
 ## 9. 팀원 및 역할, 진행 과정
 
 ### 9.1 역할 분담
 
-#### 9.1.1 PM/아키텍트
+#### 9.1.1 PM/아키텍트(김민욱)
+
 - 프로젝트 소개 작성
 - 시스템 아키텍처 설계 및 문서화
 - AWS 인프라 구성 설계
 
-#### 9.1.2 인프라 엔지니어
+#### 9.1.2 인프라 엔지니어(이재윤)
+
 - AWS 인프라 구성 및 배포
 - CloudFront, S3, ECS, ALB 설정
 - Lambda 및 EventBridge 구성
 - 모니터링 및 알람 설정
 
-#### 9.1.3 백엔드 개발자
+#### 9.1.3 백엔드 / 프론트엔드 개발자(박수정, 송민지, 최유경)
+
 - 애플리케이션 구조 설계 및 구현
 - 패키지 구조 정리
 - 도메인 모델 설계
 - API 엔드포인트 개발
 - 환경 변수 및 설정 관리
 
-#### 9.1.4 DevOps 엔지니어
+#### 9.1.4 DevOps 엔지니어(김지윤)
+
 - Docker 이미지 빌드 및 ECR 배포
 - ECS 배포 파이프라인 구축
 - CI/CD 파이프라인 설정
@@ -689,49 +633,35 @@ SES_SENDER_NAME=GitNote
 
 ### 9.2 진행 과정
 
-#### Phase 1: 기획 및 설계 (1주)
+#### Phase 1: 기획 및 설계
+
 - 프로젝트 요구사항 정의
 - 시스템 아키텍처 설계
 - 기술 스택 선정
 
-#### Phase 2: 개발 환경 구축 (1주)
+#### Phase 2: 개발 환경 구축
+
 - 로컬 개발 환경 설정
 - AWS 인프라 초기 구성
 - CI/CD 파이프라인 구축
 
-#### Phase 3: 핵심 기능 개발 (3주)
+#### Phase 3: 핵심 기능 개발
+
 - GitHub OAuth 인증 구현
 - 커밋 조회 기능 개발
 - AI 보고서 생성 기능 개발
 - 자동 보고서 스케줄링 구현
 
-#### Phase 4: 배포 및 운영 (1주)
+#### Phase 4: 배포 및 운영
+
 - 프로덕션 환경 배포
 - 모니터링 설정
 - 문서화 완료
 
----
-
-## 📚 참고 자료
+## 참고 자료
 
 - [Spring Boot 공식 문서](https://spring.io/projects/spring-boot)
 - [AWS ECS 문서](https://docs.aws.amazon.com/ecs/)
 - [AWS Lambda 문서](https://docs.aws.amazon.com/lambda/)
 - [GitHub API 문서](https://docs.github.com/en/rest)
 - [Google Gemini API 문서](https://ai.google.dev/docs)
-
----
-
-## 📝 라이선스
-
-이 프로젝트는 개인 프로젝트입니다.
-
----
-
-## 👥 기여자
-
-- 프로젝트 개발 및 운영 팀
-
----
-
-**마지막 업데이트**: 2025년 12월
