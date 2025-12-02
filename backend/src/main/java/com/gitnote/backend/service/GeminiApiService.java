@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 public class GeminiApiService {
 
@@ -33,7 +35,7 @@ public class GeminiApiService {
                 .baseUrl("https://generativelanguage.googleapis.com/v1")
                 .build();
 
-        System.out.println("[GeminiApiService] 초기화 완료. 모델: " + model + ", 프로젝트 ID: " + projectId);
+        log.info("[GeminiApiService] 초기화 완료 - 모델: {}, 프로젝트 ID: {}", model, projectId);
     }
 
     /**
@@ -43,8 +45,7 @@ public class GeminiApiService {
      * @return 생성된 텍스트
      */
     public String generateContent(String prompt, String style) {
-        System.out.println("[GeminiApiService] generateContent 시작 - prompt 길이: " + (prompt != null ? prompt.length() : 0));
-        System.out.println("[GeminiApiService] prompt 내용: " + (prompt != null ? prompt.substring(0, Math.min(100, prompt.length())) + "..." : "null"));
+        log.info("[GeminiApiService] 콘텐츠 생성 시작 - prompt 길이: {}", prompt != null ? prompt.length() : 0);
 
         String styleInstruction = switch (style) {
             case "summary" -> "**스타일:** 간결하게 요약된 보고서를 작성하세요. 핵심 포인트 위주로 표현합니다.\n";
@@ -69,8 +70,7 @@ public class GeminiApiService {
 
             String jsonBody = String.format("{\"contents\":[{\"parts\":[{\"text\":\"%s\"}]}]}", fullPrompt.replace("\"", "\\\""));
 
-            System.out.println("[GeminiApiService] 호출 URI: " + uri);
-            System.out.println("[GeminiApiService] 요청 바디 (부분): " + (jsonBody.length() > 200 ? jsonBody.substring(0, 200) + "..." : jsonBody));
+            log.debug("[GeminiApiService] API 호출 URI: {}", uri);
 
             Mono<String> responseMono = webClient.post()
                     .uri(uri)
@@ -78,24 +78,25 @@ public class GeminiApiService {
                     .bodyValue(jsonBody)
                     .retrieve()
                     .bodyToMono(String.class)
-                    .doOnError(e -> System.err.println("[GeminiApiService] Mono 에러 발생: " + e.getMessage()));
+                    .doOnError(e -> log.error("[GeminiApiService] Mono 에러 발생: {}", e.getMessage()));
 
             String rawJsonResult = responseMono.block();
-            System.out.println("[GeminiApiService] Gemini API 호출 완료, 응답 길이: " + (rawJsonResult != null ? rawJsonResult.length() : 0));
+            log.info("[GeminiApiService] Gemini API 호출 완료 - 응답 길이: {}", rawJsonResult != null ? rawJsonResult.length() : 0);
 
             String extractedText = extractTextFromJson(rawJsonResult);
-            System.out.println("[GeminiApiService] 추출된 텍스트 길이: " + extractedText.length());
+            log.info("[GeminiApiService] 텍스트 추출 완료 - 길이: {}", extractedText.length());
             return extractedText;
 
         } catch (WebClientResponseException e) {
-            System.err.println("[GeminiApiService] Gemini API 호출 실패 - 상태 코드: " + e.getStatusCode());
-            System.err.println("[GeminiApiService] 응답 내용: " + e.getResponseBodyAsString().substring(0, Math.min(200, e.getResponseBodyAsString().length())) + "...");
-            e.printStackTrace();
-            return "API Error: " + e.getMessage();
+            log.error("[GeminiApiService] Gemini API 호출 실패 - 상태코드: {}, 응답: {}", 
+                    e.getStatusCode(), 
+                    e.getResponseBodyAsString().length() > 200 
+                        ? e.getResponseBodyAsString().substring(0, 200) + "..." 
+                        : e.getResponseBodyAsString());
+            throw new RuntimeException("Gemini API 호출 실패: " + e.getMessage(), e);
         } catch (Exception e) {
-            System.err.println("[GeminiApiService] 예외 발생: " + e.getMessage());
-            e.printStackTrace();
-            return "Internal Error: " + e.getMessage();
+            log.error("[GeminiApiService] 예상치 못한 오류 발생: {}", e.getMessage(), e);
+            throw new RuntimeException("콘텐츠 생성 중 오류 발생: " + e.getMessage(), e);
         }
     }
 
@@ -111,7 +112,7 @@ public class GeminiApiService {
                 return textNode.asText();
             }
         } catch (Exception e) {
-            System.err.println("[GeminiApiService] JSON 파싱 실패: " + e.getMessage());
+            log.error("[GeminiApiService] JSON 파싱 실패: {}", e.getMessage());
         }
         return "";
     }

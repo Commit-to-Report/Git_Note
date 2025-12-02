@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.netty.http.client.HttpClient;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -25,6 +26,7 @@ import java.util.concurrent.TimeUnit;
  * GitHubService
  * - GitHub API 연동, 액세스 토큰 관리 · 사용자, 리포지토리, 커밋 데이터 수집 서비스
  */
+@Slf4j
 @Service
 public class GitHubService {
 
@@ -81,8 +83,8 @@ public class GitHubService {
                     .bodyToMono(Map.class)
                     .block();
         } catch (Exception e) {
-            System.err.println("[getAccessToken] Exception: " + e.getMessage());
-            // 실패 시 null 반환
+            log.error("[GitHubService] Access token 획득 실패: {}", e.getMessage());
+            return null;
         }
         return response != null ? (String) response.get("access_token") : null;
     }
@@ -123,7 +125,7 @@ public class GitHubService {
 
             return userInfo;
         } catch (Exception e) {
-            System.err.println("[getUserInfo] Exception: " + e.getMessage());
+            log.error("[GitHubService] 사용자 정보 조회 실패: {}", e.getMessage());
             return null;
         }
     }
@@ -151,7 +153,7 @@ public class GitHubService {
                     .block();
             return true;
         } catch (Exception e) {
-            System.err.println("[revokeToken] Failed to revoke token: " + e.getMessage());
+            log.error("[GitHubService] 토큰 폐기 실패: {}", e.getMessage());
             return false;
         }
     }
@@ -174,7 +176,7 @@ public class GitHubService {
 
             return response;
         } catch (Exception e) {
-            System.err.println("[getRateLimit] Failed: " + e.getMessage());
+            log.error("[GitHubService] Rate limit 조회 실패: {}", e.getMessage());
             Map<String, Object> errorResponse = new HashMap<>();
             errorResponse.put("error", e.getMessage());
             return errorResponse;
@@ -204,11 +206,11 @@ public class GitHubService {
 
             long elapsed = System.currentTimeMillis() - startTime;
             int count = repositories != null ? repositories.size() : 0;
-            System.out.printf("[getRepositories] %s - %d repositories fetched in %d ms%n", username, count, elapsed);
+            log.info("[GitHubService] 리포지토리 조회 완료 - 사용자: {}, 개수: {}, 소요시간: {}ms", username, count, elapsed);
 
             return repositories != null ? repositories : Collections.emptyList();
         } catch (WebClientResponseException e) {
-            System.err.println("[getRepositories] GitHub API error: " + e.getStatusCode() + " Body: " + e.getResponseBodyAsString());
+            log.error("[GitHubService] GitHub API 오류 - 상태코드: {}, 응답: {}", e.getStatusCode(), e.getResponseBodyAsString());
             if (e.getStatusCode().value() == 403) {
                 throw new RuntimeException("GitHub API 요청 한도를 초과했습니다. 잠시 후 다시 시도해주세요.");
             } else if (e.getStatusCode().value() == 401) {
@@ -216,7 +218,7 @@ public class GitHubService {
             }
             throw new RuntimeException("리포지토리 목록을 불러올 수 없습니다: " + e.getMessage());
         } catch (Exception e) {
-            System.err.printf("[getRepositories] Unexpected error: %s - %s%n", e.getClass().getName(), e.getMessage());
+            log.error("[GitHubService] 예상치 못한 오류 발생 - 타입: {}, 메시지: {}", e.getClass().getName(), e.getMessage());
             e.printStackTrace();
             throw new RuntimeException("서버 오류가 발생했습니다: " + e.getMessage());
         }
@@ -255,7 +257,7 @@ public class GitHubService {
 
             return commits != null ? commits : Collections.emptyList();
         } catch (Exception e) {
-            System.err.println("[getCommitsByDateRange] Failed: " + e.getMessage());
+            log.error("[GitHubService] 커밋 조회 실패: {}", e.getMessage());
             return Collections.emptyList();
         }
     }
@@ -280,7 +282,7 @@ public class GitHubService {
                     .bodyToMono(GitHubCommit.class)
                     .block();
         } catch (Exception e) {
-            System.err.println("[getCommitDetails] Failed: " + e.getMessage());
+            log.error("[GitHubService] 커밋 상세 조회 실패: {}", e.getMessage());
             return null;
         }
     }

@@ -7,6 +7,7 @@ import com.gitnote.backend.entity.UserPreset;
 import com.gitnote.backend.service.UserPresetService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,7 @@ import java.util.Optional;
 /**
  * 사용자 프리셋(설정) 관련 API 컨트롤러
  */
+@Slf4j
 @RestController
 @RequestMapping("/api/user/preset")
 @RequiredArgsConstructor
@@ -52,16 +54,11 @@ public class UserPresetController {
         if (result instanceof ResponseEntity) return (ResponseEntity<?>) result;
         String username = (String) result;
 
-        // 디버깅: username 확인
-        System.out.println("🔍 세션 username: " + username);
-        System.out.println("🔍 세션 ID: " + session.getId());
-        System.out.println("🔍 요청 데이터: " + request);
+        log.debug("[UserPresetController] 프리셋 저장 요청 - 사용자: {}, 세션ID: {}", username, session.getId());
 
         try {
             String sessionEmail = (String) session.getAttribute("email");
             String email = sessionEmail != null ? sessionEmail : request.getEmail();
-
-            System.out.println("🔍 email: " + email);
 
             // DynamoDB는 빈 문자열을 허용하지 않으므로 null로 변환
             if (email != null && email.trim().isEmpty()) {
@@ -98,7 +95,7 @@ public class UserPresetController {
                     .accessToken(accessToken)  // 세션의 accessToken 저장
                     .build();
 
-            System.out.println("🔍 저장할 Preset: " + preset);
+            log.debug("[UserPresetController] 프리셋 저장 - 사용자: {}, 리포지토리: {}", username, repository);
 
             UserPreset savedPreset = userPresetService.createOrUpdatePreset(preset);
             return ResponseEntity.ok(UserPresetResponse.from(savedPreset));

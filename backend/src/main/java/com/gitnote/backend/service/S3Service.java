@@ -3,6 +3,7 @@ package com.gitnote.backend.service;
 import io.awspring.cloud.s3.ObjectMetadata;
 import io.awspring.cloud.s3.S3Template;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -25,6 +26,7 @@ import java.time.Duration;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class S3Service {
@@ -83,7 +85,7 @@ public class S3Service {
             // 암호가 잔뜩 붙은 긴 URL 반환
             return presignedRequest.url().toString();
         } catch (Exception e) {
-            System.err.println("URL 생성 실패: " + e.getMessage());
+            log.error("[S3Service] Presigned URL 생성 실패: {}", e.getMessage());
             return "";
         }
     }
