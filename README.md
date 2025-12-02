@@ -95,8 +95,9 @@ SES (이메일 전송)
 - **S3**: 프론트엔드 정적 파일 저장 및 커밋 로그 백업
 - **ALB**: 백엔드 애플리케이션 로드 밸런서
 - **ECS**: 백엔드 컨테이너 실행 환경
+- **ECR**: 백엔드 컨테이너 이미지 저장
 - **DynamoDB**: 사용자 설정 및 보고서 저장
-- **Lambda**: 자동 보고서 생성 스케줄러
+- **Lambda**: 자동 보고서 생성 스케줄러, backend 배포 Image  변경
 - **EventBridge**: Lambda 함수 스케줄링
 - **SES**: 이메일 전송 서비스
 
@@ -130,9 +131,11 @@ SES (이메일 전송)
 | AWS CloudFront  | CDN 및 API 프록시        |
 | AWS S3          | 정적 파일 호스팅 및 백업 |
 | AWS ECS         | 컨테이너 오케스트레이션  |
+| AWS ECR         | 컨테이너 이미지 저장     |
 | AWS ALB         | 로드 밸런싱              |
 | AWS DynamoDB    | NoSQL 데이터베이스       |
 | AWS Lambda      | 서버리스 함수 실행       |
+| Secrets Manager | 비공개 암호화키 주입     |
 | AWS EventBridge | 스케줄링                 |
 | AWS SES         | 이메일 전송              |
 
