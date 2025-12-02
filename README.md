@@ -97,7 +97,7 @@ SES (이메일 전송)
 - **ECS**: 백엔드 컨테이너 실행 환경
 - **ECR**: 백엔드 컨테이너 이미지 저장
 - **DynamoDB**: 사용자 설정 및 보고서 저장
-- **Lambda**: 자동 보고서 생성 스케줄러, backend 배포 Image  변경
+- **Lambda**: 자동 보고서 생성 스케줄러, backend 배포 Image 변경
 - **EventBridge**: Lambda 함수 스케줄링
 - **SES**: 이메일 전송 서비스
 
@@ -669,7 +669,7 @@ SES_SENDER_NAME=GitNote
 
 ### API 문서
 
-- **[GitNote API 문서](./backend/build/docs/asciidoc/index.html)** - Spring REST Docs로 생성된 상세 API 문서
+- **[GitNote API 문서](https://github.com/user-attachments/files/23870553/GitNote.API.Documentation.pdf)** - Spring REST Docs로 생성된 상세 API 문서
   - 로컬에서 문서 생성: `cd backend && ./gradlew clean test asciidoctor`
   - 문서 위치: `backend/build/docs/asciidoc/index.html` 파일을 브라우저에서 열어 확인할 수 있습니다.
   - 문서 생성에 대한 자세한 내용은 [backend/README.md](./backend/README.md)를 참고.
