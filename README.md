@@ -43,6 +43,8 @@ GitNote는 개발자들이 GitHub 커밋 내역을 체계적으로 관리하고 
 4. 주기적으로 자동 생성되는 보고서를 이메일로 받아 확인
 5. 중요한 커밋 내역을 S3에 백업하여 보관
 
+<br/>
+
 ## 2. 시스템 아키텍처
 
 ### 2.1 전체 아키텍처
@@ -98,6 +100,8 @@ SES (이메일 전송)
 - **EventBridge**: Lambda 함수 스케줄링
 - **SES**: 이메일 전송 서비스
 
+<br/>
+
 ## 3. 사용 기술 스택
 
 ### 3.1 Backend
@@ -139,7 +143,7 @@ SES (이메일 전송)
 | GitHub REST API v3 | 리포지토리 및 커밋 정보 조회 |
 | Google Gemini API  | AI 기반 보고서 생성          |
 
----
+<br/>
 
 ## 4. AWS 인프라 구성
 
@@ -193,6 +197,8 @@ SES (이메일 전송)
 
 - **리전**: `ap-northeast-2`
 - **용도**: 보고서 완료 이메일 전송
+
+<br/>
 
 ## 5. 애플리케이션 구조
 
@@ -287,6 +293,8 @@ com.gitnote.backend/
 │      Entity/DTO Layer           │  ← 도메인 모델
 └─────────────────────────────────┘
 ```
+
+<br/>
 
 ## 6. 배포 방법
 
@@ -425,6 +433,8 @@ aws cloudfront create-invalidation \
   --distribution-id d1l3a7dvc3xbrk \
   --paths "/*"
 ```
+
+<br/>
 
 ## 7. 운영/모니터링 방법
 
