@@ -1,0 +1,446 @@
+{
+  "version": "35.0.0",
+  "artifacts": {
+    "GitNoteMonitoringStack.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "GitNoteMonitoringStack.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "GitNoteMonitoringStack": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://061039804626/ap-northeast-2",
+      "properties": {
+        "templateFile": "GitNoteMonitoringStack.template.json",
+        "terminationProtection": false,
+        "tags": {
+          "Component": "Monitoring",
+          "CostCenter": "Engineering",
+          "Environment": "Production",
+          "ManagedBy": "CDK",
+          "Owner": "DevOps Team",
+          "Project": "GitNote"
+        },
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::061039804626:role/cdk-hnb659fds-deploy-role-061039804626-ap-northeast-2",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::061039804626:role/cdk-hnb659fds-cfn-exec-role-061039804626-ap-northeast-2",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-061039804626-ap-northeast-2/6aee9fb8c0bff6d55f13e93bb9c85f841045ba908d7f85fb81dd540bfc4319e3.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "GitNoteMonitoringStack.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::061039804626:role/cdk-hnb659fds-lookup-role-061039804626-ap-northeast-2",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "GitNoteMonitoringStack.assets"
+      ],
+      "metadata": {
+        "/GitNoteMonitoringStack": [
+          {
+            "type": "aws:cdk:stack-tags",
+            "data": [
+              {
+                "Key": "Component",
+                "Value": "Monitoring"
+              },
+              {
+                "Key": "CostCenter",
+                "Value": "Engineering"
+              },
+              {
+                "Key": "Environment",
+                "Value": "Production"
+              },
+              {
+                "Key": "ManagedBy",
+                "Value": "CDK"
+              },
+              {
+                "Key": "Owner",
+                "Value": "DevOps Team"
+              },
+              {
+                "Key": "Project",
+                "Value": "GitNote"
+              }
+            ]
+          }
+        ],
+        "/GitNoteMonitoringStack/GitNoteMonitoringLambdaRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GitNoteMonitoringLambdaRoleC82E7647"
+          }
+        ],
+        "/GitNoteMonitoringStack/GitNoteMonitoringLambdaRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GitNoteMonitoringLambdaRoleDefaultPolicy16C752A1"
+          }
+        ],
+        "/GitNoteMonitoringStack/NetworkStatusFunction/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "NetworkStatusFunctionC8E4E145"
+          }
+        ],
+        "/GitNoteMonitoringStack/NetworkStatusFunction/LogRetention/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "NetworkStatusFunctionLogRetention1C71D88B"
+          }
+        ],
+        "/GitNoteMonitoringStack/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB"
+          }
+        ],
+        "/GitNoteMonitoringStack/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRoleDefaultPolicyADDA7DEB"
+          }
+        ],
+        "/GitNoteMonitoringStack/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A"
+          }
+        ],
+        "/GitNoteMonitoringStack/ComputePerformanceFunction/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ComputePerformanceFunctionC641C7BA"
+          }
+        ],
+        "/GitNoteMonitoringStack/ComputePerformanceFunction/LogRetention/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ComputePerformanceFunctionLogRetention45A8E025"
+          }
+        ],
+        "/GitNoteMonitoringStack/StorageHealthFunction/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "StorageHealthFunctionF41D9B9E"
+          }
+        ],
+        "/GitNoteMonitoringStack/StorageHealthFunction/LogRetention/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "StorageHealthFunctionLogRetentionA8FCD35B"
+          }
+        ],
+        "/GitNoteMonitoringStack/CostBreakdownFunction/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CostBreakdownFunctionA5429F6C"
+          }
+        ],
+        "/GitNoteMonitoringStack/CostBreakdownFunction/LogRetention/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CostBreakdownFunctionLogRetentionF3E10CDC"
+          }
+        ],
+        "/GitNoteMonitoringStack/GitNoteMonitoringAPI/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GitNoteMonitoringAPIFF87228C"
+          }
+        ],
+        "/GitNoteMonitoringStack/GitNoteMonitoringAPI/Deployment/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GitNoteMonitoringAPIDeployment541FAA4D097bcd2f7e1f4ccd1a1c8c5133b2d2a9"
+          }
+        ],
+        "/GitNoteMonitoringStack/GitNoteMonitoringAPI/DeploymentStage.prod/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GitNoteMonitoringAPIDeploymentStageprod39A5785F"
+          }
+        ],
+        "/GitNoteMonitoringStack/GitNoteMonitoringAPI/Endpoint": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GitNoteMonitoringAPIEndpoint3FD38E7C"
+          }
+        ],
+        "/GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GitNoteMonitoringAPIOPTIONS22B20B0C"
+          }
+        ],
+        "/GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/network-status/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GitNoteMonitoringAPInetworkstatus8262651C"
+          }
+        ],
+        "/GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/network-status/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GitNoteMonitoringAPInetworkstatusOPTIONS2CCEAFB3"
+          }
+        ],
+        "/GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/network-status/GET/ApiPermission.GitNoteMonitoringStackGitNoteMonitoringAPI53832FE2.GET..network-status": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GitNoteMonitoringAPInetworkstatusGETApiPermissionGitNoteMonitoringStackGitNoteMonitoringAPI53832FE2GETnetworkstatus05FD0C1E"
+          }
+        ],
+        "/GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/network-status/GET/ApiPermission.Test.GitNoteMonitoringStackGitNoteMonitoringAPI53832FE2.GET..network-status": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GitNoteMonitoringAPInetworkstatusGETApiPermissionTestGitNoteMonitoringStackGitNoteMonitoringAPI53832FE2GETnetworkstatus6F5FAB85"
+          }
+        ],
+        "/GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/network-status/GET/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GitNoteMonitoringAPInetworkstatusGETE767893E"
+          }
+        ],
+        "/GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/compute-performance/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GitNoteMonitoringAPIcomputeperformance58BDDAEF"
+          }
+        ],
+        "/GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/compute-performance/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GitNoteMonitoringAPIcomputeperformanceOPTIONSB151934F"
+          }
+        ],
+        "/GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/compute-performance/GET/ApiPermission.GitNoteMonitoringStackGitNoteMonitoringAPI53832FE2.GET..compute-performance": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GitNoteMonitoringAPIcomputeperformanceGETApiPermissionGitNoteMonitoringStackGitNoteMonitoringAPI53832FE2GETcomputeperformance9724170C"
+          }
+        ],
+        "/GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/compute-performance/GET/ApiPermission.Test.GitNoteMonitoringStackGitNoteMonitoringAPI53832FE2.GET..compute-performance": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GitNoteMonitoringAPIcomputeperformanceGETApiPermissionTestGitNoteMonitoringStackGitNoteMonitoringAPI53832FE2GETcomputeperformance2DF20495"
+          }
+        ],
+        "/GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/compute-performance/GET/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GitNoteMonitoringAPIcomputeperformanceGETA8FB2CAE"
+          }
+        ],
+        "/GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/storage-health/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GitNoteMonitoringAPIstoragehealthFCCA4AAA"
+          }
+        ],
+        "/GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/storage-health/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GitNoteMonitoringAPIstoragehealthOPTIONS74ADC168"
+          }
+        ],
+        "/GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/storage-health/GET/ApiPermission.GitNoteMonitoringStackGitNoteMonitoringAPI53832FE2.GET..storage-health": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GitNoteMonitoringAPIstoragehealthGETApiPermissionGitNoteMonitoringStackGitNoteMonitoringAPI53832FE2GETstoragehealthF1326B06"
+          }
+        ],
+        "/GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/storage-health/GET/ApiPermission.Test.GitNoteMonitoringStackGitNoteMonitoringAPI53832FE2.GET..storage-health": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GitNoteMonitoringAPIstoragehealthGETApiPermissionTestGitNoteMonitoringStackGitNoteMonitoringAPI53832FE2GETstoragehealth14B5E96A"
+          }
+        ],
+        "/GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/storage-health/GET/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GitNoteMonitoringAPIstoragehealthGET8EE82DBF"
+          }
+        ],
+        "/GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/cost-breakdown/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GitNoteMonitoringAPIcostbreakdownFE52C05F"
+          }
+        ],
+        "/GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/cost-breakdown/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GitNoteMonitoringAPIcostbreakdownOPTIONS16CB67DC"
+          }
+        ],
+        "/GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/cost-breakdown/GET/ApiPermission.GitNoteMonitoringStackGitNoteMonitoringAPI53832FE2.GET..cost-breakdown": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GitNoteMonitoringAPIcostbreakdownGETApiPermissionGitNoteMonitoringStackGitNoteMonitoringAPI53832FE2GETcostbreakdownA9D4A2E7"
+          }
+        ],
+        "/GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/cost-breakdown/GET/ApiPermission.Test.GitNoteMonitoringStackGitNoteMonitoringAPI53832FE2.GET..cost-breakdown": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GitNoteMonitoringAPIcostbreakdownGETApiPermissionTestGitNoteMonitoringStackGitNoteMonitoringAPI53832FE2GETcostbreakdownF5F191A6"
+          }
+        ],
+        "/GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/cost-breakdown/GET/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GitNoteMonitoringAPIcostbreakdownGET519C37F6"
+          }
+        ],
+        "/GitNoteMonitoringStack/GitNoteMonitoringAPI/GitNoteMonitoringAPIKey/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GitNoteMonitoringAPIGitNoteMonitoringAPIKey6FDD1CF5"
+          }
+        ],
+        "/GitNoteMonitoringStack/GitNoteMonitoringAPI/GitNoteMonitoringUsagePlan/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GitNoteMonitoringAPIGitNoteMonitoringUsagePlanC03AF466"
+          }
+        ],
+        "/GitNoteMonitoringStack/GitNoteMonitoringAPI/GitNoteMonitoringUsagePlan/UsagePlanKeyResource:GitNoteMonitoringStackGitNoteMonitoringAPIGitNoteMonitoringAPIKeyD962EBE1": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GitNoteMonitoringAPIGitNoteMonitoringUsagePlanUsagePlanKeyResourceGitNoteMonitoringStackGitNoteMonitoringAPIGitNoteMonitoringAPIKeyD962EBE1112120D7"
+          }
+        ],
+        "/GitNoteMonitoringStack/GitNoteMonitoringWebsite/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GitNoteMonitoringWebsite2EE96085"
+          }
+        ],
+        "/GitNoteMonitoringStack/GitNoteMonitoringWebsite/Policy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GitNoteMonitoringWebsitePolicy2858C4C0"
+          }
+        ],
+        "/GitNoteMonitoringStack/GitNoteMonitoringWebsite/AutoDeleteObjectsCustomResource/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GitNoteMonitoringWebsiteAutoDeleteObjectsCustomResource10D91861"
+          }
+        ],
+        "/GitNoteMonitoringStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Role": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092"
+          }
+        ],
+        "/GitNoteMonitoringStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F"
+          }
+        ],
+        "/GitNoteMonitoringStack/OAI/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "OAIE1EFC67F"
+          }
+        ],
+        "/GitNoteMonitoringStack/GitNoteMonitoringDistribution/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GitNoteMonitoringDistributionFFE9F7B6"
+          }
+        ],
+        "/GitNoteMonitoringStack/DeployWebsite/AwsCliLayer/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DeployWebsiteAwsCliLayer17DBC421"
+          }
+        ],
+        "/GitNoteMonitoringStack/DeployWebsite/CustomResource/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DeployWebsiteCustomResourceD116527B"
+          }
+        ],
+        "/GitNoteMonitoringStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265"
+          }
+        ],
+        "/GitNoteMonitoringStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRoleDefaultPolicy88902FDF"
+          }
+        ],
+        "/GitNoteMonitoringStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C81C01536"
+          }
+        ],
+        "/GitNoteMonitoringStack/APIGatewayURL": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "APIGatewayURL"
+          }
+        ],
+        "/GitNoteMonitoringStack/APIKey": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "APIKey"
+          }
+        ],
+        "/GitNoteMonitoringStack/CloudFrontURL": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CloudFrontURL"
+          }
+        ],
+        "/GitNoteMonitoringStack/S3BucketName": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "S3BucketName"
+          }
+        ],
+        "/GitNoteMonitoringStack/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/GitNoteMonitoringStack/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/GitNoteMonitoringStack/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "GitNoteMonitoringStack"
+    },
+    "Tree": {
+      "type": "cdk:tree",
+      "properties": {
+        "file": "tree.json"
+      }
+    }
+  }
+}
