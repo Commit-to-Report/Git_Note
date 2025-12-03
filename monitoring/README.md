@@ -1,8 +1,8 @@
 # GitNote Enterprise Infrastructure Monitoring System
 
 ## 🚀 Overview
-
 AWS 인프라 모니터링 대시보드로, GitNote 프로젝트의 모든 AWS 리소스를 실시간으로 모니터링하고 분석합니다.
+>>>>>>> 71b2d75ece2d1d3366fb348cae6cc7a5e457e216
 
 ### 주요 기능
 - **Network Status**: VPC, ALB, NAT Gateway 상태 모니터링
@@ -260,3 +260,7 @@ curl https://YOUR_API_GATEWAY_URL/network-status \
                     │ (EC2, ECS,   │
                     │  S3, DDB...)  │
                     └──────────────┘
+<<<<<<< HEAD
+=======
+
+
