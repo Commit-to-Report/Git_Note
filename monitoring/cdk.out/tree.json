@@ -1,0 +1,2822 @@
+{
+  "version": "tree-0.1",
+  "tree": {
+    "id": "App",
+    "path": "",
+    "children": {
+      "GitNoteMonitoringStack": {
+        "id": "GitNoteMonitoringStack",
+        "path": "GitNoteMonitoringStack",
+        "children": {
+          "GitNoteMonitoringLambdaRole": {
+            "id": "GitNoteMonitoringLambdaRole",
+            "path": "GitNoteMonitoringStack/GitNoteMonitoringLambdaRole",
+            "children": {
+              "ImportGitNoteMonitoringLambdaRole": {
+                "id": "ImportGitNoteMonitoringLambdaRole",
+                "path": "GitNoteMonitoringStack/GitNoteMonitoringLambdaRole/ImportGitNoteMonitoringLambdaRole",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Resource",
+                  "version": "2.110.0"
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "GitNoteMonitoringStack/GitNoteMonitoringLambdaRole/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                  "aws:cdk:cloudformation:props": {
+                    "assumeRolePolicyDocument": {
+                      "Statement": [
+                        {
+                          "Action": "sts:AssumeRole",
+                          "Effect": "Allow",
+                          "Principal": {
+                            "Service": "lambda.amazonaws.com"
+                          }
+                        }
+                      ],
+                      "Version": "2012-10-17"
+                    },
+                    "description": "Execution role for GitNote monitoring Lambda functions",
+                    "managedPolicyArns": [
+                      {
+                        "Fn::Join": [
+                          "",
+                          [
+                            "arn:",
+                            {
+                              "Ref": "AWS::Partition"
+                            },
+                            ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+                          ]
+                        ]
+                      }
+                    ],
+                    "tags": [
+                      {
+                        "key": "Component",
+                        "value": "Monitoring"
+                      },
+                      {
+                        "key": "Environment",
+                        "value": "Production"
+                      },
+                      {
+                        "key": "ManagedBy",
+                        "value": "CDK"
+                      },
+                      {
+                        "key": "Project",
+                        "value": "GitNote"
+                      }
+                    ]
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                  "version": "2.110.0"
+                }
+              },
+              "DefaultPolicy": {
+                "id": "DefaultPolicy",
+                "path": "GitNoteMonitoringStack/GitNoteMonitoringLambdaRole/DefaultPolicy",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "GitNoteMonitoringStack/GitNoteMonitoringLambdaRole/DefaultPolicy/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                      "aws:cdk:cloudformation:props": {
+                        "policyDocument": {
+                          "Statement": [
+                            {
+                              "Action": [
+                                "ce:GetCostAndUsage",
+                                "ce:GetCostForecast",
+                                "ce:GetDimensionValues",
+                                "ce:GetReservationUtilization",
+                                "ce:GetSavingsPlansPurchaseRecommendation",
+                                "cloudwatch:DescribeAlarms",
+                                "cloudwatch:GetMetricData",
+                                "cloudwatch:GetMetricStatistics",
+                                "cloudwatch:ListMetrics",
+                                "ec2:DescribeInstances",
+                                "ec2:DescribeInternetGateways",
+                                "ec2:DescribeNatGateways",
+                                "ec2:DescribeRouteTables",
+                                "ec2:DescribeSecurityGroups",
+                                "ec2:DescribeSubnets",
+                                "ec2:DescribeVpcs",
+                                "ecs:DescribeClusters",
+                                "ecs:DescribeContainerInstances",
+                                "ecs:DescribeServices",
+                                "ecs:DescribeTaskDefinition",
+                                "ecs:DescribeTasks",
+                                "ecs:ListServices",
+                                "ecs:ListTasks",
+                                "elasticloadbalancing:DescribeListeners",
+                                "elasticloadbalancing:DescribeLoadBalancers",
+                                "elasticloadbalancing:DescribeRules",
+                                "elasticloadbalancing:DescribeTargetGroups",
+                                "elasticloadbalancing:DescribeTargetHealth"
+                              ],
+                              "Effect": "Allow",
+                              "Resource": "*"
+                            },
+                            {
+                              "Action": [
+                                "s3:GetBucketEncryption",
+                                "s3:GetBucketLifecycleConfiguration",
+                                "s3:GetBucketLocation",
+                                "s3:GetBucketLogging",
+                                "s3:GetBucketVersioning",
+                                "s3:ListBucket",
+                                "s3:ListBucketVersions"
+                              ],
+                              "Effect": "Allow",
+                              "Resource": [
+                                "arn:aws:s3:::gitnote-s3-bucket",
+                                "arn:aws:s3:::gitnote-s3-bucket/*"
+                              ]
+                            },
+                            {
+                              "Action": [
+                                "dynamodb:DescribeContinuousBackups",
+                                "dynamodb:DescribeGlobalTable",
+                                "dynamodb:DescribeTable",
+                                "dynamodb:DescribeTableReplicaAutoScaling",
+                                "dynamodb:DescribeTimeToLive",
+                                "dynamodb:ListTagsOfResource"
+                              ],
+                              "Effect": "Allow",
+                              "Resource": [
+                                "arn:aws:dynamodb:ap-northeast-2:061039804626:table/UserPreset",
+                                "arn:aws:dynamodb:ap-northeast-2:061039804626:table/UserReports"
+                              ]
+                            },
+                            {
+                              "Action": [
+                                "secretsmanager:DescribeSecret",
+                                "secretsmanager:ListSecretVersionIds"
+                              ],
+                              "Effect": "Allow",
+                              "Resource": "arn:aws:secretsmanager:ap-northeast-2:061039804626:secret:GitNote/Secrets-*"
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        },
+                        "policyName": "GitNoteMonitoringLambdaRoleDefaultPolicy16C752A1",
+                        "roles": [
+                          {
+                            "Ref": "GitNoteMonitoringLambdaRoleC82E7647"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                      "version": "2.110.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.Policy",
+                  "version": "2.110.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_iam.Role",
+              "version": "2.110.0"
+            }
+          },
+          "NetworkStatusFunction": {
+            "id": "NetworkStatusFunction",
+            "path": "GitNoteMonitoringStack/NetworkStatusFunction",
+            "children": {
+              "Code": {
+                "id": "Code",
+                "path": "GitNoteMonitoringStack/NetworkStatusFunction/Code",
+                "children": {
+                  "Stage": {
+                    "id": "Stage",
+                    "path": "GitNoteMonitoringStack/NetworkStatusFunction/Code/Stage",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.AssetStaging",
+                      "version": "2.110.0"
+                    }
+                  },
+                  "AssetBucket": {
+                    "id": "AssetBucket",
+                    "path": "GitNoteMonitoringStack/NetworkStatusFunction/Code/AssetBucket",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3.BucketBase",
+                      "version": "2.110.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_s3_assets.Asset",
+                  "version": "2.110.0"
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "GitNoteMonitoringStack/NetworkStatusFunction/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
+                  "aws:cdk:cloudformation:props": {
+                    "code": {
+                      "s3Bucket": "cdk-hnb659fds-assets-061039804626-ap-northeast-2",
+                      "s3Key": "adb313242e5fa37f643fc0806cfc782840eee3bb5c76d1ba460e97ed7080ed39.zip"
+                    },
+                    "description": "Monitor VPC, ALB, and network resources",
+                    "environment": {
+                      "variables": {
+                        "REGION": "ap-northeast-2",
+                        "NODE_ENV": "production"
+                      }
+                    },
+                    "handler": "network-status.handler",
+                    "memorySize": 512,
+                    "role": {
+                      "Fn::GetAtt": [
+                        "GitNoteMonitoringLambdaRoleC82E7647",
+                        "Arn"
+                      ]
+                    },
+                    "runtime": "nodejs18.x",
+                    "tags": [
+                      {
+                        "key": "Component",
+                        "value": "Monitoring"
+                      },
+                      {
+                        "key": "Environment",
+                        "value": "Production"
+                      },
+                      {
+                        "key": "ManagedBy",
+                        "value": "CDK"
+                      },
+                      {
+                        "key": "Project",
+                        "value": "GitNote"
+                      }
+                    ],
+                    "timeout": 30
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.CfnFunction",
+                  "version": "2.110.0"
+                }
+              },
+              "LogRetention": {
+                "id": "LogRetention",
+                "path": "GitNoteMonitoringStack/NetworkStatusFunction/LogRetention",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "GitNoteMonitoringStack/NetworkStatusFunction/LogRetention/Resource",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.CfnResource",
+                      "version": "2.110.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_logs.LogRetention",
+                  "version": "2.110.0"
+                }
+              },
+              "LogGroup": {
+                "id": "LogGroup",
+                "path": "GitNoteMonitoringStack/NetworkStatusFunction/LogGroup",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Resource",
+                  "version": "2.110.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_lambda.Function",
+              "version": "2.110.0"
+            }
+          },
+          "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a": {
+            "id": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a",
+            "path": "GitNoteMonitoringStack/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a",
+            "children": {
+              "Code": {
+                "id": "Code",
+                "path": "GitNoteMonitoringStack/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/Code",
+                "children": {
+                  "Stage": {
+                    "id": "Stage",
+                    "path": "GitNoteMonitoringStack/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/Code/Stage",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.AssetStaging",
+                      "version": "2.110.0"
+                    }
+                  },
+                  "AssetBucket": {
+                    "id": "AssetBucket",
+                    "path": "GitNoteMonitoringStack/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/Code/AssetBucket",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3.BucketBase",
+                      "version": "2.110.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_s3_assets.Asset",
+                  "version": "2.110.0"
+                }
+              },
+              "ServiceRole": {
+                "id": "ServiceRole",
+                "path": "GitNoteMonitoringStack/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/ServiceRole",
+                "children": {
+                  "ImportServiceRole": {
+                    "id": "ImportServiceRole",
+                    "path": "GitNoteMonitoringStack/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/ServiceRole/ImportServiceRole",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.Resource",
+                      "version": "2.110.0"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "GitNoteMonitoringStack/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/ServiceRole/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                      "aws:cdk:cloudformation:props": {
+                        "assumeRolePolicyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "sts:AssumeRole",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "Service": "lambda.amazonaws.com"
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        },
+                        "managedPolicyArns": [
+                          {
+                            "Fn::Join": [
+                              "",
+                              [
+                                "arn:",
+                                {
+                                  "Ref": "AWS::Partition"
+                                },
+                                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+                              ]
+                            ]
+                          }
+                        ],
+                        "tags": [
+                          {
+                            "key": "Component",
+                            "value": "Monitoring"
+                          },
+                          {
+                            "key": "Environment",
+                            "value": "Production"
+                          },
+                          {
+                            "key": "ManagedBy",
+                            "value": "CDK"
+                          },
+                          {
+                            "key": "Project",
+                            "value": "GitNote"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                      "version": "2.110.0"
+                    }
+                  },
+                  "DefaultPolicy": {
+                    "id": "DefaultPolicy",
+                    "path": "GitNoteMonitoringStack/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/ServiceRole/DefaultPolicy",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "GitNoteMonitoringStack/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/ServiceRole/DefaultPolicy/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                          "aws:cdk:cloudformation:props": {
+                            "policyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": [
+                                    "logs:DeleteRetentionPolicy",
+                                    "logs:PutRetentionPolicy"
+                                  ],
+                                  "Effect": "Allow",
+                                  "Resource": "*"
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            },
+                            "policyName": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRoleDefaultPolicyADDA7DEB",
+                            "roles": [
+                              {
+                                "Ref": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB"
+                              }
+                            ]
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                          "version": "2.110.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.Policy",
+                      "version": "2.110.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.Role",
+                  "version": "2.110.0"
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "GitNoteMonitoringStack/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/Resource",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnResource",
+                  "version": "2.110.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "constructs.Construct",
+              "version": "10.4.3"
+            }
+          },
+          "ComputePerformanceFunction": {
+            "id": "ComputePerformanceFunction",
+            "path": "GitNoteMonitoringStack/ComputePerformanceFunction",
+            "children": {
+              "Code": {
+                "id": "Code",
+                "path": "GitNoteMonitoringStack/ComputePerformanceFunction/Code",
+                "children": {
+                  "Stage": {
+                    "id": "Stage",
+                    "path": "GitNoteMonitoringStack/ComputePerformanceFunction/Code/Stage",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.AssetStaging",
+                      "version": "2.110.0"
+                    }
+                  },
+                  "AssetBucket": {
+                    "id": "AssetBucket",
+                    "path": "GitNoteMonitoringStack/ComputePerformanceFunction/Code/AssetBucket",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3.BucketBase",
+                      "version": "2.110.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_s3_assets.Asset",
+                  "version": "2.110.0"
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "GitNoteMonitoringStack/ComputePerformanceFunction/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
+                  "aws:cdk:cloudformation:props": {
+                    "code": {
+                      "s3Bucket": "cdk-hnb659fds-assets-061039804626-ap-northeast-2",
+                      "s3Key": "adb313242e5fa37f643fc0806cfc782840eee3bb5c76d1ba460e97ed7080ed39.zip"
+                    },
+                    "description": "Monitor ECS Fargate performance metrics",
+                    "environment": {
+                      "variables": {
+                        "REGION": "ap-northeast-2",
+                        "NODE_ENV": "production"
+                      }
+                    },
+                    "handler": "compute-performance.handler",
+                    "memorySize": 512,
+                    "role": {
+                      "Fn::GetAtt": [
+                        "GitNoteMonitoringLambdaRoleC82E7647",
+                        "Arn"
+                      ]
+                    },
+                    "runtime": "nodejs18.x",
+                    "tags": [
+                      {
+                        "key": "Component",
+                        "value": "Monitoring"
+                      },
+                      {
+                        "key": "Environment",
+                        "value": "Production"
+                      },
+                      {
+                        "key": "ManagedBy",
+                        "value": "CDK"
+                      },
+                      {
+                        "key": "Project",
+                        "value": "GitNote"
+                      }
+                    ],
+                    "timeout": 30
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.CfnFunction",
+                  "version": "2.110.0"
+                }
+              },
+              "LogRetention": {
+                "id": "LogRetention",
+                "path": "GitNoteMonitoringStack/ComputePerformanceFunction/LogRetention",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "GitNoteMonitoringStack/ComputePerformanceFunction/LogRetention/Resource",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.CfnResource",
+                      "version": "2.110.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_logs.LogRetention",
+                  "version": "2.110.0"
+                }
+              },
+              "LogGroup": {
+                "id": "LogGroup",
+                "path": "GitNoteMonitoringStack/ComputePerformanceFunction/LogGroup",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Resource",
+                  "version": "2.110.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_lambda.Function",
+              "version": "2.110.0"
+            }
+          },
+          "StorageHealthFunction": {
+            "id": "StorageHealthFunction",
+            "path": "GitNoteMonitoringStack/StorageHealthFunction",
+            "children": {
+              "Code": {
+                "id": "Code",
+                "path": "GitNoteMonitoringStack/StorageHealthFunction/Code",
+                "children": {
+                  "Stage": {
+                    "id": "Stage",
+                    "path": "GitNoteMonitoringStack/StorageHealthFunction/Code/Stage",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.AssetStaging",
+                      "version": "2.110.0"
+                    }
+                  },
+                  "AssetBucket": {
+                    "id": "AssetBucket",
+                    "path": "GitNoteMonitoringStack/StorageHealthFunction/Code/AssetBucket",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3.BucketBase",
+                      "version": "2.110.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_s3_assets.Asset",
+                  "version": "2.110.0"
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "GitNoteMonitoringStack/StorageHealthFunction/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
+                  "aws:cdk:cloudformation:props": {
+                    "code": {
+                      "s3Bucket": "cdk-hnb659fds-assets-061039804626-ap-northeast-2",
+                      "s3Key": "adb313242e5fa37f643fc0806cfc782840eee3bb5c76d1ba460e97ed7080ed39.zip"
+                    },
+                    "description": "Monitor S3 and DynamoDB health",
+                    "environment": {
+                      "variables": {
+                        "REGION": "ap-northeast-2",
+                        "NODE_ENV": "production"
+                      }
+                    },
+                    "handler": "storage-health.handler",
+                    "memorySize": 512,
+                    "role": {
+                      "Fn::GetAtt": [
+                        "GitNoteMonitoringLambdaRoleC82E7647",
+                        "Arn"
+                      ]
+                    },
+                    "runtime": "nodejs18.x",
+                    "tags": [
+                      {
+                        "key": "Component",
+                        "value": "Monitoring"
+                      },
+                      {
+                        "key": "Environment",
+                        "value": "Production"
+                      },
+                      {
+                        "key": "ManagedBy",
+                        "value": "CDK"
+                      },
+                      {
+                        "key": "Project",
+                        "value": "GitNote"
+                      }
+                    ],
+                    "timeout": 30
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.CfnFunction",
+                  "version": "2.110.0"
+                }
+              },
+              "LogRetention": {
+                "id": "LogRetention",
+                "path": "GitNoteMonitoringStack/StorageHealthFunction/LogRetention",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "GitNoteMonitoringStack/StorageHealthFunction/LogRetention/Resource",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.CfnResource",
+                      "version": "2.110.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_logs.LogRetention",
+                  "version": "2.110.0"
+                }
+              },
+              "LogGroup": {
+                "id": "LogGroup",
+                "path": "GitNoteMonitoringStack/StorageHealthFunction/LogGroup",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Resource",
+                  "version": "2.110.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_lambda.Function",
+              "version": "2.110.0"
+            }
+          },
+          "CostBreakdownFunction": {
+            "id": "CostBreakdownFunction",
+            "path": "GitNoteMonitoringStack/CostBreakdownFunction",
+            "children": {
+              "Code": {
+                "id": "Code",
+                "path": "GitNoteMonitoringStack/CostBreakdownFunction/Code",
+                "children": {
+                  "Stage": {
+                    "id": "Stage",
+                    "path": "GitNoteMonitoringStack/CostBreakdownFunction/Code/Stage",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.AssetStaging",
+                      "version": "2.110.0"
+                    }
+                  },
+                  "AssetBucket": {
+                    "id": "AssetBucket",
+                    "path": "GitNoteMonitoringStack/CostBreakdownFunction/Code/AssetBucket",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3.BucketBase",
+                      "version": "2.110.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_s3_assets.Asset",
+                  "version": "2.110.0"
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "GitNoteMonitoringStack/CostBreakdownFunction/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
+                  "aws:cdk:cloudformation:props": {
+                    "code": {
+                      "s3Bucket": "cdk-hnb659fds-assets-061039804626-ap-northeast-2",
+                      "s3Key": "adb313242e5fa37f643fc0806cfc782840eee3bb5c76d1ba460e97ed7080ed39.zip"
+                    },
+                    "description": "Analyze AWS service costs and provide recommendations",
+                    "environment": {
+                      "variables": {
+                        "REGION": "ap-northeast-2",
+                        "ACCOUNT_ID": "061039804626",
+                        "NODE_ENV": "production"
+                      }
+                    },
+                    "handler": "cost-breakdown.handler",
+                    "memorySize": 512,
+                    "role": {
+                      "Fn::GetAtt": [
+                        "GitNoteMonitoringLambdaRoleC82E7647",
+                        "Arn"
+                      ]
+                    },
+                    "runtime": "nodejs18.x",
+                    "tags": [
+                      {
+                        "key": "Component",
+                        "value": "Monitoring"
+                      },
+                      {
+                        "key": "Environment",
+                        "value": "Production"
+                      },
+                      {
+                        "key": "ManagedBy",
+                        "value": "CDK"
+                      },
+                      {
+                        "key": "Project",
+                        "value": "GitNote"
+                      }
+                    ],
+                    "timeout": 30
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.CfnFunction",
+                  "version": "2.110.0"
+                }
+              },
+              "LogRetention": {
+                "id": "LogRetention",
+                "path": "GitNoteMonitoringStack/CostBreakdownFunction/LogRetention",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "GitNoteMonitoringStack/CostBreakdownFunction/LogRetention/Resource",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.CfnResource",
+                      "version": "2.110.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_logs.LogRetention",
+                  "version": "2.110.0"
+                }
+              },
+              "LogGroup": {
+                "id": "LogGroup",
+                "path": "GitNoteMonitoringStack/CostBreakdownFunction/LogGroup",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Resource",
+                  "version": "2.110.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_lambda.Function",
+              "version": "2.110.0"
+            }
+          },
+          "GitNoteMonitoringAPI": {
+            "id": "GitNoteMonitoringAPI",
+            "path": "GitNoteMonitoringStack/GitNoteMonitoringAPI",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::ApiGateway::RestApi",
+                  "aws:cdk:cloudformation:props": {
+                    "description": "API for GitNote infrastructure monitoring dashboard",
+                    "name": "GitNote Monitoring API",
+                    "tags": [
+                      {
+                        "key": "Component",
+                        "value": "Monitoring"
+                      },
+                      {
+                        "key": "Environment",
+                        "value": "Production"
+                      },
+                      {
+                        "key": "ManagedBy",
+                        "value": "CDK"
+                      },
+                      {
+                        "key": "Project",
+                        "value": "GitNote"
+                      }
+                    ]
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_apigateway.CfnRestApi",
+                  "version": "2.110.0"
+                }
+              },
+              "Deployment": {
+                "id": "Deployment",
+                "path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Deployment",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Deployment/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::ApiGateway::Deployment",
+                      "aws:cdk:cloudformation:props": {
+                        "description": "API for GitNote infrastructure monitoring dashboard",
+                        "restApiId": {
+                          "Ref": "GitNoteMonitoringAPIFF87228C"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_apigateway.CfnDeployment",
+                      "version": "2.110.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_apigateway.Deployment",
+                  "version": "2.110.0"
+                }
+              },
+              "DeploymentStage.prod": {
+                "id": "DeploymentStage.prod",
+                "path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/DeploymentStage.prod",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/DeploymentStage.prod/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::ApiGateway::Stage",
+                      "aws:cdk:cloudformation:props": {
+                        "deploymentId": {
+                          "Ref": "GitNoteMonitoringAPIDeployment541FAA4D097bcd2f7e1f4ccd1a1c8c5133b2d2a9"
+                        },
+                        "methodSettings": [
+                          {
+                            "httpMethod": "*",
+                            "resourcePath": "/*",
+                            "dataTraceEnabled": true,
+                            "loggingLevel": "INFO",
+                            "throttlingBurstLimit": 100,
+                            "throttlingRateLimit": 50
+                          }
+                        ],
+                        "restApiId": {
+                          "Ref": "GitNoteMonitoringAPIFF87228C"
+                        },
+                        "stageName": "prod",
+                        "tags": [
+                          {
+                            "key": "Component",
+                            "value": "Monitoring"
+                          },
+                          {
+                            "key": "Environment",
+                            "value": "Production"
+                          },
+                          {
+                            "key": "ManagedBy",
+                            "value": "CDK"
+                          },
+                          {
+                            "key": "Project",
+                            "value": "GitNote"
+                          }
+                        ],
+                        "tracingEnabled": true
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_apigateway.CfnStage",
+                      "version": "2.110.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_apigateway.Stage",
+                  "version": "2.110.0"
+                }
+              },
+              "Endpoint": {
+                "id": "Endpoint",
+                "path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Endpoint",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnOutput",
+                  "version": "2.110.0"
+                }
+              },
+              "Default": {
+                "id": "Default",
+                "path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default",
+                "children": {
+                  "OPTIONS": {
+                    "id": "OPTIONS",
+                    "path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/OPTIONS",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/OPTIONS/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::ApiGateway::Method",
+                          "aws:cdk:cloudformation:props": {
+                            "apiKeyRequired": false,
+                            "authorizationType": "NONE",
+                            "httpMethod": "OPTIONS",
+                            "integration": {
+                              "type": "MOCK",
+                              "requestTemplates": {
+                                "application/json": "{ statusCode: 200 }"
+                              },
+                              "integrationResponses": [
+                                {
+                                  "statusCode": "204",
+                                  "responseParameters": {
+                                    "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+                                    "method.response.header.Access-Control-Allow-Origin": "'*'",
+                                    "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+                                  }
+                                }
+                              ]
+                            },
+                            "methodResponses": [
+                              {
+                                "statusCode": "204",
+                                "responseParameters": {
+                                  "method.response.header.Access-Control-Allow-Headers": true,
+                                  "method.response.header.Access-Control-Allow-Origin": true,
+                                  "method.response.header.Access-Control-Allow-Methods": true
+                                }
+                              }
+                            ],
+                            "resourceId": {
+                              "Fn::GetAtt": [
+                                "GitNoteMonitoringAPIFF87228C",
+                                "RootResourceId"
+                              ]
+                            },
+                            "restApiId": {
+                              "Ref": "GitNoteMonitoringAPIFF87228C"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_apigateway.CfnMethod",
+                          "version": "2.110.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_apigateway.Method",
+                      "version": "2.110.0"
+                    }
+                  },
+                  "network-status": {
+                    "id": "network-status",
+                    "path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/network-status",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/network-status/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::ApiGateway::Resource",
+                          "aws:cdk:cloudformation:props": {
+                            "parentId": {
+                              "Fn::GetAtt": [
+                                "GitNoteMonitoringAPIFF87228C",
+                                "RootResourceId"
+                              ]
+                            },
+                            "pathPart": "network-status",
+                            "restApiId": {
+                              "Ref": "GitNoteMonitoringAPIFF87228C"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_apigateway.CfnResource",
+                          "version": "2.110.0"
+                        }
+                      },
+                      "OPTIONS": {
+                        "id": "OPTIONS",
+                        "path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/network-status/OPTIONS",
+                        "children": {
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/network-status/OPTIONS/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::ApiGateway::Method",
+                              "aws:cdk:cloudformation:props": {
+                                "apiKeyRequired": false,
+                                "authorizationType": "NONE",
+                                "httpMethod": "OPTIONS",
+                                "integration": {
+                                  "type": "MOCK",
+                                  "requestTemplates": {
+                                    "application/json": "{ statusCode: 200 }"
+                                  },
+                                  "integrationResponses": [
+                                    {
+                                      "statusCode": "204",
+                                      "responseParameters": {
+                                        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+                                        "method.response.header.Access-Control-Allow-Origin": "'*'",
+                                        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+                                      }
+                                    }
+                                  ]
+                                },
+                                "methodResponses": [
+                                  {
+                                    "statusCode": "204",
+                                    "responseParameters": {
+                                      "method.response.header.Access-Control-Allow-Headers": true,
+                                      "method.response.header.Access-Control-Allow-Origin": true,
+                                      "method.response.header.Access-Control-Allow-Methods": true
+                                    }
+                                  }
+                                ],
+                                "resourceId": {
+                                  "Ref": "GitNoteMonitoringAPInetworkstatus8262651C"
+                                },
+                                "restApiId": {
+                                  "Ref": "GitNoteMonitoringAPIFF87228C"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_apigateway.CfnMethod",
+                              "version": "2.110.0"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_apigateway.Method",
+                          "version": "2.110.0"
+                        }
+                      },
+                      "GET": {
+                        "id": "GET",
+                        "path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/network-status/GET",
+                        "children": {
+                          "ApiPermission.GitNoteMonitoringStackGitNoteMonitoringAPI53832FE2.GET..network-status": {
+                            "id": "ApiPermission.GitNoteMonitoringStackGitNoteMonitoringAPI53832FE2.GET..network-status",
+                            "path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/network-status/GET/ApiPermission.GitNoteMonitoringStackGitNoteMonitoringAPI53832FE2.GET..network-status",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
+                              "aws:cdk:cloudformation:props": {
+                                "action": "lambda:InvokeFunction",
+                                "functionName": {
+                                  "Fn::GetAtt": [
+                                    "NetworkStatusFunctionC8E4E145",
+                                    "Arn"
+                                  ]
+                                },
+                                "principal": "apigateway.amazonaws.com",
+                                "sourceArn": {
+                                  "Fn::Join": [
+                                    "",
+                                    [
+                                      "arn:aws:execute-api:ap-northeast-2:061039804626:",
+                                      {
+                                        "Ref": "GitNoteMonitoringAPIFF87228C"
+                                      },
+                                      "/",
+                                      {
+                                        "Ref": "GitNoteMonitoringAPIDeploymentStageprod39A5785F"
+                                      },
+                                      "/GET/network-status"
+                                    ]
+                                  ]
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_lambda.CfnPermission",
+                              "version": "2.110.0"
+                            }
+                          },
+                          "ApiPermission.Test.GitNoteMonitoringStackGitNoteMonitoringAPI53832FE2.GET..network-status": {
+                            "id": "ApiPermission.Test.GitNoteMonitoringStackGitNoteMonitoringAPI53832FE2.GET..network-status",
+                            "path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/network-status/GET/ApiPermission.Test.GitNoteMonitoringStackGitNoteMonitoringAPI53832FE2.GET..network-status",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
+                              "aws:cdk:cloudformation:props": {
+                                "action": "lambda:InvokeFunction",
+                                "functionName": {
+                                  "Fn::GetAtt": [
+                                    "NetworkStatusFunctionC8E4E145",
+                                    "Arn"
+                                  ]
+                                },
+                                "principal": "apigateway.amazonaws.com",
+                                "sourceArn": {
+                                  "Fn::Join": [
+                                    "",
+                                    [
+                                      "arn:aws:execute-api:ap-northeast-2:061039804626:",
+                                      {
+                                        "Ref": "GitNoteMonitoringAPIFF87228C"
+                                      },
+                                      "/test-invoke-stage/GET/network-status"
+                                    ]
+                                  ]
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_lambda.CfnPermission",
+                              "version": "2.110.0"
+                            }
+                          },
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/network-status/GET/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::ApiGateway::Method",
+                              "aws:cdk:cloudformation:props": {
+                                "authorizationType": "NONE",
+                                "httpMethod": "GET",
+                                "integration": {
+                                  "type": "AWS_PROXY",
+                                  "uri": {
+                                    "Fn::Join": [
+                                      "",
+                                      [
+                                        "arn:aws:apigateway:ap-northeast-2:lambda:path/2015-03-31/functions/",
+                                        {
+                                          "Fn::GetAtt": [
+                                            "NetworkStatusFunctionC8E4E145",
+                                            "Arn"
+                                          ]
+                                        },
+                                        "/invocations"
+                                      ]
+                                    ]
+                                  },
+                                  "integrationHttpMethod": "POST"
+                                },
+                                "resourceId": {
+                                  "Ref": "GitNoteMonitoringAPInetworkstatus8262651C"
+                                },
+                                "restApiId": {
+                                  "Ref": "GitNoteMonitoringAPIFF87228C"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_apigateway.CfnMethod",
+                              "version": "2.110.0"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_apigateway.Method",
+                          "version": "2.110.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_apigateway.Resource",
+                      "version": "2.110.0"
+                    }
+                  },
+                  "compute-performance": {
+                    "id": "compute-performance",
+                    "path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/compute-performance",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/compute-performance/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::ApiGateway::Resource",
+                          "aws:cdk:cloudformation:props": {
+                            "parentId": {
+                              "Fn::GetAtt": [
+                                "GitNoteMonitoringAPIFF87228C",
+                                "RootResourceId"
+                              ]
+                            },
+                            "pathPart": "compute-performance",
+                            "restApiId": {
+                              "Ref": "GitNoteMonitoringAPIFF87228C"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_apigateway.CfnResource",
+                          "version": "2.110.0"
+                        }
+                      },
+                      "OPTIONS": {
+                        "id": "OPTIONS",
+                        "path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/compute-performance/OPTIONS",
+                        "children": {
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/compute-performance/OPTIONS/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::ApiGateway::Method",
+                              "aws:cdk:cloudformation:props": {
+                                "apiKeyRequired": false,
+                                "authorizationType": "NONE",
+                                "httpMethod": "OPTIONS",
+                                "integration": {
+                                  "type": "MOCK",
+                                  "requestTemplates": {
+                                    "application/json": "{ statusCode: 200 }"
+                                  },
+                                  "integrationResponses": [
+                                    {
+                                      "statusCode": "204",
+                                      "responseParameters": {
+                                        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+                                        "method.response.header.Access-Control-Allow-Origin": "'*'",
+                                        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+                                      }
+                                    }
+                                  ]
+                                },
+                                "methodResponses": [
+                                  {
+                                    "statusCode": "204",
+                                    "responseParameters": {
+                                      "method.response.header.Access-Control-Allow-Headers": true,
+                                      "method.response.header.Access-Control-Allow-Origin": true,
+                                      "method.response.header.Access-Control-Allow-Methods": true
+                                    }
+                                  }
+                                ],
+                                "resourceId": {
+                                  "Ref": "GitNoteMonitoringAPIcomputeperformance58BDDAEF"
+                                },
+                                "restApiId": {
+                                  "Ref": "GitNoteMonitoringAPIFF87228C"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_apigateway.CfnMethod",
+                              "version": "2.110.0"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_apigateway.Method",
+                          "version": "2.110.0"
+                        }
+                      },
+                      "GET": {
+                        "id": "GET",
+                        "path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/compute-performance/GET",
+                        "children": {
+                          "ApiPermission.GitNoteMonitoringStackGitNoteMonitoringAPI53832FE2.GET..compute-performance": {
+                            "id": "ApiPermission.GitNoteMonitoringStackGitNoteMonitoringAPI53832FE2.GET..compute-performance",
+                            "path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/compute-performance/GET/ApiPermission.GitNoteMonitoringStackGitNoteMonitoringAPI53832FE2.GET..compute-performance",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
+                              "aws:cdk:cloudformation:props": {
+                                "action": "lambda:InvokeFunction",
+                                "functionName": {
+                                  "Fn::GetAtt": [
+                                    "ComputePerformanceFunctionC641C7BA",
+                                    "Arn"
+                                  ]
+                                },
+                                "principal": "apigateway.amazonaws.com",
+                                "sourceArn": {
+                                  "Fn::Join": [
+                                    "",
+                                    [
+                                      "arn:aws:execute-api:ap-northeast-2:061039804626:",
+                                      {
+                                        "Ref": "GitNoteMonitoringAPIFF87228C"
+                                      },
+                                      "/",
+                                      {
+                                        "Ref": "GitNoteMonitoringAPIDeploymentStageprod39A5785F"
+                                      },
+                                      "/GET/compute-performance"
+                                    ]
+                                  ]
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_lambda.CfnPermission",
+                              "version": "2.110.0"
+                            }
+                          },
+                          "ApiPermission.Test.GitNoteMonitoringStackGitNoteMonitoringAPI53832FE2.GET..compute-performance": {
+                            "id": "ApiPermission.Test.GitNoteMonitoringStackGitNoteMonitoringAPI53832FE2.GET..compute-performance",
+                            "path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/compute-performance/GET/ApiPermission.Test.GitNoteMonitoringStackGitNoteMonitoringAPI53832FE2.GET..compute-performance",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
+                              "aws:cdk:cloudformation:props": {
+                                "action": "lambda:InvokeFunction",
+                                "functionName": {
+                                  "Fn::GetAtt": [
+                                    "ComputePerformanceFunctionC641C7BA",
+                                    "Arn"
+                                  ]
+                                },
+                                "principal": "apigateway.amazonaws.com",
+                                "sourceArn": {
+                                  "Fn::Join": [
+                                    "",
+                                    [
+                                      "arn:aws:execute-api:ap-northeast-2:061039804626:",
+                                      {
+                                        "Ref": "GitNoteMonitoringAPIFF87228C"
+                                      },
+                                      "/test-invoke-stage/GET/compute-performance"
+                                    ]
+                                  ]
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_lambda.CfnPermission",
+                              "version": "2.110.0"
+                            }
+                          },
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/compute-performance/GET/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::ApiGateway::Method",
+                              "aws:cdk:cloudformation:props": {
+                                "authorizationType": "NONE",
+                                "httpMethod": "GET",
+                                "integration": {
+                                  "type": "AWS_PROXY",
+                                  "uri": {
+                                    "Fn::Join": [
+                                      "",
+                                      [
+                                        "arn:aws:apigateway:ap-northeast-2:lambda:path/2015-03-31/functions/",
+                                        {
+                                          "Fn::GetAtt": [
+                                            "ComputePerformanceFunctionC641C7BA",
+                                            "Arn"
+                                          ]
+                                        },
+                                        "/invocations"
+                                      ]
+                                    ]
+                                  },
+                                  "integrationHttpMethod": "POST"
+                                },
+                                "resourceId": {
+                                  "Ref": "GitNoteMonitoringAPIcomputeperformance58BDDAEF"
+                                },
+                                "restApiId": {
+                                  "Ref": "GitNoteMonitoringAPIFF87228C"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_apigateway.CfnMethod",
+                              "version": "2.110.0"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_apigateway.Method",
+                          "version": "2.110.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_apigateway.Resource",
+                      "version": "2.110.0"
+                    }
+                  },
+                  "storage-health": {
+                    "id": "storage-health",
+                    "path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/storage-health",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/storage-health/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::ApiGateway::Resource",
+                          "aws:cdk:cloudformation:props": {
+                            "parentId": {
+                              "Fn::GetAtt": [
+                                "GitNoteMonitoringAPIFF87228C",
+                                "RootResourceId"
+                              ]
+                            },
+                            "pathPart": "storage-health",
+                            "restApiId": {
+                              "Ref": "GitNoteMonitoringAPIFF87228C"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_apigateway.CfnResource",
+                          "version": "2.110.0"
+                        }
+                      },
+                      "OPTIONS": {
+                        "id": "OPTIONS",
+                        "path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/storage-health/OPTIONS",
+                        "children": {
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/storage-health/OPTIONS/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::ApiGateway::Method",
+                              "aws:cdk:cloudformation:props": {
+                                "apiKeyRequired": false,
+                                "authorizationType": "NONE",
+                                "httpMethod": "OPTIONS",
+                                "integration": {
+                                  "type": "MOCK",
+                                  "requestTemplates": {
+                                    "application/json": "{ statusCode: 200 }"
+                                  },
+                                  "integrationResponses": [
+                                    {
+                                      "statusCode": "204",
+                                      "responseParameters": {
+                                        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+                                        "method.response.header.Access-Control-Allow-Origin": "'*'",
+                                        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+                                      }
+                                    }
+                                  ]
+                                },
+                                "methodResponses": [
+                                  {
+                                    "statusCode": "204",
+                                    "responseParameters": {
+                                      "method.response.header.Access-Control-Allow-Headers": true,
+                                      "method.response.header.Access-Control-Allow-Origin": true,
+                                      "method.response.header.Access-Control-Allow-Methods": true
+                                    }
+                                  }
+                                ],
+                                "resourceId": {
+                                  "Ref": "GitNoteMonitoringAPIstoragehealthFCCA4AAA"
+                                },
+                                "restApiId": {
+                                  "Ref": "GitNoteMonitoringAPIFF87228C"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_apigateway.CfnMethod",
+                              "version": "2.110.0"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_apigateway.Method",
+                          "version": "2.110.0"
+                        }
+                      },
+                      "GET": {
+                        "id": "GET",
+                        "path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/storage-health/GET",
+                        "children": {
+                          "ApiPermission.GitNoteMonitoringStackGitNoteMonitoringAPI53832FE2.GET..storage-health": {
+                            "id": "ApiPermission.GitNoteMonitoringStackGitNoteMonitoringAPI53832FE2.GET..storage-health",
+                            "path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/storage-health/GET/ApiPermission.GitNoteMonitoringStackGitNoteMonitoringAPI53832FE2.GET..storage-health",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
+                              "aws:cdk:cloudformation:props": {
+                                "action": "lambda:InvokeFunction",
+                                "functionName": {
+                                  "Fn::GetAtt": [
+                                    "StorageHealthFunctionF41D9B9E",
+                                    "Arn"
+                                  ]
+                                },
+                                "principal": "apigateway.amazonaws.com",
+                                "sourceArn": {
+                                  "Fn::Join": [
+                                    "",
+                                    [
+                                      "arn:aws:execute-api:ap-northeast-2:061039804626:",
+                                      {
+                                        "Ref": "GitNoteMonitoringAPIFF87228C"
+                                      },
+                                      "/",
+                                      {
+                                        "Ref": "GitNoteMonitoringAPIDeploymentStageprod39A5785F"
+                                      },
+                                      "/GET/storage-health"
+                                    ]
+                                  ]
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_lambda.CfnPermission",
+                              "version": "2.110.0"
+                            }
+                          },
+                          "ApiPermission.Test.GitNoteMonitoringStackGitNoteMonitoringAPI53832FE2.GET..storage-health": {
+                            "id": "ApiPermission.Test.GitNoteMonitoringStackGitNoteMonitoringAPI53832FE2.GET..storage-health",
+                            "path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/storage-health/GET/ApiPermission.Test.GitNoteMonitoringStackGitNoteMonitoringAPI53832FE2.GET..storage-health",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
+                              "aws:cdk:cloudformation:props": {
+                                "action": "lambda:InvokeFunction",
+                                "functionName": {
+                                  "Fn::GetAtt": [
+                                    "StorageHealthFunctionF41D9B9E",
+                                    "Arn"
+                                  ]
+                                },
+                                "principal": "apigateway.amazonaws.com",
+                                "sourceArn": {
+                                  "Fn::Join": [
+                                    "",
+                                    [
+                                      "arn:aws:execute-api:ap-northeast-2:061039804626:",
+                                      {
+                                        "Ref": "GitNoteMonitoringAPIFF87228C"
+                                      },
+                                      "/test-invoke-stage/GET/storage-health"
+                                    ]
+                                  ]
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_lambda.CfnPermission",
+                              "version": "2.110.0"
+                            }
+                          },
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/storage-health/GET/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::ApiGateway::Method",
+                              "aws:cdk:cloudformation:props": {
+                                "authorizationType": "NONE",
+                                "httpMethod": "GET",
+                                "integration": {
+                                  "type": "AWS_PROXY",
+                                  "uri": {
+                                    "Fn::Join": [
+                                      "",
+                                      [
+                                        "arn:aws:apigateway:ap-northeast-2:lambda:path/2015-03-31/functions/",
+                                        {
+                                          "Fn::GetAtt": [
+                                            "StorageHealthFunctionF41D9B9E",
+                                            "Arn"
+                                          ]
+                                        },
+                                        "/invocations"
+                                      ]
+                                    ]
+                                  },
+                                  "integrationHttpMethod": "POST"
+                                },
+                                "resourceId": {
+                                  "Ref": "GitNoteMonitoringAPIstoragehealthFCCA4AAA"
+                                },
+                                "restApiId": {
+                                  "Ref": "GitNoteMonitoringAPIFF87228C"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_apigateway.CfnMethod",
+                              "version": "2.110.0"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_apigateway.Method",
+                          "version": "2.110.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_apigateway.Resource",
+                      "version": "2.110.0"
+                    }
+                  },
+                  "cost-breakdown": {
+                    "id": "cost-breakdown",
+                    "path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/cost-breakdown",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/cost-breakdown/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::ApiGateway::Resource",
+                          "aws:cdk:cloudformation:props": {
+                            "parentId": {
+                              "Fn::GetAtt": [
+                                "GitNoteMonitoringAPIFF87228C",
+                                "RootResourceId"
+                              ]
+                            },
+                            "pathPart": "cost-breakdown",
+                            "restApiId": {
+                              "Ref": "GitNoteMonitoringAPIFF87228C"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_apigateway.CfnResource",
+                          "version": "2.110.0"
+                        }
+                      },
+                      "OPTIONS": {
+                        "id": "OPTIONS",
+                        "path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/cost-breakdown/OPTIONS",
+                        "children": {
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/cost-breakdown/OPTIONS/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::ApiGateway::Method",
+                              "aws:cdk:cloudformation:props": {
+                                "apiKeyRequired": false,
+                                "authorizationType": "NONE",
+                                "httpMethod": "OPTIONS",
+                                "integration": {
+                                  "type": "MOCK",
+                                  "requestTemplates": {
+                                    "application/json": "{ statusCode: 200 }"
+                                  },
+                                  "integrationResponses": [
+                                    {
+                                      "statusCode": "204",
+                                      "responseParameters": {
+                                        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+                                        "method.response.header.Access-Control-Allow-Origin": "'*'",
+                                        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+                                      }
+                                    }
+                                  ]
+                                },
+                                "methodResponses": [
+                                  {
+                                    "statusCode": "204",
+                                    "responseParameters": {
+                                      "method.response.header.Access-Control-Allow-Headers": true,
+                                      "method.response.header.Access-Control-Allow-Origin": true,
+                                      "method.response.header.Access-Control-Allow-Methods": true
+                                    }
+                                  }
+                                ],
+                                "resourceId": {
+                                  "Ref": "GitNoteMonitoringAPIcostbreakdownFE52C05F"
+                                },
+                                "restApiId": {
+                                  "Ref": "GitNoteMonitoringAPIFF87228C"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_apigateway.CfnMethod",
+                              "version": "2.110.0"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_apigateway.Method",
+                          "version": "2.110.0"
+                        }
+                      },
+                      "GET": {
+                        "id": "GET",
+                        "path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/cost-breakdown/GET",
+                        "children": {
+                          "ApiPermission.GitNoteMonitoringStackGitNoteMonitoringAPI53832FE2.GET..cost-breakdown": {
+                            "id": "ApiPermission.GitNoteMonitoringStackGitNoteMonitoringAPI53832FE2.GET..cost-breakdown",
+                            "path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/cost-breakdown/GET/ApiPermission.GitNoteMonitoringStackGitNoteMonitoringAPI53832FE2.GET..cost-breakdown",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
+                              "aws:cdk:cloudformation:props": {
+                                "action": "lambda:InvokeFunction",
+                                "functionName": {
+                                  "Fn::GetAtt": [
+                                    "CostBreakdownFunctionA5429F6C",
+                                    "Arn"
+                                  ]
+                                },
+                                "principal": "apigateway.amazonaws.com",
+                                "sourceArn": {
+                                  "Fn::Join": [
+                                    "",
+                                    [
+                                      "arn:aws:execute-api:ap-northeast-2:061039804626:",
+                                      {
+                                        "Ref": "GitNoteMonitoringAPIFF87228C"
+                                      },
+                                      "/",
+                                      {
+                                        "Ref": "GitNoteMonitoringAPIDeploymentStageprod39A5785F"
+                                      },
+                                      "/GET/cost-breakdown"
+                                    ]
+                                  ]
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_lambda.CfnPermission",
+                              "version": "2.110.0"
+                            }
+                          },
+                          "ApiPermission.Test.GitNoteMonitoringStackGitNoteMonitoringAPI53832FE2.GET..cost-breakdown": {
+                            "id": "ApiPermission.Test.GitNoteMonitoringStackGitNoteMonitoringAPI53832FE2.GET..cost-breakdown",
+                            "path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/cost-breakdown/GET/ApiPermission.Test.GitNoteMonitoringStackGitNoteMonitoringAPI53832FE2.GET..cost-breakdown",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
+                              "aws:cdk:cloudformation:props": {
+                                "action": "lambda:InvokeFunction",
+                                "functionName": {
+                                  "Fn::GetAtt": [
+                                    "CostBreakdownFunctionA5429F6C",
+                                    "Arn"
+                                  ]
+                                },
+                                "principal": "apigateway.amazonaws.com",
+                                "sourceArn": {
+                                  "Fn::Join": [
+                                    "",
+                                    [
+                                      "arn:aws:execute-api:ap-northeast-2:061039804626:",
+                                      {
+                                        "Ref": "GitNoteMonitoringAPIFF87228C"
+                                      },
+                                      "/test-invoke-stage/GET/cost-breakdown"
+                                    ]
+                                  ]
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_lambda.CfnPermission",
+                              "version": "2.110.0"
+                            }
+                          },
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/cost-breakdown/GET/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::ApiGateway::Method",
+                              "aws:cdk:cloudformation:props": {
+                                "authorizationType": "NONE",
+                                "httpMethod": "GET",
+                                "integration": {
+                                  "type": "AWS_PROXY",
+                                  "uri": {
+                                    "Fn::Join": [
+                                      "",
+                                      [
+                                        "arn:aws:apigateway:ap-northeast-2:lambda:path/2015-03-31/functions/",
+                                        {
+                                          "Fn::GetAtt": [
+                                            "CostBreakdownFunctionA5429F6C",
+                                            "Arn"
+                                          ]
+                                        },
+                                        "/invocations"
+                                      ]
+                                    ]
+                                  },
+                                  "integrationHttpMethod": "POST"
+                                },
+                                "resourceId": {
+                                  "Ref": "GitNoteMonitoringAPIcostbreakdownFE52C05F"
+                                },
+                                "restApiId": {
+                                  "Ref": "GitNoteMonitoringAPIFF87228C"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_apigateway.CfnMethod",
+                              "version": "2.110.0"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_apigateway.Method",
+                          "version": "2.110.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_apigateway.Resource",
+                      "version": "2.110.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_apigateway.ResourceBase",
+                  "version": "2.110.0"
+                }
+              },
+              "GitNoteMonitoringAPIKey": {
+                "id": "GitNoteMonitoringAPIKey",
+                "path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/GitNoteMonitoringAPIKey",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/GitNoteMonitoringAPIKey/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::ApiGateway::ApiKey",
+                      "aws:cdk:cloudformation:props": {
+                        "description": "API key for GitNote monitoring dashboard",
+                        "enabled": true,
+                        "name": "gitnote-monitoring-key",
+                        "stageKeys": [
+                          {
+                            "restApiId": {
+                              "Ref": "GitNoteMonitoringAPIFF87228C"
+                            },
+                            "stageName": {
+                              "Ref": "GitNoteMonitoringAPIDeploymentStageprod39A5785F"
+                            }
+                          }
+                        ],
+                        "tags": [
+                          {
+                            "key": "Component",
+                            "value": "Monitoring"
+                          },
+                          {
+                            "key": "Environment",
+                            "value": "Production"
+                          },
+                          {
+                            "key": "ManagedBy",
+                            "value": "CDK"
+                          },
+                          {
+                            "key": "Project",
+                            "value": "GitNote"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_apigateway.CfnApiKey",
+                      "version": "2.110.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_apigateway.ApiKey",
+                  "version": "2.110.0"
+                }
+              },
+              "GitNoteMonitoringUsagePlan": {
+                "id": "GitNoteMonitoringUsagePlan",
+                "path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/GitNoteMonitoringUsagePlan",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/GitNoteMonitoringUsagePlan/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::ApiGateway::UsagePlan",
+                      "aws:cdk:cloudformation:props": {
+                        "apiStages": [
+                          {
+                            "apiId": {
+                              "Ref": "GitNoteMonitoringAPIFF87228C"
+                            },
+                            "stage": {
+                              "Ref": "GitNoteMonitoringAPIDeploymentStageprod39A5785F"
+                            },
+                            "throttle": {}
+                          }
+                        ],
+                        "quota": {
+                          "limit": 10000,
+                          "period": "DAY"
+                        },
+                        "tags": [
+                          {
+                            "key": "Component",
+                            "value": "Monitoring"
+                          },
+                          {
+                            "key": "Environment",
+                            "value": "Production"
+                          },
+                          {
+                            "key": "ManagedBy",
+                            "value": "CDK"
+                          },
+                          {
+                            "key": "Project",
+                            "value": "GitNote"
+                          }
+                        ],
+                        "throttle": {
+                          "burstLimit": 200,
+                          "rateLimit": 100
+                        },
+                        "usagePlanName": "Standard"
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_apigateway.CfnUsagePlan",
+                      "version": "2.110.0"
+                    }
+                  },
+                  "UsagePlanKeyResource:GitNoteMonitoringStackGitNoteMonitoringAPIGitNoteMonitoringAPIKeyD962EBE1": {
+                    "id": "UsagePlanKeyResource:GitNoteMonitoringStackGitNoteMonitoringAPIGitNoteMonitoringAPIKeyD962EBE1",
+                    "path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/GitNoteMonitoringUsagePlan/UsagePlanKeyResource:GitNoteMonitoringStackGitNoteMonitoringAPIGitNoteMonitoringAPIKeyD962EBE1",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::ApiGateway::UsagePlanKey",
+                      "aws:cdk:cloudformation:props": {
+                        "keyId": {
+                          "Ref": "GitNoteMonitoringAPIGitNoteMonitoringAPIKey6FDD1CF5"
+                        },
+                        "keyType": "API_KEY",
+                        "usagePlanId": {
+                          "Ref": "GitNoteMonitoringAPIGitNoteMonitoringUsagePlanC03AF466"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_apigateway.CfnUsagePlanKey",
+                      "version": "2.110.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_apigateway.UsagePlan",
+                  "version": "2.110.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_apigateway.RestApi",
+              "version": "2.110.0"
+            }
+          },
+          "GitNoteMonitoringWebsite": {
+            "id": "GitNoteMonitoringWebsite",
+            "path": "GitNoteMonitoringStack/GitNoteMonitoringWebsite",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "GitNoteMonitoringStack/GitNoteMonitoringWebsite/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::S3::Bucket",
+                  "aws:cdk:cloudformation:props": {
+                    "bucketName": "gitnote-monitoring-061039804626-ap-northeast-2",
+                    "corsConfiguration": {
+                      "corsRules": [
+                        {
+                          "allowedHeaders": [
+                            "*"
+                          ],
+                          "allowedMethods": [
+                            "GET",
+                            "HEAD"
+                          ],
+                          "allowedOrigins": [
+                            "*"
+                          ]
+                        }
+                      ]
+                    },
+                    "publicAccessBlockConfiguration": {
+                      "blockPublicAcls": true,
+                      "blockPublicPolicy": true,
+                      "ignorePublicAcls": true,
+                      "restrictPublicBuckets": true
+                    },
+                    "tags": [
+                      {
+                        "key": "aws-cdk:auto-delete-objects",
+                        "value": "true"
+                      },
+                      {
+                        "key": "aws-cdk:cr-owned:aaebc6d7",
+                        "value": "true"
+                      },
+                      {
+                        "key": "Component",
+                        "value": "Monitoring"
+                      },
+                      {
+                        "key": "Environment",
+                        "value": "Production"
+                      },
+                      {
+                        "key": "ManagedBy",
+                        "value": "CDK"
+                      },
+                      {
+                        "key": "Project",
+                        "value": "GitNote"
+                      }
+                    ],
+                    "websiteConfiguration": {
+                      "indexDocument": "index.html",
+                      "errorDocument": "error.html"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_s3.CfnBucket",
+                  "version": "2.110.0"
+                }
+              },
+              "Policy": {
+                "id": "Policy",
+                "path": "GitNoteMonitoringStack/GitNoteMonitoringWebsite/Policy",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "GitNoteMonitoringStack/GitNoteMonitoringWebsite/Policy/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::S3::BucketPolicy",
+                      "aws:cdk:cloudformation:props": {
+                        "bucket": {
+                          "Ref": "GitNoteMonitoringWebsite2EE96085"
+                        },
+                        "policyDocument": {
+                          "Statement": [
+                            {
+                              "Action": [
+                                "s3:DeleteObject*",
+                                "s3:GetBucket*",
+                                "s3:List*",
+                                "s3:PutBucketPolicy"
+                              ],
+                              "Effect": "Allow",
+                              "Principal": {
+                                "AWS": {
+                                  "Fn::GetAtt": [
+                                    "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
+                                    "Arn"
+                                  ]
+                                }
+                              },
+                              "Resource": [
+                                {
+                                  "Fn::GetAtt": [
+                                    "GitNoteMonitoringWebsite2EE96085",
+                                    "Arn"
+                                  ]
+                                },
+                                {
+                                  "Fn::Join": [
+                                    "",
+                                    [
+                                      {
+                                        "Fn::GetAtt": [
+                                          "GitNoteMonitoringWebsite2EE96085",
+                                          "Arn"
+                                        ]
+                                      },
+                                      "/*"
+                                    ]
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "Action": [
+                                "s3:GetBucket*",
+                                "s3:GetObject*",
+                                "s3:List*"
+                              ],
+                              "Effect": "Allow",
+                              "Principal": {
+                                "CanonicalUser": {
+                                  "Fn::GetAtt": [
+                                    "OAIE1EFC67F",
+                                    "S3CanonicalUserId"
+                                  ]
+                                }
+                              },
+                              "Resource": [
+                                {
+                                  "Fn::GetAtt": [
+                                    "GitNoteMonitoringWebsite2EE96085",
+                                    "Arn"
+                                  ]
+                                },
+                                {
+                                  "Fn::Join": [
+                                    "",
+                                    [
+                                      {
+                                        "Fn::GetAtt": [
+                                          "GitNoteMonitoringWebsite2EE96085",
+                                          "Arn"
+                                        ]
+                                      },
+                                      "/*"
+                                    ]
+                                  ]
+                                }
+                              ]
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3.CfnBucketPolicy",
+                      "version": "2.110.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_s3.BucketPolicy",
+                  "version": "2.110.0"
+                }
+              },
+              "AutoDeleteObjectsCustomResource": {
+                "id": "AutoDeleteObjectsCustomResource",
+                "path": "GitNoteMonitoringStack/GitNoteMonitoringWebsite/AutoDeleteObjectsCustomResource",
+                "children": {
+                  "Default": {
+                    "id": "Default",
+                    "path": "GitNoteMonitoringStack/GitNoteMonitoringWebsite/AutoDeleteObjectsCustomResource/Default",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.CfnResource",
+                      "version": "2.110.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CustomResource",
+                  "version": "2.110.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_s3.Bucket",
+              "version": "2.110.0"
+            }
+          },
+          "Custom::S3AutoDeleteObjectsCustomResourceProvider": {
+            "id": "Custom::S3AutoDeleteObjectsCustomResourceProvider",
+            "path": "GitNoteMonitoringStack/Custom::S3AutoDeleteObjectsCustomResourceProvider",
+            "children": {
+              "Staging": {
+                "id": "Staging",
+                "path": "GitNoteMonitoringStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Staging",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.AssetStaging",
+                  "version": "2.110.0"
+                }
+              },
+              "Role": {
+                "id": "Role",
+                "path": "GitNoteMonitoringStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Role",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnResource",
+                  "version": "2.110.0"
+                }
+              },
+              "Handler": {
+                "id": "Handler",
+                "path": "GitNoteMonitoringStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnResource",
+                  "version": "2.110.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CustomResourceProvider",
+              "version": "2.110.0"
+            }
+          },
+          "OAI": {
+            "id": "OAI",
+            "path": "GitNoteMonitoringStack/OAI",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "GitNoteMonitoringStack/OAI/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::CloudFront::CloudFrontOriginAccessIdentity",
+                  "aws:cdk:cloudformation:props": {
+                    "cloudFrontOriginAccessIdentityConfig": {
+                      "comment": "OAI for GitNote Monitoring Dashboard"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_cloudfront.CfnCloudFrontOriginAccessIdentity",
+                  "version": "2.110.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_cloudfront.OriginAccessIdentity",
+              "version": "2.110.0"
+            }
+          },
+          "GitNoteMonitoringDistribution": {
+            "id": "GitNoteMonitoringDistribution",
+            "path": "GitNoteMonitoringStack/GitNoteMonitoringDistribution",
+            "children": {
+              "Origin1": {
+                "id": "Origin1",
+                "path": "GitNoteMonitoringStack/GitNoteMonitoringDistribution/Origin1",
+                "constructInfo": {
+                  "fqn": "constructs.Construct",
+                  "version": "10.4.3"
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "GitNoteMonitoringStack/GitNoteMonitoringDistribution/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::CloudFront::Distribution",
+                  "aws:cdk:cloudformation:props": {
+                    "distributionConfig": {
+                      "enabled": true,
+                      "origins": [
+                        {
+                          "domainName": {
+                            "Fn::Select": [
+                              2,
+                              {
+                                "Fn::Split": [
+                                  "/",
+                                  {
+                                    "Fn::GetAtt": [
+                                      "GitNoteMonitoringWebsite2EE96085",
+                                      "WebsiteURL"
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          "id": "GitNoteMonitoringStackGitNoteMonitoringDistributionOrigin1B898CD57",
+                          "customOriginConfig": {
+                            "originSslProtocols": [
+                              "TLSv1.2"
+                            ],
+                            "originProtocolPolicy": "http-only"
+                          }
+                        }
+                      ],
+                      "defaultCacheBehavior": {
+                        "pathPattern": "*",
+                        "targetOriginId": "GitNoteMonitoringStackGitNoteMonitoringDistributionOrigin1B898CD57",
+                        "allowedMethods": [
+                          "GET",
+                          "HEAD"
+                        ],
+                        "cachePolicyId": "658327ea-f89d-4fab-a63d-7e88639e58f6",
+                        "compress": true,
+                        "viewerProtocolPolicy": "redirect-to-https"
+                      },
+                      "comment": "CloudFront distribution for GitNote Monitoring Dashboard",
+                      "customErrorResponses": [
+                        {
+                          "errorCachingMinTtl": 300,
+                          "errorCode": 404,
+                          "responseCode": 200,
+                          "responsePagePath": "/index.html"
+                        }
+                      ],
+                      "defaultRootObject": "index.html",
+                      "httpVersion": "http2",
+                      "ipv6Enabled": true,
+                      "priceClass": "PriceClass_100"
+                    },
+                    "tags": [
+                      {
+                        "key": "Component",
+                        "value": "Monitoring"
+                      },
+                      {
+                        "key": "Environment",
+                        "value": "Production"
+                      },
+                      {
+                        "key": "ManagedBy",
+                        "value": "CDK"
+                      },
+                      {
+                        "key": "Project",
+                        "value": "GitNote"
+                      }
+                    ]
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_cloudfront.CfnDistribution",
+                  "version": "2.110.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_cloudfront.Distribution",
+              "version": "2.110.0"
+            }
+          },
+          "DeployWebsite": {
+            "id": "DeployWebsite",
+            "path": "GitNoteMonitoringStack/DeployWebsite",
+            "children": {
+              "AwsCliLayer": {
+                "id": "AwsCliLayer",
+                "path": "GitNoteMonitoringStack/DeployWebsite/AwsCliLayer",
+                "children": {
+                  "Code": {
+                    "id": "Code",
+                    "path": "GitNoteMonitoringStack/DeployWebsite/AwsCliLayer/Code",
+                    "children": {
+                      "Stage": {
+                        "id": "Stage",
+                        "path": "GitNoteMonitoringStack/DeployWebsite/AwsCliLayer/Code/Stage",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.AssetStaging",
+                          "version": "2.110.0"
+                        }
+                      },
+                      "AssetBucket": {
+                        "id": "AssetBucket",
+                        "path": "GitNoteMonitoringStack/DeployWebsite/AwsCliLayer/Code/AssetBucket",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_s3.BucketBase",
+                          "version": "2.110.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3_assets.Asset",
+                      "version": "2.110.0"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "GitNoteMonitoringStack/DeployWebsite/AwsCliLayer/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::Lambda::LayerVersion",
+                      "aws:cdk:cloudformation:props": {
+                        "content": {
+                          "s3Bucket": "cdk-hnb659fds-assets-061039804626-ap-northeast-2",
+                          "s3Key": "d3adb8f8245549682ed42bc738adfed018ab3d9442ade840a7f42553830499d4.zip"
+                        },
+                        "description": "/opt/awscli/aws"
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_lambda.CfnLayerVersion",
+                      "version": "2.110.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.lambda_layer_awscli.AwsCliLayer",
+                  "version": "2.110.0"
+                }
+              },
+              "CustomResourceHandler": {
+                "id": "CustomResourceHandler",
+                "path": "GitNoteMonitoringStack/DeployWebsite/CustomResourceHandler",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.SingletonFunction",
+                  "version": "2.110.0"
+                }
+              },
+              "Asset1": {
+                "id": "Asset1",
+                "path": "GitNoteMonitoringStack/DeployWebsite/Asset1",
+                "children": {
+                  "Stage": {
+                    "id": "Stage",
+                    "path": "GitNoteMonitoringStack/DeployWebsite/Asset1/Stage",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.AssetStaging",
+                      "version": "2.110.0"
+                    }
+                  },
+                  "AssetBucket": {
+                    "id": "AssetBucket",
+                    "path": "GitNoteMonitoringStack/DeployWebsite/Asset1/AssetBucket",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3.BucketBase",
+                      "version": "2.110.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_s3_assets.Asset",
+                  "version": "2.110.0"
+                }
+              },
+              "CustomResource": {
+                "id": "CustomResource",
+                "path": "GitNoteMonitoringStack/DeployWebsite/CustomResource",
+                "children": {
+                  "Default": {
+                    "id": "Default",
+                    "path": "GitNoteMonitoringStack/DeployWebsite/CustomResource/Default",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.CfnResource",
+                      "version": "2.110.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CustomResource",
+                  "version": "2.110.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_s3_deployment.BucketDeployment",
+              "version": "2.110.0"
+            }
+          },
+          "Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C": {
+            "id": "Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C",
+            "path": "GitNoteMonitoringStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C",
+            "children": {
+              "ServiceRole": {
+                "id": "ServiceRole",
+                "path": "GitNoteMonitoringStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole",
+                "children": {
+                  "ImportServiceRole": {
+                    "id": "ImportServiceRole",
+                    "path": "GitNoteMonitoringStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole/ImportServiceRole",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.Resource",
+                      "version": "2.110.0"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "GitNoteMonitoringStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                      "aws:cdk:cloudformation:props": {
+                        "assumeRolePolicyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "sts:AssumeRole",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "Service": "lambda.amazonaws.com"
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        },
+                        "managedPolicyArns": [
+                          {
+                            "Fn::Join": [
+                              "",
+                              [
+                                "arn:",
+                                {
+                                  "Ref": "AWS::Partition"
+                                },
+                                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+                              ]
+                            ]
+                          }
+                        ],
+                        "tags": [
+                          {
+                            "key": "Component",
+                            "value": "Monitoring"
+                          },
+                          {
+                            "key": "Environment",
+                            "value": "Production"
+                          },
+                          {
+                            "key": "ManagedBy",
+                            "value": "CDK"
+                          },
+                          {
+                            "key": "Project",
+                            "value": "GitNote"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                      "version": "2.110.0"
+                    }
+                  },
+                  "DefaultPolicy": {
+                    "id": "DefaultPolicy",
+                    "path": "GitNoteMonitoringStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole/DefaultPolicy",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "GitNoteMonitoringStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole/DefaultPolicy/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                          "aws:cdk:cloudformation:props": {
+                            "policyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": [
+                                    "s3:GetBucket*",
+                                    "s3:GetObject*",
+                                    "s3:List*"
+                                  ],
+                                  "Effect": "Allow",
+                                  "Resource": [
+                                    "arn:aws:s3:::cdk-hnb659fds-assets-061039804626-ap-northeast-2",
+                                    "arn:aws:s3:::cdk-hnb659fds-assets-061039804626-ap-northeast-2/*"
+                                  ]
+                                },
+                                {
+                                  "Action": [
+                                    "s3:Abort*",
+                                    "s3:DeleteObject*",
+                                    "s3:GetBucket*",
+                                    "s3:GetObject*",
+                                    "s3:List*",
+                                    "s3:PutObject",
+                                    "s3:PutObjectLegalHold",
+                                    "s3:PutObjectRetention",
+                                    "s3:PutObjectTagging",
+                                    "s3:PutObjectVersionTagging"
+                                  ],
+                                  "Effect": "Allow",
+                                  "Resource": [
+                                    {
+                                      "Fn::GetAtt": [
+                                        "GitNoteMonitoringWebsite2EE96085",
+                                        "Arn"
+                                      ]
+                                    },
+                                    {
+                                      "Fn::Join": [
+                                        "",
+                                        [
+                                          {
+                                            "Fn::GetAtt": [
+                                              "GitNoteMonitoringWebsite2EE96085",
+                                              "Arn"
+                                            ]
+                                          },
+                                          "/*"
+                                        ]
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "Action": [
+                                    "cloudfront:CreateInvalidation",
+                                    "cloudfront:GetInvalidation"
+                                  ],
+                                  "Effect": "Allow",
+                                  "Resource": "*"
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            },
+                            "policyName": "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRoleDefaultPolicy88902FDF",
+                            "roles": [
+                              {
+                                "Ref": "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265"
+                              }
+                            ]
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                          "version": "2.110.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.Policy",
+                      "version": "2.110.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.Role",
+                  "version": "2.110.0"
+                }
+              },
+              "Code": {
+                "id": "Code",
+                "path": "GitNoteMonitoringStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/Code",
+                "children": {
+                  "Stage": {
+                    "id": "Stage",
+                    "path": "GitNoteMonitoringStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/Code/Stage",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.AssetStaging",
+                      "version": "2.110.0"
+                    }
+                  },
+                  "AssetBucket": {
+                    "id": "AssetBucket",
+                    "path": "GitNoteMonitoringStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/Code/AssetBucket",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3.BucketBase",
+                      "version": "2.110.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_s3_assets.Asset",
+                  "version": "2.110.0"
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "GitNoteMonitoringStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
+                  "aws:cdk:cloudformation:props": {
+                    "code": {
+                      "s3Bucket": "cdk-hnb659fds-assets-061039804626-ap-northeast-2",
+                      "s3Key": "0b1f5aa55d045066ed91316b823a808060c12737e0575ab7cefe2335324108b0.zip"
+                    },
+                    "environment": {
+                      "variables": {
+                        "AWS_CA_BUNDLE": "/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem"
+                      }
+                    },
+                    "handler": "index.handler",
+                    "layers": [
+                      {
+                        "Ref": "DeployWebsiteAwsCliLayer17DBC421"
+                      }
+                    ],
+                    "role": {
+                      "Fn::GetAtt": [
+                        "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265",
+                        "Arn"
+                      ]
+                    },
+                    "runtime": "python3.9",
+                    "tags": [
+                      {
+                        "key": "Component",
+                        "value": "Monitoring"
+                      },
+                      {
+                        "key": "Environment",
+                        "value": "Production"
+                      },
+                      {
+                        "key": "ManagedBy",
+                        "value": "CDK"
+                      },
+                      {
+                        "key": "Project",
+                        "value": "GitNote"
+                      }
+                    ],
+                    "timeout": 900
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.CfnFunction",
+                  "version": "2.110.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_lambda.Function",
+              "version": "2.110.0"
+            }
+          },
+          "APIGatewayURL": {
+            "id": "APIGatewayURL",
+            "path": "GitNoteMonitoringStack/APIGatewayURL",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.110.0"
+            }
+          },
+          "APIKey": {
+            "id": "APIKey",
+            "path": "GitNoteMonitoringStack/APIKey",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.110.0"
+            }
+          },
+          "CloudFrontURL": {
+            "id": "CloudFrontURL",
+            "path": "GitNoteMonitoringStack/CloudFrontURL",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.110.0"
+            }
+          },
+          "S3BucketName": {
+            "id": "S3BucketName",
+            "path": "GitNoteMonitoringStack/S3BucketName",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.110.0"
+            }
+          },
+          "CDKMetadata": {
+            "id": "CDKMetadata",
+            "path": "GitNoteMonitoringStack/CDKMetadata",
+            "children": {
+              "Default": {
+                "id": "Default",
+                "path": "GitNoteMonitoringStack/CDKMetadata/Default",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnResource",
+                  "version": "2.110.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "constructs.Construct",
+              "version": "10.4.3"
+            }
+          },
+          "BootstrapVersion": {
+            "id": "BootstrapVersion",
+            "path": "GitNoteMonitoringStack/BootstrapVersion",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnParameter",
+              "version": "2.110.0"
+            }
+          },
+          "CheckBootstrapVersion": {
+            "id": "CheckBootstrapVersion",
+            "path": "GitNoteMonitoringStack/CheckBootstrapVersion",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnRule",
+              "version": "2.110.0"
+            }
+          }
+        },
+        "constructInfo": {
+          "fqn": "aws-cdk-lib.Stack",
+          "version": "2.110.0"
+        }
+      },
+      "Tree": {
+        "id": "Tree",
+        "path": "Tree",
+        "constructInfo": {
+          "fqn": "constructs.Construct",
+          "version": "10.4.3"
+        }
+      }
+    },
+    "constructInfo": {
+      "fqn": "aws-cdk-lib.App",
+      "version": "2.110.0"
+    }
+  }
+}

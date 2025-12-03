@@ -1,0 +1,2160 @@
+{
+ "Description": "GitNote Enterprise Monitoring Dashboard Infrastructure",
+ "Resources": {
+  "GitNoteMonitoringLambdaRoleC82E7647": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "Description": "Execution role for GitNote monitoring Lambda functions",
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "Component",
+      "Value": "Monitoring"
+     },
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "CDK"
+     },
+     {
+      "Key": "Project",
+      "Value": "GitNote"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "GitNoteMonitoringStack/GitNoteMonitoringLambdaRole/Resource"
+   }
+  },
+  "GitNoteMonitoringLambdaRoleDefaultPolicy16C752A1": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "ce:GetCostAndUsage",
+        "ce:GetCostForecast",
+        "ce:GetDimensionValues",
+        "ce:GetReservationUtilization",
+        "ce:GetSavingsPlansPurchaseRecommendation",
+        "cloudwatch:DescribeAlarms",
+        "cloudwatch:GetMetricData",
+        "cloudwatch:GetMetricStatistics",
+        "cloudwatch:ListMetrics",
+        "ec2:DescribeInstances",
+        "ec2:DescribeInternetGateways",
+        "ec2:DescribeNatGateways",
+        "ec2:DescribeRouteTables",
+        "ec2:DescribeSecurityGroups",
+        "ec2:DescribeSubnets",
+        "ec2:DescribeVpcs",
+        "ecs:DescribeClusters",
+        "ecs:DescribeContainerInstances",
+        "ecs:DescribeServices",
+        "ecs:DescribeTaskDefinition",
+        "ecs:DescribeTasks",
+        "ecs:ListServices",
+        "ecs:ListTasks",
+        "elasticloadbalancing:DescribeListeners",
+        "elasticloadbalancing:DescribeLoadBalancers",
+        "elasticloadbalancing:DescribeRules",
+        "elasticloadbalancing:DescribeTargetGroups",
+        "elasticloadbalancing:DescribeTargetHealth"
+       ],
+       "Effect": "Allow",
+       "Resource": "*"
+      },
+      {
+       "Action": [
+        "s3:GetBucketEncryption",
+        "s3:GetBucketLifecycleConfiguration",
+        "s3:GetBucketLocation",
+        "s3:GetBucketLogging",
+        "s3:GetBucketVersioning",
+        "s3:ListBucket",
+        "s3:ListBucketVersions"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        "arn:aws:s3:::gitnote-s3-bucket",
+        "arn:aws:s3:::gitnote-s3-bucket/*"
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:DescribeContinuousBackups",
+        "dynamodb:DescribeGlobalTable",
+        "dynamodb:DescribeTable",
+        "dynamodb:DescribeTableReplicaAutoScaling",
+        "dynamodb:DescribeTimeToLive",
+        "dynamodb:ListTagsOfResource"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        "arn:aws:dynamodb:ap-northeast-2:061039804626:table/UserPreset",
+        "arn:aws:dynamodb:ap-northeast-2:061039804626:table/UserReports"
+       ]
+      },
+      {
+       "Action": [
+        "secretsmanager:DescribeSecret",
+        "secretsmanager:ListSecretVersionIds"
+       ],
+       "Effect": "Allow",
+       "Resource": "arn:aws:secretsmanager:ap-northeast-2:061039804626:secret:GitNote/Secrets-*"
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "GitNoteMonitoringLambdaRoleDefaultPolicy16C752A1",
+    "Roles": [
+     {
+      "Ref": "GitNoteMonitoringLambdaRoleC82E7647"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "GitNoteMonitoringStack/GitNoteMonitoringLambdaRole/DefaultPolicy/Resource"
+   }
+  },
+  "NetworkStatusFunctionC8E4E145": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-061039804626-ap-northeast-2",
+     "S3Key": "adb313242e5fa37f643fc0806cfc782840eee3bb5c76d1ba460e97ed7080ed39.zip"
+    },
+    "Description": "Monitor VPC, ALB, and network resources",
+    "Environment": {
+     "Variables": {
+      "REGION": "ap-northeast-2",
+      "NODE_ENV": "production"
+     }
+    },
+    "Handler": "network-status.handler",
+    "MemorySize": 512,
+    "Role": {
+     "Fn::GetAtt": [
+      "GitNoteMonitoringLambdaRoleC82E7647",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs18.x",
+    "Tags": [
+     {
+      "Key": "Component",
+      "Value": "Monitoring"
+     },
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "CDK"
+     },
+     {
+      "Key": "Project",
+      "Value": "GitNote"
+     }
+    ],
+    "Timeout": 30
+   },
+   "DependsOn": [
+    "GitNoteMonitoringLambdaRoleDefaultPolicy16C752A1",
+    "GitNoteMonitoringLambdaRoleC82E7647"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "GitNoteMonitoringStack/NetworkStatusFunction/Resource",
+    "aws:asset:path": "asset.adb313242e5fa37f643fc0806cfc782840eee3bb5c76d1ba460e97ed7080ed39",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "NetworkStatusFunctionLogRetention1C71D88B": {
+   "Type": "Custom::LogRetention",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A",
+      "Arn"
+     ]
+    },
+    "LogGroupName": {
+     "Fn::Join": [
+      "",
+      [
+       "/aws/lambda/",
+       {
+        "Ref": "NetworkStatusFunctionC8E4E145"
+       }
+      ]
+     ]
+    },
+    "RetentionInDays": 7
+   },
+   "Metadata": {
+    "aws:cdk:path": "GitNoteMonitoringStack/NetworkStatusFunction/LogRetention/Resource"
+   }
+  },
+  "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "Component",
+      "Value": "Monitoring"
+     },
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "CDK"
+     },
+     {
+      "Key": "Project",
+      "Value": "GitNote"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "GitNoteMonitoringStack/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/ServiceRole/Resource"
+   }
+  },
+  "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRoleDefaultPolicyADDA7DEB": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "logs:DeleteRetentionPolicy",
+        "logs:PutRetentionPolicy"
+       ],
+       "Effect": "Allow",
+       "Resource": "*"
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRoleDefaultPolicyADDA7DEB",
+    "Roles": [
+     {
+      "Ref": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "GitNoteMonitoringStack/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Handler": "index.handler",
+    "Runtime": "nodejs18.x",
+    "Timeout": 900,
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-061039804626-ap-northeast-2",
+     "S3Key": "5bc602ecde93c947efe5899ae355f999986a1acbe610b1c0b9c468d738857555.zip"
+    },
+    "Role": {
+     "Fn::GetAtt": [
+      "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB",
+      "Arn"
+     ]
+    },
+    "Tags": [
+     {
+      "Key": "Component",
+      "Value": "Monitoring"
+     },
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "CDK"
+     },
+     {
+      "Key": "Project",
+      "Value": "GitNote"
+     }
+    ]
+   },
+   "DependsOn": [
+    "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRoleDefaultPolicyADDA7DEB",
+    "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "GitNoteMonitoringStack/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/Resource",
+    "aws:asset:path": "asset.5bc602ecde93c947efe5899ae355f999986a1acbe610b1c0b9c468d738857555",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "ComputePerformanceFunctionC641C7BA": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-061039804626-ap-northeast-2",
+     "S3Key": "adb313242e5fa37f643fc0806cfc782840eee3bb5c76d1ba460e97ed7080ed39.zip"
+    },
+    "Description": "Monitor ECS Fargate performance metrics",
+    "Environment": {
+     "Variables": {
+      "REGION": "ap-northeast-2",
+      "NODE_ENV": "production"
+     }
+    },
+    "Handler": "compute-performance.handler",
+    "MemorySize": 512,
+    "Role": {
+     "Fn::GetAtt": [
+      "GitNoteMonitoringLambdaRoleC82E7647",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs18.x",
+    "Tags": [
+     {
+      "Key": "Component",
+      "Value": "Monitoring"
+     },
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "CDK"
+     },
+     {
+      "Key": "Project",
+      "Value": "GitNote"
+     }
+    ],
+    "Timeout": 30
+   },
+   "DependsOn": [
+    "GitNoteMonitoringLambdaRoleDefaultPolicy16C752A1",
+    "GitNoteMonitoringLambdaRoleC82E7647"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "GitNoteMonitoringStack/ComputePerformanceFunction/Resource",
+    "aws:asset:path": "asset.adb313242e5fa37f643fc0806cfc782840eee3bb5c76d1ba460e97ed7080ed39",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "ComputePerformanceFunctionLogRetention45A8E025": {
+   "Type": "Custom::LogRetention",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A",
+      "Arn"
+     ]
+    },
+    "LogGroupName": {
+     "Fn::Join": [
+      "",
+      [
+       "/aws/lambda/",
+       {
+        "Ref": "ComputePerformanceFunctionC641C7BA"
+       }
+      ]
+     ]
+    },
+    "RetentionInDays": 7
+   },
+   "Metadata": {
+    "aws:cdk:path": "GitNoteMonitoringStack/ComputePerformanceFunction/LogRetention/Resource"
+   }
+  },
+  "StorageHealthFunctionF41D9B9E": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-061039804626-ap-northeast-2",
+     "S3Key": "adb313242e5fa37f643fc0806cfc782840eee3bb5c76d1ba460e97ed7080ed39.zip"
+    },
+    "Description": "Monitor S3 and DynamoDB health",
+    "Environment": {
+     "Variables": {
+      "REGION": "ap-northeast-2",
+      "NODE_ENV": "production"
+     }
+    },
+    "Handler": "storage-health.handler",
+    "MemorySize": 512,
+    "Role": {
+     "Fn::GetAtt": [
+      "GitNoteMonitoringLambdaRoleC82E7647",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs18.x",
+    "Tags": [
+     {
+      "Key": "Component",
+      "Value": "Monitoring"
+     },
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "CDK"
+     },
+     {
+      "Key": "Project",
+      "Value": "GitNote"
+     }
+    ],
+    "Timeout": 30
+   },
+   "DependsOn": [
+    "GitNoteMonitoringLambdaRoleDefaultPolicy16C752A1",
+    "GitNoteMonitoringLambdaRoleC82E7647"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "GitNoteMonitoringStack/StorageHealthFunction/Resource",
+    "aws:asset:path": "asset.adb313242e5fa37f643fc0806cfc782840eee3bb5c76d1ba460e97ed7080ed39",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "StorageHealthFunctionLogRetentionA8FCD35B": {
+   "Type": "Custom::LogRetention",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A",
+      "Arn"
+     ]
+    },
+    "LogGroupName": {
+     "Fn::Join": [
+      "",
+      [
+       "/aws/lambda/",
+       {
+        "Ref": "StorageHealthFunctionF41D9B9E"
+       }
+      ]
+     ]
+    },
+    "RetentionInDays": 7
+   },
+   "Metadata": {
+    "aws:cdk:path": "GitNoteMonitoringStack/StorageHealthFunction/LogRetention/Resource"
+   }
+  },
+  "CostBreakdownFunctionA5429F6C": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-061039804626-ap-northeast-2",
+     "S3Key": "adb313242e5fa37f643fc0806cfc782840eee3bb5c76d1ba460e97ed7080ed39.zip"
+    },
+    "Description": "Analyze AWS service costs and provide recommendations",
+    "Environment": {
+     "Variables": {
+      "REGION": "ap-northeast-2",
+      "ACCOUNT_ID": "061039804626",
+      "NODE_ENV": "production"
+     }
+    },
+    "Handler": "cost-breakdown.handler",
+    "MemorySize": 512,
+    "Role": {
+     "Fn::GetAtt": [
+      "GitNoteMonitoringLambdaRoleC82E7647",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs18.x",
+    "Tags": [
+     {
+      "Key": "Component",
+      "Value": "Monitoring"
+     },
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "CDK"
+     },
+     {
+      "Key": "Project",
+      "Value": "GitNote"
+     }
+    ],
+    "Timeout": 30
+   },
+   "DependsOn": [
+    "GitNoteMonitoringLambdaRoleDefaultPolicy16C752A1",
+    "GitNoteMonitoringLambdaRoleC82E7647"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "GitNoteMonitoringStack/CostBreakdownFunction/Resource",
+    "aws:asset:path": "asset.adb313242e5fa37f643fc0806cfc782840eee3bb5c76d1ba460e97ed7080ed39",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "CostBreakdownFunctionLogRetentionF3E10CDC": {
+   "Type": "Custom::LogRetention",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A",
+      "Arn"
+     ]
+    },
+    "LogGroupName": {
+     "Fn::Join": [
+      "",
+      [
+       "/aws/lambda/",
+       {
+        "Ref": "CostBreakdownFunctionA5429F6C"
+       }
+      ]
+     ]
+    },
+    "RetentionInDays": 7
+   },
+   "Metadata": {
+    "aws:cdk:path": "GitNoteMonitoringStack/CostBreakdownFunction/LogRetention/Resource"
+   }
+  },
+  "GitNoteMonitoringAPIFF87228C": {
+   "Type": "AWS::ApiGateway::RestApi",
+   "Properties": {
+    "Description": "API for GitNote infrastructure monitoring dashboard",
+    "Name": "GitNote Monitoring API",
+    "Tags": [
+     {
+      "Key": "Component",
+      "Value": "Monitoring"
+     },
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "CDK"
+     },
+     {
+      "Key": "Project",
+      "Value": "GitNote"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Resource"
+   }
+  },
+  "GitNoteMonitoringAPIDeployment541FAA4D097bcd2f7e1f4ccd1a1c8c5133b2d2a9": {
+   "Type": "AWS::ApiGateway::Deployment",
+   "Properties": {
+    "Description": "API for GitNote infrastructure monitoring dashboard",
+    "RestApiId": {
+     "Ref": "GitNoteMonitoringAPIFF87228C"
+    }
+   },
+   "DependsOn": [
+    "GitNoteMonitoringAPIcomputeperformanceGETA8FB2CAE",
+    "GitNoteMonitoringAPIcomputeperformanceOPTIONSB151934F",
+    "GitNoteMonitoringAPIcomputeperformance58BDDAEF",
+    "GitNoteMonitoringAPIcostbreakdownGET519C37F6",
+    "GitNoteMonitoringAPIcostbreakdownOPTIONS16CB67DC",
+    "GitNoteMonitoringAPIcostbreakdownFE52C05F",
+    "GitNoteMonitoringAPInetworkstatusGETE767893E",
+    "GitNoteMonitoringAPInetworkstatusOPTIONS2CCEAFB3",
+    "GitNoteMonitoringAPInetworkstatus8262651C",
+    "GitNoteMonitoringAPIOPTIONS22B20B0C",
+    "GitNoteMonitoringAPIstoragehealthGET8EE82DBF",
+    "GitNoteMonitoringAPIstoragehealthOPTIONS74ADC168",
+    "GitNoteMonitoringAPIstoragehealthFCCA4AAA"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Deployment/Resource"
+   }
+  },
+  "GitNoteMonitoringAPIDeploymentStageprod39A5785F": {
+   "Type": "AWS::ApiGateway::Stage",
+   "Properties": {
+    "DeploymentId": {
+     "Ref": "GitNoteMonitoringAPIDeployment541FAA4D097bcd2f7e1f4ccd1a1c8c5133b2d2a9"
+    },
+    "MethodSettings": [
+     {
+      "DataTraceEnabled": true,
+      "HttpMethod": "*",
+      "LoggingLevel": "INFO",
+      "ResourcePath": "/*",
+      "ThrottlingBurstLimit": 100,
+      "ThrottlingRateLimit": 50
+     }
+    ],
+    "RestApiId": {
+     "Ref": "GitNoteMonitoringAPIFF87228C"
+    },
+    "StageName": "prod",
+    "Tags": [
+     {
+      "Key": "Component",
+      "Value": "Monitoring"
+     },
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "CDK"
+     },
+     {
+      "Key": "Project",
+      "Value": "GitNote"
+     }
+    ],
+    "TracingEnabled": true
+   },
+   "Metadata": {
+    "aws:cdk:path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/DeploymentStage.prod/Resource"
+   }
+  },
+  "GitNoteMonitoringAPIOPTIONS22B20B0C": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Fn::GetAtt": [
+      "GitNoteMonitoringAPIFF87228C",
+      "RootResourceId"
+     ]
+    },
+    "RestApiId": {
+     "Ref": "GitNoteMonitoringAPIFF87228C"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/OPTIONS/Resource"
+   }
+  },
+  "GitNoteMonitoringAPInetworkstatus8262651C": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Fn::GetAtt": [
+      "GitNoteMonitoringAPIFF87228C",
+      "RootResourceId"
+     ]
+    },
+    "PathPart": "network-status",
+    "RestApiId": {
+     "Ref": "GitNoteMonitoringAPIFF87228C"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/network-status/Resource"
+   }
+  },
+  "GitNoteMonitoringAPInetworkstatusOPTIONS2CCEAFB3": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "GitNoteMonitoringAPInetworkstatus8262651C"
+    },
+    "RestApiId": {
+     "Ref": "GitNoteMonitoringAPIFF87228C"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/network-status/OPTIONS/Resource"
+   }
+  },
+  "GitNoteMonitoringAPInetworkstatusGETApiPermissionGitNoteMonitoringStackGitNoteMonitoringAPI53832FE2GETnetworkstatus05FD0C1E": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "NetworkStatusFunctionC8E4E145",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:ap-northeast-2:061039804626:",
+       {
+        "Ref": "GitNoteMonitoringAPIFF87228C"
+       },
+       "/",
+       {
+        "Ref": "GitNoteMonitoringAPIDeploymentStageprod39A5785F"
+       },
+       "/GET/network-status"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/network-status/GET/ApiPermission.GitNoteMonitoringStackGitNoteMonitoringAPI53832FE2.GET..network-status"
+   }
+  },
+  "GitNoteMonitoringAPInetworkstatusGETApiPermissionTestGitNoteMonitoringStackGitNoteMonitoringAPI53832FE2GETnetworkstatus6F5FAB85": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "NetworkStatusFunctionC8E4E145",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:ap-northeast-2:061039804626:",
+       {
+        "Ref": "GitNoteMonitoringAPIFF87228C"
+       },
+       "/test-invoke-stage/GET/network-status"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/network-status/GET/ApiPermission.Test.GitNoteMonitoringStackGitNoteMonitoringAPI53832FE2.GET..network-status"
+   }
+  },
+  "GitNoteMonitoringAPInetworkstatusGETE767893E": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "NONE",
+    "HttpMethod": "GET",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:aws:apigateway:ap-northeast-2:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "NetworkStatusFunctionC8E4E145",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "GitNoteMonitoringAPInetworkstatus8262651C"
+    },
+    "RestApiId": {
+     "Ref": "GitNoteMonitoringAPIFF87228C"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/network-status/GET/Resource"
+   }
+  },
+  "GitNoteMonitoringAPIcomputeperformance58BDDAEF": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Fn::GetAtt": [
+      "GitNoteMonitoringAPIFF87228C",
+      "RootResourceId"
+     ]
+    },
+    "PathPart": "compute-performance",
+    "RestApiId": {
+     "Ref": "GitNoteMonitoringAPIFF87228C"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/compute-performance/Resource"
+   }
+  },
+  "GitNoteMonitoringAPIcomputeperformanceOPTIONSB151934F": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "GitNoteMonitoringAPIcomputeperformance58BDDAEF"
+    },
+    "RestApiId": {
+     "Ref": "GitNoteMonitoringAPIFF87228C"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/compute-performance/OPTIONS/Resource"
+   }
+  },
+  "GitNoteMonitoringAPIcomputeperformanceGETApiPermissionGitNoteMonitoringStackGitNoteMonitoringAPI53832FE2GETcomputeperformance9724170C": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ComputePerformanceFunctionC641C7BA",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:ap-northeast-2:061039804626:",
+       {
+        "Ref": "GitNoteMonitoringAPIFF87228C"
+       },
+       "/",
+       {
+        "Ref": "GitNoteMonitoringAPIDeploymentStageprod39A5785F"
+       },
+       "/GET/compute-performance"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/compute-performance/GET/ApiPermission.GitNoteMonitoringStackGitNoteMonitoringAPI53832FE2.GET..compute-performance"
+   }
+  },
+  "GitNoteMonitoringAPIcomputeperformanceGETApiPermissionTestGitNoteMonitoringStackGitNoteMonitoringAPI53832FE2GETcomputeperformance2DF20495": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ComputePerformanceFunctionC641C7BA",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:ap-northeast-2:061039804626:",
+       {
+        "Ref": "GitNoteMonitoringAPIFF87228C"
+       },
+       "/test-invoke-stage/GET/compute-performance"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/compute-performance/GET/ApiPermission.Test.GitNoteMonitoringStackGitNoteMonitoringAPI53832FE2.GET..compute-performance"
+   }
+  },
+  "GitNoteMonitoringAPIcomputeperformanceGETA8FB2CAE": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "NONE",
+    "HttpMethod": "GET",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:aws:apigateway:ap-northeast-2:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "ComputePerformanceFunctionC641C7BA",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "GitNoteMonitoringAPIcomputeperformance58BDDAEF"
+    },
+    "RestApiId": {
+     "Ref": "GitNoteMonitoringAPIFF87228C"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/compute-performance/GET/Resource"
+   }
+  },
+  "GitNoteMonitoringAPIstoragehealthFCCA4AAA": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Fn::GetAtt": [
+      "GitNoteMonitoringAPIFF87228C",
+      "RootResourceId"
+     ]
+    },
+    "PathPart": "storage-health",
+    "RestApiId": {
+     "Ref": "GitNoteMonitoringAPIFF87228C"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/storage-health/Resource"
+   }
+  },
+  "GitNoteMonitoringAPIstoragehealthOPTIONS74ADC168": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "GitNoteMonitoringAPIstoragehealthFCCA4AAA"
+    },
+    "RestApiId": {
+     "Ref": "GitNoteMonitoringAPIFF87228C"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/storage-health/OPTIONS/Resource"
+   }
+  },
+  "GitNoteMonitoringAPIstoragehealthGETApiPermissionGitNoteMonitoringStackGitNoteMonitoringAPI53832FE2GETstoragehealthF1326B06": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "StorageHealthFunctionF41D9B9E",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:ap-northeast-2:061039804626:",
+       {
+        "Ref": "GitNoteMonitoringAPIFF87228C"
+       },
+       "/",
+       {
+        "Ref": "GitNoteMonitoringAPIDeploymentStageprod39A5785F"
+       },
+       "/GET/storage-health"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/storage-health/GET/ApiPermission.GitNoteMonitoringStackGitNoteMonitoringAPI53832FE2.GET..storage-health"
+   }
+  },
+  "GitNoteMonitoringAPIstoragehealthGETApiPermissionTestGitNoteMonitoringStackGitNoteMonitoringAPI53832FE2GETstoragehealth14B5E96A": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "StorageHealthFunctionF41D9B9E",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:ap-northeast-2:061039804626:",
+       {
+        "Ref": "GitNoteMonitoringAPIFF87228C"
+       },
+       "/test-invoke-stage/GET/storage-health"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/storage-health/GET/ApiPermission.Test.GitNoteMonitoringStackGitNoteMonitoringAPI53832FE2.GET..storage-health"
+   }
+  },
+  "GitNoteMonitoringAPIstoragehealthGET8EE82DBF": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "NONE",
+    "HttpMethod": "GET",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:aws:apigateway:ap-northeast-2:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "StorageHealthFunctionF41D9B9E",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "GitNoteMonitoringAPIstoragehealthFCCA4AAA"
+    },
+    "RestApiId": {
+     "Ref": "GitNoteMonitoringAPIFF87228C"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/storage-health/GET/Resource"
+   }
+  },
+  "GitNoteMonitoringAPIcostbreakdownFE52C05F": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Fn::GetAtt": [
+      "GitNoteMonitoringAPIFF87228C",
+      "RootResourceId"
+     ]
+    },
+    "PathPart": "cost-breakdown",
+    "RestApiId": {
+     "Ref": "GitNoteMonitoringAPIFF87228C"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/cost-breakdown/Resource"
+   }
+  },
+  "GitNoteMonitoringAPIcostbreakdownOPTIONS16CB67DC": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "GitNoteMonitoringAPIcostbreakdownFE52C05F"
+    },
+    "RestApiId": {
+     "Ref": "GitNoteMonitoringAPIFF87228C"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/cost-breakdown/OPTIONS/Resource"
+   }
+  },
+  "GitNoteMonitoringAPIcostbreakdownGETApiPermissionGitNoteMonitoringStackGitNoteMonitoringAPI53832FE2GETcostbreakdownA9D4A2E7": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "CostBreakdownFunctionA5429F6C",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:ap-northeast-2:061039804626:",
+       {
+        "Ref": "GitNoteMonitoringAPIFF87228C"
+       },
+       "/",
+       {
+        "Ref": "GitNoteMonitoringAPIDeploymentStageprod39A5785F"
+       },
+       "/GET/cost-breakdown"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/cost-breakdown/GET/ApiPermission.GitNoteMonitoringStackGitNoteMonitoringAPI53832FE2.GET..cost-breakdown"
+   }
+  },
+  "GitNoteMonitoringAPIcostbreakdownGETApiPermissionTestGitNoteMonitoringStackGitNoteMonitoringAPI53832FE2GETcostbreakdownF5F191A6": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "CostBreakdownFunctionA5429F6C",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:ap-northeast-2:061039804626:",
+       {
+        "Ref": "GitNoteMonitoringAPIFF87228C"
+       },
+       "/test-invoke-stage/GET/cost-breakdown"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/cost-breakdown/GET/ApiPermission.Test.GitNoteMonitoringStackGitNoteMonitoringAPI53832FE2.GET..cost-breakdown"
+   }
+  },
+  "GitNoteMonitoringAPIcostbreakdownGET519C37F6": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "NONE",
+    "HttpMethod": "GET",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:aws:apigateway:ap-northeast-2:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "CostBreakdownFunctionA5429F6C",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "GitNoteMonitoringAPIcostbreakdownFE52C05F"
+    },
+    "RestApiId": {
+     "Ref": "GitNoteMonitoringAPIFF87228C"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/Default/cost-breakdown/GET/Resource"
+   }
+  },
+  "GitNoteMonitoringAPIGitNoteMonitoringAPIKey6FDD1CF5": {
+   "Type": "AWS::ApiGateway::ApiKey",
+   "Properties": {
+    "Description": "API key for GitNote monitoring dashboard",
+    "Enabled": true,
+    "Name": "gitnote-monitoring-key",
+    "StageKeys": [
+     {
+      "RestApiId": {
+       "Ref": "GitNoteMonitoringAPIFF87228C"
+      },
+      "StageName": {
+       "Ref": "GitNoteMonitoringAPIDeploymentStageprod39A5785F"
+      }
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "Component",
+      "Value": "Monitoring"
+     },
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "CDK"
+     },
+     {
+      "Key": "Project",
+      "Value": "GitNote"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/GitNoteMonitoringAPIKey/Resource"
+   }
+  },
+  "GitNoteMonitoringAPIGitNoteMonitoringUsagePlanC03AF466": {
+   "Type": "AWS::ApiGateway::UsagePlan",
+   "Properties": {
+    "ApiStages": [
+     {
+      "ApiId": {
+       "Ref": "GitNoteMonitoringAPIFF87228C"
+      },
+      "Stage": {
+       "Ref": "GitNoteMonitoringAPIDeploymentStageprod39A5785F"
+      },
+      "Throttle": {}
+     }
+    ],
+    "Quota": {
+     "Limit": 10000,
+     "Period": "DAY"
+    },
+    "Tags": [
+     {
+      "Key": "Component",
+      "Value": "Monitoring"
+     },
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "CDK"
+     },
+     {
+      "Key": "Project",
+      "Value": "GitNote"
+     }
+    ],
+    "Throttle": {
+     "BurstLimit": 200,
+     "RateLimit": 100
+    },
+    "UsagePlanName": "Standard"
+   },
+   "Metadata": {
+    "aws:cdk:path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/GitNoteMonitoringUsagePlan/Resource"
+   }
+  },
+  "GitNoteMonitoringAPIGitNoteMonitoringUsagePlanUsagePlanKeyResourceGitNoteMonitoringStackGitNoteMonitoringAPIGitNoteMonitoringAPIKeyD962EBE1112120D7": {
+   "Type": "AWS::ApiGateway::UsagePlanKey",
+   "Properties": {
+    "KeyId": {
+     "Ref": "GitNoteMonitoringAPIGitNoteMonitoringAPIKey6FDD1CF5"
+    },
+    "KeyType": "API_KEY",
+    "UsagePlanId": {
+     "Ref": "GitNoteMonitoringAPIGitNoteMonitoringUsagePlanC03AF466"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "GitNoteMonitoringStack/GitNoteMonitoringAPI/GitNoteMonitoringUsagePlan/UsagePlanKeyResource:GitNoteMonitoringStackGitNoteMonitoringAPIGitNoteMonitoringAPIKeyD962EBE1"
+   }
+  },
+  "GitNoteMonitoringWebsite2EE96085": {
+   "Type": "AWS::S3::Bucket",
+   "Properties": {
+    "BucketName": "gitnote-monitoring-061039804626-ap-northeast-2",
+    "CorsConfiguration": {
+     "CorsRules": [
+      {
+       "AllowedHeaders": [
+        "*"
+       ],
+       "AllowedMethods": [
+        "GET",
+        "HEAD"
+       ],
+       "AllowedOrigins": [
+        "*"
+       ]
+      }
+     ]
+    },
+    "PublicAccessBlockConfiguration": {
+     "BlockPublicAcls": true,
+     "BlockPublicPolicy": true,
+     "IgnorePublicAcls": true,
+     "RestrictPublicBuckets": true
+    },
+    "Tags": [
+     {
+      "Key": "aws-cdk:auto-delete-objects",
+      "Value": "true"
+     },
+     {
+      "Key": "aws-cdk:cr-owned:aaebc6d7",
+      "Value": "true"
+     },
+     {
+      "Key": "Component",
+      "Value": "Monitoring"
+     },
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "CDK"
+     },
+     {
+      "Key": "Project",
+      "Value": "GitNote"
+     }
+    ],
+    "WebsiteConfiguration": {
+     "ErrorDocument": "error.html",
+     "IndexDocument": "index.html"
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "GitNoteMonitoringStack/GitNoteMonitoringWebsite/Resource"
+   }
+  },
+  "GitNoteMonitoringWebsitePolicy2858C4C0": {
+   "Type": "AWS::S3::BucketPolicy",
+   "Properties": {
+    "Bucket": {
+     "Ref": "GitNoteMonitoringWebsite2EE96085"
+    },
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "s3:DeleteObject*",
+        "s3:GetBucket*",
+        "s3:List*",
+        "s3:PutBucketPolicy"
+       ],
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": {
+         "Fn::GetAtt": [
+          "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
+          "Arn"
+         ]
+        }
+       },
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "GitNoteMonitoringWebsite2EE96085",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "GitNoteMonitoringWebsite2EE96085",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "s3:GetBucket*",
+        "s3:GetObject*",
+        "s3:List*"
+       ],
+       "Effect": "Allow",
+       "Principal": {
+        "CanonicalUser": {
+         "Fn::GetAtt": [
+          "OAIE1EFC67F",
+          "S3CanonicalUserId"
+         ]
+        }
+       },
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "GitNoteMonitoringWebsite2EE96085",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "GitNoteMonitoringWebsite2EE96085",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "GitNoteMonitoringStack/GitNoteMonitoringWebsite/Policy/Resource"
+   }
+  },
+  "GitNoteMonitoringWebsiteAutoDeleteObjectsCustomResource10D91861": {
+   "Type": "Custom::S3AutoDeleteObjects",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F",
+      "Arn"
+     ]
+    },
+    "BucketName": {
+     "Ref": "GitNoteMonitoringWebsite2EE96085"
+    }
+   },
+   "DependsOn": [
+    "GitNoteMonitoringWebsitePolicy2858C4C0"
+   ],
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "GitNoteMonitoringStack/GitNoteMonitoringWebsite/AutoDeleteObjectsCustomResource/Default"
+   }
+  },
+  "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Version": "2012-10-17",
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ]
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Sub": "arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "GitNoteMonitoringStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Role"
+   }
+  },
+  "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-061039804626-ap-northeast-2",
+     "S3Key": "b7f33614a69548d6bafe224d751a7ef238cde19097415e553fe8b63a4c8fd8a6.zip"
+    },
+    "Timeout": 900,
+    "MemorySize": 128,
+    "Handler": "index.handler",
+    "Role": {
+     "Fn::GetAtt": [
+      "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs18.x",
+    "Description": {
+     "Fn::Join": [
+      "",
+      [
+       "Lambda function for auto-deleting objects in ",
+       {
+        "Ref": "GitNoteMonitoringWebsite2EE96085"
+       },
+       " S3 bucket."
+      ]
+     ]
+    }
+   },
+   "DependsOn": [
+    "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "GitNoteMonitoringStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler",
+    "aws:asset:path": "asset.b7f33614a69548d6bafe224d751a7ef238cde19097415e553fe8b63a4c8fd8a6",
+    "aws:asset:property": "Code"
+   }
+  },
+  "OAIE1EFC67F": {
+   "Type": "AWS::CloudFront::CloudFrontOriginAccessIdentity",
+   "Properties": {
+    "CloudFrontOriginAccessIdentityConfig": {
+     "Comment": "OAI for GitNote Monitoring Dashboard"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "GitNoteMonitoringStack/OAI/Resource"
+   }
+  },
+  "GitNoteMonitoringDistributionFFE9F7B6": {
+   "Type": "AWS::CloudFront::Distribution",
+   "Properties": {
+    "DistributionConfig": {
+     "Comment": "CloudFront distribution for GitNote Monitoring Dashboard",
+     "CustomErrorResponses": [
+      {
+       "ErrorCachingMinTTL": 300,
+       "ErrorCode": 404,
+       "ResponseCode": 200,
+       "ResponsePagePath": "/index.html"
+      }
+     ],
+     "DefaultCacheBehavior": {
+      "AllowedMethods": [
+       "GET",
+       "HEAD"
+      ],
+      "CachePolicyId": "658327ea-f89d-4fab-a63d-7e88639e58f6",
+      "Compress": true,
+      "TargetOriginId": "GitNoteMonitoringStackGitNoteMonitoringDistributionOrigin1B898CD57",
+      "ViewerProtocolPolicy": "redirect-to-https"
+     },
+     "DefaultRootObject": "index.html",
+     "Enabled": true,
+     "HttpVersion": "http2",
+     "IPV6Enabled": true,
+     "Origins": [
+      {
+       "CustomOriginConfig": {
+        "OriginProtocolPolicy": "http-only",
+        "OriginSSLProtocols": [
+         "TLSv1.2"
+        ]
+       },
+       "DomainName": {
+        "Fn::Select": [
+         2,
+         {
+          "Fn::Split": [
+           "/",
+           {
+            "Fn::GetAtt": [
+             "GitNoteMonitoringWebsite2EE96085",
+             "WebsiteURL"
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "Id": "GitNoteMonitoringStackGitNoteMonitoringDistributionOrigin1B898CD57"
+      }
+     ],
+     "PriceClass": "PriceClass_100"
+    },
+    "Tags": [
+     {
+      "Key": "Component",
+      "Value": "Monitoring"
+     },
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "CDK"
+     },
+     {
+      "Key": "Project",
+      "Value": "GitNote"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "GitNoteMonitoringStack/GitNoteMonitoringDistribution/Resource"
+   }
+  },
+  "DeployWebsiteAwsCliLayer17DBC421": {
+   "Type": "AWS::Lambda::LayerVersion",
+   "Properties": {
+    "Content": {
+     "S3Bucket": "cdk-hnb659fds-assets-061039804626-ap-northeast-2",
+     "S3Key": "d3adb8f8245549682ed42bc738adfed018ab3d9442ade840a7f42553830499d4.zip"
+    },
+    "Description": "/opt/awscli/aws"
+   },
+   "Metadata": {
+    "aws:cdk:path": "GitNoteMonitoringStack/DeployWebsite/AwsCliLayer/Resource",
+    "aws:asset:path": "asset.d3adb8f8245549682ed42bc738adfed018ab3d9442ade840a7f42553830499d4.zip",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Content"
+   }
+  },
+  "DeployWebsiteCustomResourceD116527B": {
+   "Type": "Custom::CDKBucketDeployment",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C81C01536",
+      "Arn"
+     ]
+    },
+    "SourceBucketNames": [
+     "cdk-hnb659fds-assets-061039804626-ap-northeast-2"
+    ],
+    "SourceObjectKeys": [
+     "1ebc9d3ac2033816c4abb63e4afd69d350b4aba8704cc9236b82ea520b74f4b0.zip"
+    ],
+    "DestinationBucketName": {
+     "Ref": "GitNoteMonitoringWebsite2EE96085"
+    },
+    "Prune": true,
+    "DistributionId": {
+     "Ref": "GitNoteMonitoringDistributionFFE9F7B6"
+    },
+    "DistributionPaths": [
+     "/*"
+    ]
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "GitNoteMonitoringStack/DeployWebsite/CustomResource/Default"
+   }
+  },
+  "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "Component",
+      "Value": "Monitoring"
+     },
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "CDK"
+     },
+     {
+      "Key": "Project",
+      "Value": "GitNote"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "GitNoteMonitoringStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole/Resource"
+   }
+  },
+  "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRoleDefaultPolicy88902FDF": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "s3:GetBucket*",
+        "s3:GetObject*",
+        "s3:List*"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        "arn:aws:s3:::cdk-hnb659fds-assets-061039804626-ap-northeast-2",
+        "arn:aws:s3:::cdk-hnb659fds-assets-061039804626-ap-northeast-2/*"
+       ]
+      },
+      {
+       "Action": [
+        "s3:Abort*",
+        "s3:DeleteObject*",
+        "s3:GetBucket*",
+        "s3:GetObject*",
+        "s3:List*",
+        "s3:PutObject",
+        "s3:PutObjectLegalHold",
+        "s3:PutObjectRetention",
+        "s3:PutObjectTagging",
+        "s3:PutObjectVersionTagging"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "GitNoteMonitoringWebsite2EE96085",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "GitNoteMonitoringWebsite2EE96085",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "cloudfront:CreateInvalidation",
+        "cloudfront:GetInvalidation"
+       ],
+       "Effect": "Allow",
+       "Resource": "*"
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRoleDefaultPolicy88902FDF",
+    "Roles": [
+     {
+      "Ref": "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "GitNoteMonitoringStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C81C01536": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-061039804626-ap-northeast-2",
+     "S3Key": "0b1f5aa55d045066ed91316b823a808060c12737e0575ab7cefe2335324108b0.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "AWS_CA_BUNDLE": "/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem"
+     }
+    },
+    "Handler": "index.handler",
+    "Layers": [
+     {
+      "Ref": "DeployWebsiteAwsCliLayer17DBC421"
+     }
+    ],
+    "Role": {
+     "Fn::GetAtt": [
+      "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265",
+      "Arn"
+     ]
+    },
+    "Runtime": "python3.9",
+    "Tags": [
+     {
+      "Key": "Component",
+      "Value": "Monitoring"
+     },
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "CDK"
+     },
+     {
+      "Key": "Project",
+      "Value": "GitNote"
+     }
+    ],
+    "Timeout": 900
+   },
+   "DependsOn": [
+    "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRoleDefaultPolicy88902FDF",
+    "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "GitNoteMonitoringStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/Resource",
+    "aws:asset:path": "asset.0b1f5aa55d045066ed91316b823a808060c12737e0575ab7cefe2335324108b0",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/21STU/DMAz9LdyzsI0D59IJCQ20qRNcpyz1ilmaVLGzqqr631HS7gOJk9+zn5zn2Eu5WMzl/EG1NNPlaWbwIPsdK30SqqV9j6qWfeEMiPxoU9w6g7qLdESDMKo+lEr2r8FqRmdj7R5vwddINLF31YH/Ap/4Dm1lgN1VPwh62veKCJhkFoMooTGuq8GyfAn6BLy6JqJa9mP2RRGIEcZnJjSGm+d7PgjjKpLvriqAwSa7qsFKMbSqk30BxFmDafIJ3p6O2Tu2Y1WlPxpBAeSC15BMfQB/uzIWJ3SpTp1HnDW4huRxQp+kKtgalX7tf7KGbhDauFAevbMs+43HCm2mNRC9lXEmTi3zqHmNmn8VKyT2eAiXjd3zYbj5TQuJE6Kt/pjPj3YTuAks8kDs6lvhD916d8YS/HQyexNvYa9a0gZl1lJuMJ3HIKwrQf7Q43m5lItnuXj4IcSZD5axBlmM8RfP58e8vQIAAA=="
+   },
+   "Metadata": {
+    "aws:cdk:path": "GitNoteMonitoringStack/CDKMetadata/Default"
+   }
+  }
+ },
+ "Outputs": {
+  "GitNoteMonitoringAPIEndpoint3FD38E7C": {
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "https://",
+      {
+       "Ref": "GitNoteMonitoringAPIFF87228C"
+      },
+      ".execute-api.ap-northeast-2.",
+      {
+       "Ref": "AWS::URLSuffix"
+      },
+      "/",
+      {
+       "Ref": "GitNoteMonitoringAPIDeploymentStageprod39A5785F"
+      },
+      "/"
+     ]
+    ]
+   }
+  },
+  "APIGatewayURL": {
+   "Description": "API Gateway endpoint URL",
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "https://",
+      {
+       "Ref": "GitNoteMonitoringAPIFF87228C"
+      },
+      ".execute-api.ap-northeast-2.",
+      {
+       "Ref": "AWS::URLSuffix"
+      },
+      "/",
+      {
+       "Ref": "GitNoteMonitoringAPIDeploymentStageprod39A5785F"
+      },
+      "/"
+     ]
+    ]
+   },
+   "Export": {
+    "Name": "GitNoteMonitoringAPIURL"
+   }
+  },
+  "APIKey": {
+   "Description": "API Key ID (retrieve value from console)",
+   "Value": {
+    "Ref": "GitNoteMonitoringAPIGitNoteMonitoringAPIKey6FDD1CF5"
+   },
+   "Export": {
+    "Name": "GitNoteMonitoringAPIKey"
+   }
+  },
+  "CloudFrontURL": {
+   "Description": "CloudFront distribution URL for the monitoring dashboard",
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "https://",
+      {
+       "Fn::GetAtt": [
+        "GitNoteMonitoringDistributionFFE9F7B6",
+        "DomainName"
+       ]
+      }
+     ]
+    ]
+   },
+   "Export": {
+    "Name": "GitNoteMonitoringDashboardURL"
+   }
+  },
+  "S3BucketName": {
+   "Description": "S3 bucket name for website hosting",
+   "Value": {
+    "Ref": "GitNoteMonitoringWebsite2EE96085"
+   },
+   "Export": {
+    "Name": "GitNoteMonitoringBucket"
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}
